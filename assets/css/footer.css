@@ -1,0 +1,111 @@
+/* Footer Styling */
+.footer {
+    background: #3D3D3D; 
+    color: #F2E3C6;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.footer ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer ul li {
+    margin-bottom: 5px; /* Beri sedikit ruang antar item */
+}
+
+.footer ul li a {
+    color: #F2E3C6;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+.footer ul li a:hover {
+    text-decoration: underline;
+    color: #D17A22;
+}
+
+/* === FOOTER LOGO === */
+.footer-logo {
+    margin-top: 20px;
+}
+
+.footer-logo img {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Nama Tim Glitch Effect */
+.glitch-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 
+        0 0 3px rgba(255, 42, 109, 0.6),  
+        0 0 6px rgba(168, 85, 247, 0.5);
+    transition: transform 0.3s, text-shadow 0.3s;
+}
+
+.glitch-text:hover {
+    transform: scale(1.1);
+    text-shadow: 
+        0 0 5px rgba(255, 42, 109, 0.7),
+        0 0 8px rgba(168, 85, 247, 0.6),
+        0 0 12px rgba(168, 85, 247, 0.5);
+    animation: glitch 0.3s infinite;
+}
+
+/* Animasi Glitch */
+@keyframes glitch {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-1px) skewX(-5deg); }
+    40% { transform: translateX(1px) skewX(5deg); }
+    60% { transform: translateX(-1px) skewX(-5deg); }
+    80% { transform: translateX(1px) skewX(5deg); }
+    100% { transform: translateX(0); }
+}
+
+/* Style untuk Contact Section */
+.contact-section {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    color: #F2E3C6;
+}
+
+/* Social Media Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap; /* Supaya ikon tidak terlalu mepet di layar kecil */
+}
+
+/* Style untuk Icon */
+.social-icons a {
+    font-size: 24px;
+    color: white;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.social-icons a:hover {
+    transform: scale(1.2);
+}
+
+/* Efek Hover untuk Warna Sesuai Media Sosial */
+.social-icons a[href*="instagram"]:hover { color: #C13584; } 
+.social-icons a[href*="whatsapp"]:hover { color: #25D366; } 
+
+/* RESPONSIVE UNTUK MOBILE */
+@media (max-width: 768px) {
+    .footer .row {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer-logo img {
+        width: 60px; /* Kecilkan logo di mobile */
+    }
+}
+

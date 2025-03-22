@@ -1,0 +1,26 @@
+/* === CUSTOM FONT FOR JAPANESE RETRO FEEL === */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap');
+
+/* General Styling */
+body {
+    font-family: 'Noto Serif JP', serif;
+    background-color: #6C4E31;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    color: #2C3E50;
+}
+
+/* Pastikan teks rata kiri */
+.content {
+    text-align: left;
+    max-width: 80%; /* Agar tidak terlalu melebar di layar besar */
+    margin: 0 auto; /* Memastikan tetap berada di tengah */
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+    .content {
+        max-width: 90%; /* Sedikit lebih lebar di layar kecil */
+    }
+}

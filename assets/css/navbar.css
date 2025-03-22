@@ -1,0 +1,48 @@
+/* Floating Navbar */
+.navbar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 91%;
+    background: rgba(140, 47, 57, 0.9); /* Deep Red ala Jepang */
+    border-radius: 10px;
+    padding: 10px 20px;
+    z-index: 1000;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease-in-out;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Efek Navbar Saat di-scroll */
+.navbar.scrolled {
+    background: rgba(44, 62, 80, 0.95); /* Dark Navy saat scroll */
+}
+
+/* Link Navbar */
+.navbar a {
+    color: #F2E3C6 !important; /* Warna krem */
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 8px 15px;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #D17A22 !important; /* Burnt Orange saat hover */
+}
+
+/* Section Styling */
+.section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    background-size: cover;
+    background-position: center;
+}
+

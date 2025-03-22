@@ -1,0 +1,58 @@
+#location { 
+    background: url('../img/loc.png') no-repeat center center/cover;
+    background-color: rgba(0, 0, 0, 0.5); /* Warna hitam dengan transparansi */
+    background-blend-mode: multiply; /* Bisa diganti dengan overlay, screen, dst */
+    background-size: cover;
+}
+
+/* Pastikan background tetap di tengah */
+#location {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed; /* Membuat efek paralaks */
+}
+
+/* Untuk memastikan responsif di layar kecil */
+@media (max-width: 768px) {
+    #location {
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed; /* Membuat efek paralaks */
+    }
+}
+
+/* Container utama menggunakan flexbox */
+#location .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Agar elemen diatur secara vertikal */
+    width: 100%;
+}
+
+/* Pastikan peta responsif */
+.map-container {
+    width: 100%;
+    max-width: 1000px; /* Maksimal ukuran agar tidak terlalu besar di layar besar */
+    height: 500px; /* Tinggi default */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Atur iframe agar fit dalam container */
+.map-container iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px; /* Opsional: membuat sudut membulat */
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+    .map-container {
+        height: 400px; /* Kurangi tinggi di layar kecil */
+    }
+}
+
