@@ -1,1 +1,1 @@
-# scp.github.io update
+# [scp website](https://shitodcy.github.io/scp) 
