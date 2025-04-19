@@ -1,10 +1,10 @@
 .team-section {
-    padding: 20px 0;
+    padding: 48px 0;
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), /* Overlay transparan */
     url('/assets/img/bg-team.png') no-repeat center center/cover; /* Background image */
     background-attachment: fixed; /* Membuat background tetap diam saat scroll */
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -17,12 +17,13 @@
 .team-member {
     position: relative;
     text-align: center;
-    background: rgba(255, 255, 255, 0.1); /* Efek transparan pada kartu */
-    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 24px;
     border-radius: 8px;
-    margin: 10px;
-    backdrop-filter: blur(10px); /* Efek blur untuk transparansi lebih lembut */
+    margin: 10px auto;
+    backdrop-filter: blur(10px);
     transition: all 0.3s ease;
+    height: 100%;
 }
 
 /* Hover Effect untuk Transparansi */
@@ -50,7 +51,7 @@
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(61, 61, 61, 0.8); /* Efek transparan */
+    background: rgba(61, 61, 61, 0.8);
     color: #F2E3C6;
     padding: 5px 15px;
     border-radius: 20px;
@@ -80,5 +81,59 @@
     text-align: center;
 }
 
+@media (min-width: 992px) {
+    .col-lg {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
 
+/* Mobile view - 3 in first row, 2 in second row */
+@media (max-width: 991.98px) {
+    .col-md-4 {
+        flex: 0 0 33.333%;
+        max-width: 33.333%;
+    }
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
 
+@media (min-width: 769px) {
+    .team-member:hover .job-info {
+        opacity: 1;
+    }
+}
+
+/* Small mobile view */
+@media (max-width: 768px) {
+    .col-sm-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .team-member img {
+        width: 90px;
+        height: 90px;
+        padding: 15px;
+    }
+
+    .team-member p {
+        font-size: 18px;
+        font-weight: bold;
+        color: #F2E3C6;
+        margin-top: 10px;
+    }
+
+    .team-member .job-info {
+        opacity: 1;
+        margin-top: 10px;
+        position: static;
+        transform: none;
+        left: auto;
+        display: inline-block;
+    }
+
+    
+}
