@@ -35,9 +35,7 @@ h1 {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-#imageCarousel{
-  display: none;
-}
+
 /* General styling for the menu */
 .menu-item {
   text-align: center;
@@ -106,5 +104,9 @@ h1 {
 @media (max-width: 768px) {
   .menu-item p {
     font-size: 12px; /* Ukuran font lebih kecil pada layar kecil */
+  }
+
+  #imageCarousel{
+    display: none;
   }
 }
