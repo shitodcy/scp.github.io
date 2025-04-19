@@ -24,3 +24,7 @@ body {
         max-width: 90%; /* Sedikit lebih lebar di layar kecil */
     }
 }
+
+.accordion-button::after {
+    filter: brightness(0) invert(1);
+}
