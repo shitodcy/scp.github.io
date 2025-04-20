@@ -44,7 +44,7 @@
     padding: 20px;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
     background-color: rgba(117, 72, 31, 0.276);
-    color: white;
+    color: #F2E3C6;
     padding: 20px;
     border-radius: 15px;
 }
@@ -52,7 +52,7 @@
 .text-content h1 {
     font-size: 36px;
     font-weight: bold;
-    color: white;
+    color: #F2E3C6;
 }
 
 .text-content p {

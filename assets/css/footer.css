@@ -14,35 +14,3 @@
     
 }
 
-/* Style untuk Contact Section */
-.contact-section {
-    text-align: center;
-    padding: 20px;
-    border-radius: 10px;
-    color: #F2E3C6;
-}
-
-/* Social Media Icons */
-.social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 10px;
-    flex-wrap: wrap; /* Supaya ikon tidak terlalu mepet di layar kecil */
-}
-
-/* Style untuk Icon */
-.social-icons a {
-    font-size: 24px;
-    color: white;
-    transition: transform 0.3s, color 0.3s;
-}
-
-.social-icons a:hover {
-    transform: scale(1.2);
-}
-
-/* Efek Hover untuk Warna Sesuai Media Sosial */
-.social-icons a[href*="instagram"]:hover { color: #C13584; } 
-.social-icons a[href*="whatsapp"]:hover { color: #25D366; } 
-
