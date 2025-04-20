@@ -1,17 +1,46 @@
 #location { 
-    background: url('../img/loc.png') no-repeat center center/cover;
+    background: url('../img/lokasi.png') no-repeat center center/cover;
     background-color: rgba(0, 0, 0, 0.5); /* Warna hitam dengan transparansi */
     background-blend-mode: multiply; /* Bisa diganti dengan overlay, screen, dst */
     background-size: cover;
-}
-
-/* Pastikan background tetap di tengah */
-#location {
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed; /* Membuat efek paralaks */
 }
+
+
+/* Style untuk Contact Section */
+.contact-section {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    color: #F2E3C6;
+}
+
+/* Social Media Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap; /* Supaya ikon tidak terlalu mepet di layar kecil */
+}
+
+/* Style untuk Icon */
+.social-icons a {
+    font-size: 24px;
+    color: white;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.social-icons a:hover {
+    transform: scale(1.2);
+}
+
+/* Efek Hover untuk Warna Sesuai Media Sosial */
+.social-icons a[href*="instagram"]:hover { color: #C13584; } 
+.social-icons a[href*="whatsapp"]:hover { color: #25D366; } 
 
 /* Untuk memastikan responsif di layar kecil */
 @media (max-width: 768px) {

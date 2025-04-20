@@ -73,7 +73,13 @@
     margin-top: 10px;
 }
 
-/* Animasi Teks SCP9242 Berwarna RGB */
+.team-member h4 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #F2E3C6;
+    margin-top: 10px;
+}
+
 .text {
     font-size: 42px;
     font-weight: bold;

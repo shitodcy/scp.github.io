@@ -5,7 +5,6 @@
     left: 50%;
     transform: translateX(-50%);
     width: 91%;
-    background: rgba(140, 47, 57, 0.9); /* Deep Red ala Jepang */
     border-radius: 10px;
     padding: 10px 20px;
     z-index: 1000;

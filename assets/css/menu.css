@@ -27,7 +27,7 @@
 
 h1 {
   text-align: center;
-  color: white;
+  color: #F2E3C6;
   margin-bottom: 30px;
   background-color: #301507;
   border-radius: 10px;
@@ -53,34 +53,34 @@ h1 {
 .menu-item p {
   font-size: 12px;
   font-weight: bold;
-  color: #333;
+  color: #F2E3C6;
 }
 
 .menu-name {
   font-size: 12px;
   font-weight: bold;
-  color: #333;
+  color: #F2E3C6;
 }
 
 .menu-price {
   font-size: 10px;
   font-weight: lighter;
-  color: #333;
+  color: #F2E3C6;
 }
 .accordion-button {
   background-color: #6f4e37; /* Coffee brown color */
-  color: white;
+  color: #F2E3C6;
   font-size: 18px;
   font-weight: bold;
 }
 
 .accordion-button:not(.collapsed) {
   background-color: #543a2d;
-  color: white;
+  color: #F2E3C6;
 }
 
 .accordion-body {
-  background-color: #f8f5f2;
+  background-color: #6f4e37;
   padding: 20px;
 }
 
@@ -91,6 +91,10 @@ h1 {
 
 .accordion-button:focus {
   box-shadow: none;
+}
+
+.accordion-button::after {
+  filter: brightness(0) invert(1);
 }
 
 .carousel-control-prev-icon,
