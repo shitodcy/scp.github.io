@@ -9,6 +9,13 @@
     background-attachment: fixed; /* Membuat efek paralaks */
 }
 
+/* Pastikan teks rata kiri */
+.content {
+    text-align: left;
+    max-width: 80%; /* Agar tidak terlalu melebar di layar besar */
+    margin: 0 auto; /* Memastikan tetap berada di tengah */
+}
+
 
 /* Style untuk Contact Section */
 .contact-section {

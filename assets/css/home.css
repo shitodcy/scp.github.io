@@ -2,7 +2,7 @@
 #home { 
     background: url('../img/bg.png') no-repeat center center/cover; 
     background-color: rgba(0, 0, 0, 0.5); 
-  background-attachment: fixed; /* Membuat background tetap diam saat scroll */
+    background-attachment: fixed; /* Membuat background tetap diam saat scroll */
     background-blend-mode: multiply;
     width: 100%;
     height: 100%;
@@ -23,20 +23,19 @@
 
 /* Kotak gambar dengan carousel */
 .image-box {
-    width: 60%;
-    height: 50%;
+    width: auto;
+    height: auto;
     background-color: #8b5a2b; /* Coklat */
     border-radius: 20px;
     overflow: hidden;
     padding: 10px;
 }
 
-.image-box img {
-    width: auto;
-    height: auto;
+.d-block {
+    border-radius: 1rem;
     object-fit: cover;
-    border-radius: 15px;
 }
+
 
 /* Teks di sebelah kanan dengan efek blur */
 .text-content {
@@ -61,20 +60,6 @@
     color: white;
 }
 
-/* Styling tombol */
-.btn-custom {
-    background-color: #a67c52;
-    border: none;
-    padding: 10px 20px;
-    font-size: 18px;
-    border-radius: 8px;
-    color: white;
-}
-
-.btn-custom:hover {
-    background-color: #8b5a2b;
-
-}
 
 /* Responsif */
 @media (max-width: 768px) {
