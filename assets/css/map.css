@@ -85,10 +85,4 @@
     border-radius: 10px; /* Opsional: membuat sudut membulat */
 }
 
-/* Responsif untuk layar kecil */
-@media (max-width: 768px) {
-    .map-container {
-        height: 400px; /* Kurangi tinggi di layar kecil */
-    }
-}
 
