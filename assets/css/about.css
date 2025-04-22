@@ -1,20 +1,30 @@
-#about { 
-    background: url('../img/bg-team.png') no-repeat center center/cover; 
-    background-color: rgba(0, 0, 0, 0.5); 
-    background-attachment: fixed; /* Membuat background tetap diam saat scroll */
+#about {
+    background: url('../img/bg-team.png') no-repeat center center/cover;
+    background-color: rgba(0, 0, 0, 0.5);
     background-blend-mode: multiply;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    background-attachment: fixed;
+    padding: 4rem 1rem;
 }
 
 .card-custom {
     border-radius: 2rem;
     background-color: #6f4e37;
     box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    color: #F2E3C6;
+    height: 100%;
+    width: 1000%;
+}
+
+
+
+.barista-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-custom:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
 }
 
 .img-rounded {
@@ -30,17 +40,13 @@
     color: #F2E3C6;
 }
 
+.text-custom {
+    font-family: 'Roboto Slab', serif;
+    color: #F2E3C6;
+    line-height: 1.6;
+}
+
 .fw-bold {
     font-family: 'Roboto Slab', serif;
     color: #F2E3C6;
 }
-.text-custom {
-    font-family: 'Roboto Slab', serif;
-    color: #030303;
-}
-
-.card-custom:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
-  }
-  
