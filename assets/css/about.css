@@ -12,14 +12,8 @@
     box-shadow: 0 10px 15px rgba(0,0,0,0.1);
     color: #F2E3C6;
     height: 100%;
-    width: 1000%;
-}
-
-
-
-.barista-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    transition: all 0.3s ease-in-out;
 }
 
 .card-custom:hover {
@@ -49,4 +43,27 @@
 .fw-bold {
     font-family: 'Roboto Slab', serif;
     color: #F2E3C6;
+}
+
+/* Custom layout panels */
+.panel-wrapper {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+}
+
+.panel-small {
+    height: 400px; /* Set fixed height for consistency */
+    width: 100%;
+}
+
+.panel-main {
+    min-height: 700px;
+    max-width: 900px;
+    width: 100%;
+}
+
+.text-content {
+    max-width: 480px;
+    margin: 0 auto;
 }
