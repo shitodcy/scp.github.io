@@ -1,5 +1,5 @@
-# [scp website](https://shitodcy.github.io/scp) 
-**Comingsoon**
+# [scp website](https://scp-puce.vercel.app/) 
+
 
 SCP9242
 1. 23.11.5494 Arya Putra Bahari
