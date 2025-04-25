@@ -10,7 +10,7 @@ env:
   # replace "github_username" with your GitHub username
   # replace "github.com/username/repo.git" with your GitHub repo path
   # do NOT replace ${{secrets.GITHUB_TOKEN}}, GitHub will take care of it
-  MY_REPO: https://shitodcy:${{secrets.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}}@github.com/shitodcy/scp.git
+  MY_REPO: https://shitodcy:${{secrets.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}}@github.com/shitodcy/scp
 
   # replace "long-lived_branch_name" with your branch name
   MY_BRANCH: codingan-push-baru
