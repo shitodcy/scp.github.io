@@ -16,7 +16,7 @@ env:
   MY_BRANCH: codingan-push-baru
 
   # replace it with the path to master repo
-  MASTER_REPO: https://github.com/shitodcy/scp.git
+  MASTER_REPO: https://github.com/shitodcy/scp
 
   # replace "master" with your master branch name
   MASTER_BRANCH: main
@@ -30,8 +30,8 @@ jobs:
       run: |
         git clone ${{env.MY_REPO}} -b ${{env.MY_BRANCH}} tmp
         cd tmp
-        git config user.name "Automerge Bot"
-        git config user.email "bot@example.com"
+        git config user.name "shitodcy"
+        git config user.email "tn.putra404@gmail.com"
         git config pull.rebase false
         git pull ${{env.MASTER_REPO}} ${{env.MASTER_BRANCH}}
         git push
