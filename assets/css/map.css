@@ -1,94 +1,52 @@
+/* map.css */
+
+/* Styles for the location section */
 #location { 
     background: url('../img/lokasi.png') no-repeat center center/cover;
-    background-color: rgba(0, 0, 0, 0.5); /* Warna hitam dengan transparansi */
-    background-blend-mode: multiply; /* Bisa diganti dengan overlay, screen, dst */
+    background-color: rgba(0, 0, 0, 0.5); /* Black color with transparency */
+    background-blend-mode: multiply; /* Blend mode for background */
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed; /* Membuat efek paralaks */
+    background-attachment: fixed; /* Parallax effect */
 }
 
-/* Pastikan teks rata kiri */
+/* Ensure text is left-aligned */
 .content {
     text-align: left;
-    max-width: 80%; /* Agar tidak terlalu melebar di layar besar */
-    margin: 0 auto; /* Memastikan tetap berada di tengah */
+    max-width: 80%; /* Prevents excessive width on large screens */
+    margin: 0 auto; /* Centers the content */
 }
 
-
-/* Style untuk Contact Section */
-.contact-section {
-    text-align: center;
-    padding: 20px;
-    border-radius: 10px;
-    color: #F2E3C6;
-}
-
-/* Social Media Icons */
-.social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 10px;
-    flex-wrap: wrap; /* Supaya ikon tidak terlalu mepet di layar kecil */
-}
-
-/* Style untuk Icon */
-.social-icons a {
-    font-size: 24px;
-    color: white;
-    transition: transform 0.3s, color 0.3s;
-}
-
-.social-icons a:hover {
-    transform: scale(1.2);
-}
-
-/* Efek Hover untuk Warna Sesuai Media Sosial */
-.social-icons a[href*="instagram"]:hover { color: #C13584; } 
-.social-icons a[href*="whatsapp"]:hover { color: #25D366; } 
-
-/* Untuk memastikan responsif di layar kecil */
-@media (max-width: 768px) {
-    #location {
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-attachment: fixed; /* Membuat efek paralaks */
-    }
-}
-
-/* Container utama menggunakan flexbox */
+/* Main container using flexbox */
 #location .content {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column; /* Agar elemen diatur secara vertikal */
+    flex-direction: column; /* Arrange elements vertically */
     width: 100%;
 }
 
-/* Pastikan peta responsif */
+/* Ensure the map is responsive */
 .map-container {
     width: 100%;
-    max-width: 1000px; /* Maksimal ukuran agar tidak terlalu besar di layar besar */
-    height: 500px; /* Tinggi default */
+    max-width: 1000px; /* Maximum size to prevent excessive width */
+    height: 500px; /* Default height */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Atur iframe agar fit dalam container */
+/* Adjust iframe to fit within the container */
 .map-container iframe {
     width: 100%;
     height: 100%;
-    border-radius: 10px; /* Opsional: membuat sudut membulat */
+    border-radius: 10px; /* Optional: rounded corners */
 }
 
-/* Responsif untuk layar kecil */
+/* Responsive adjustments for small screens */
 @media (max-width: 768px) {
     .map-container {
-        height: 400px; /* Kurangi tinggi di layar kecil */
+        height: 400px; /* Reduce height on small screens */
     }
 }
-
