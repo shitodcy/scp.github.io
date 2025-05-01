@@ -1,4 +1,4 @@
-# 🚨 SCP Website Project – Team SCP9242
+# 🚨 Kedai Kopi Kayu Website Project – Team SCP9242
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://img.shields.io/github/workflow/status/shitodcy/scp/CI)](https://github.com/shitodcy/scp/actions)
