@@ -1,0 +1,44 @@
+/* review.css */
+
+/* Styles for the review section */
+#review {
+    padding: 40px 0; /* Padding for the review section */
+    background-image: url('../img/bg-team.png'); /* Background image */
+    background-size: cover; /* Cover the entire section */
+    background-position: center; /* Center the background image */
+    color: white; /* Text color for better contrast */
+}
+
+/* contact.css */
+
+/* Style for Contact Section */
+.contact-section {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    color: #F2E3C6; /* Light color for text */
+}
+
+/* Social Media Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap; /* Prevents icons from being too close on small screens */
+}
+
+/* Style for Icon */
+.social-icons a {
+    font-size: 24px;
+    color: white;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.social-icons a:hover {
+    transform: scale(1.2); /* Scale effect on hover */
+}
+
+/* Hover effects for social media colors */
+.social-icons a[href*="instagram"]:hover { color: #C13584; } 
+.social-icons a[href*="whatsapp"]:hover { color: #25D366; } 
