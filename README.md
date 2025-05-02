@@ -12,7 +12,7 @@ Welcome to the official repository of our SCP Website Project, created as part o
 
 ## 🧑‍💻 Team SCP9242
 
-| Name               | NIM         |    JOBS     |
+| Name               | Nim         |    Jobs     |
 |--------------------|-------------|-------------|
 | Arya Putra Bahari  | 23.11.5494  |  team leader|
 | Jihan Humaira      | 23.11.5492  |  front-end  |
