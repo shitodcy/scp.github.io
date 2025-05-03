@@ -48,19 +48,19 @@ h1 {
 }
 
 .menu-item p {
-  font-size: 12px;
+  font-size: 15px;
   font-weight: bold;
   color: #F2E3C6;
 }
 
 .menu-name {
-  font-size: 12px;
+  font-size: 15px;
   font-weight: bold;
   color: #F2E3C6;
 }
 
 .menu-price {
-  font-size: 10px;
+  font-size: 15px;
   font-weight: lighter;
   color: #F2E3C6;
 }
