@@ -53,12 +53,12 @@
 }
 
 .panel-small {
-    height: 400px; /* Set fixed height for consistency */
+    height: fit-content; /* Set fixed height for consistency */
     width: 100%;
 }
 
 .panel-main {
-    min-height: 700px;
+    min-height: fit-content;
     max-width: 900px;
     width: 100%;
 }
