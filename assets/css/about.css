@@ -61,9 +61,53 @@
     min-height: fit-content;
     max-width: 900px;
     width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .text-content {
     max-width: 480px;
     margin: 0 auto;
+}
+
+/* Scrollable content styles */
+.scrollable-content {
+    overflow-y: auto;
+    max-height: 200px; /* Adjust this value as needed */
+    padding-right: 5px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 480px;
+}
+
+/* Scrollbar styling */
+.scrollable-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+    background: rgba(111, 78, 55, 0.5);
+    border-radius: 10px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+    background-color: #dbc8a4;
+    border-radius: 10px;
+}
+
+/* For Firefox */
+.scrollable-content {
+    scrollbar-width: thin;
+    scrollbar-color: #dbc8a4 rgba(111, 78, 55, 0.5);
+}
+
+/* Make sure all panels have consistent heights */
+@media (min-width: 768px) {
+    .about-row {
+        align-items: stretch;
+    }
+    
+    .panel-main, .panel-small {
+        height: 100%;
+    }
 }
