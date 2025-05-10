@@ -1,12 +1,14 @@
 /* review.css */
 
 /* Styles for the review section */
-#review {
-    padding: 40px 0; /* Padding for the review section */
-    background-image: url('../img/bg-team.png'); /* Background image */
-    background-size: cover; /* Cover the entire section */
-    background-position: center; /* Center the background image */
-    color: white; /* Text color for better contrast */
+#review { 
+    background: url('../img/bg-team.png') no-repeat center center/cover;
+    background-color: rgba(0, 0, 0, 0.4); /* Black color with transparency */
+    background-blend-mode: multiply; /* Blend mode for background */
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Parallax effect */
 }
 
 /* contact.css */
