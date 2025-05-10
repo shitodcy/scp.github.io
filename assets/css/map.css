@@ -3,7 +3,7 @@
 /* Styles for the location section */
 #location { 
     background: url('../img/lokasi.png') no-repeat center center/cover;
-    background-color: rgba(0, 0, 0, 0.5); /* Black color with transparency */
+    background-color: rgba(0, 0, 0, 0.4); /* Black color with transparency */
     background-blend-mode: multiply; /* Blend mode for background */
     background-size: cover;
     background-position: center center;
