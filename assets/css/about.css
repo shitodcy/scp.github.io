@@ -12,7 +12,6 @@
     box-shadow: 0 10px 15px rgba(0,0,0,0.1);
     color: #dbc8a4;
     height: 100%;
-    width: 100%;
     transition: all 0.3s ease-in-out;
 }
 
@@ -26,12 +25,20 @@
     object-fit: cover;
 }
 
-.celebration-text {
+.celebration-title {
     font-family: 'Roboto Slab', serif;
     font-size: 2.5rem;
     font-style: italic;
     font-weight: 600;
     color: #bda77b;
+}
+
+.celebration-text{
+    font-family: 'Roboto Slab', serif;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #bda77b;
+    text-align: auto;
 }
 
 .text-custom {
