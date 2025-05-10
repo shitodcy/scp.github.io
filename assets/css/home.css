@@ -1,7 +1,7 @@
 /* Background dengan overlay */
 #home { 
-    background: url('../img/bg.png') no-repeat center center/cover; 
-    background-color: rgba(0, 0, 0, 0.5); 
+    background: url('../img/background/fotolokasi.depan.png') no-repeat center center/cover; 
+    background-color: rgba(0, 0, 0, 0.2); 
     background-attachment: fixed; /* Membuat background tetap diam saat scroll */
     background-blend-mode: multiply;
     width: 100%;
