@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <!-- Favicon -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kedai Kopi Kayu</title>
     <link rel="icon" href="assets/img/logo/logokkk.ico" type="image/x-icon">
     
-    
-    <!-- Favicon -->
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,9 +21,9 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- public/index.html -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
 
     <!-- CSS Custom -->
@@ -41,6 +40,9 @@
 
     <!-- JavaScript Custom -->
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/about.js"></script>
+    <script src="assets/js/menu.js"></script>
+    <script src="assets/js/home.js"></script>
 </head>
 
 <body>
@@ -64,38 +66,41 @@
         </div>
     </nav>
 
-    <!-- Section Home -->
     <section id="home">
-        <div class="container d-flex align-items-center justify-content-center vh-100">
-            <div class="row content-wrapper">
-                <!-- Kotak Carousel di sisi kiri -->
-                <div class="col-md-5 d-flex justify-content-center">
-                    <div id="imageCarousel" class="carousel slide image-box" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="assets/img/menu/contoh.png" class="d-block w-100" alt="Kopi 1">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="assets/img/menu/contoh.png" class="d-block w-100" alt="Kopi 2">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="assets/img/menu/contoh.png" class="d-block w-100" alt="Kopi 3">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
+        <div class="content-container">
+            <div class="image-box">
+                <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="2"></button>
                     </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="assets/img/lokasi.png" alt="Kedai Kopi Kayu Interior">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="assets/img/background/fotofarhankerja.png" alt="Barista menyajikan kopi">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="assets/img/background/fotolokasidaridalam.png" alt="Suasana kedai">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
-
-                <!-- Teks di sisi kanan -->
-                <div class="col-md-7 text-content">
-                    <h1 class="ss-kanan">Kedai Kopi Kayu</h1>
-                    <p>adalah destinasi unik bagi para pecinta kopi yang ingin merasakan pengalaman menikmati kopi dengan sentuhan tradisional dan modern. Kami menghadirkan suasana yang nyaman, cita rasa khas, serta kehangatan khas Yogyakarta dalam setiap cangkir kopi.</p>
-                </div>
+            </div>
+            
+            <div class="text-content">
+                <h1>Kedai Kopi Kayu</h1>
+                <p>adalah destinasi unik bagi para pecinta kopi yang ingin merasakan pengalaman menikmati kopi dengan sentuhan tradisional dan modern. Kami menghadirkan suasana yang nyaman, cita rasa khas, serta kehangatan khas Yogyakarta dalam setiap cangkir kopi.</p>
+                <p>Nikmati berbagai pilihan kopi single origin dan racikan spesial kami yang diolah dengan penuh dedikasi oleh barista berpengalaman.</p>
             </div>
         </div>
     </section>
@@ -114,8 +119,7 @@
                         <div class="celebration-text">
                            <p>Kami menghadirkan secangkir kopi dengan cita rasa khas yang membangkitkan semangat dan menyempurnakan harimu.</p>
                            <p>Menjadi coffeeshop pilihan dengan kopi terbaik, pelayanan ramah, dan suasana yang mendukung setiap momen berharga.</p>
-                            <p>Dengan ruang yang hangat dan inspiratif, kami menyatukan semua kalangan dalam pengalaman kopi yang tak terlupakan.</p>
-
+                           <p> kami menyatukan semua kalangan dalam pengalaman kopi yang tak terlupakan.</p>
                         </div>
                     </div>
                 </div>
@@ -123,32 +127,37 @@
 
             <!-- Panel 2 -->
             <div class="col-12 col-md-5 d-flex justify-content-center">
-                <div class="card card-custom p-4 text-center panel-main">
-                    <img src="assets/img/menu/m1.jpg" class="mb-3 img-rounded" alt="Menu Image" />
-                    <p class="text-custom fs-5 mb-2">SINCE 2024</p>
-                    <h3 class="celebration-title mb-3">Kedai Kopi Kayu</h3>
-                    <div class="scrollable-content">
-                        <p class="text-custom fs-8">
-                            Tempat ini dibangun oleh sekelompok mahasiswa yang memiliki visi untuk menciptakan
-                            tempat berkumpul yang nyaman dan menyajikan kopi berkualitas tinggi.
-                        </p>
-                        <p class="text-custom fs-8">
-                            Dengan menggunakan biji kopi pilihan dari petani lokal, kami berkomitmen untuk
-                            memberikan pengalaman kopi autentik. Desain interior kami menggabungkan elemen kayu
-                            alami yang menciptakan suasana hangat dan mengundang.
-                        </p>
-                        <p class="text-custom fs-8">
-                            Selain menyajikan kopi, kami juga menawarkan berbagai pastry dan makanan ringan yang
-                            dibuat segar setiap hari. Kami percaya bahwa kopi adalah lebih dari sekedar minuman,
-                            tapi juga tentang pengalaman dan komunitas.
-                        </p>
-                        <p class="text-custom fs-8">
-                            Kedai Kopi Kayu hadir sebagai ruang di mana cerita-cerita baru tercipta, ide-ide
-                            mengalir, dan persahabatan terjalin. Bergabunglah dengan kami dan rasakan perbedaannya!
-                        </p>
+                <div class="card-custom p-4 text-center panel-main">
+                  <div class="text-center mb-3">
+                    <img src="assets/img/menu/m1.jpg" class="img-rounded mx-auto d-block" alt="Menu Image" />
+                  </div>
+                  <p class="text-custom fs-5 mb-2">SINCE 2024</p>
+                  <h3 class="celebration-title mb-3">Kedai Kopi Kayu</h3>
+                  <div class="scrollable-content" id="scrollContainer">
+                    <div class="scroll-text" id="scrollText">
+                      <p class="text-custom fs-8">
+                        Tempat ini dibangun oleh sekelompok mahasiswa yang memiliki visi untuk menciptakan
+                        tempat berkumpul yang nyaman dan menyajikan kopi berkualitas tinggi.
+                      </p>
+                      <p class="text-custom fs-8">
+                        Dengan menggunakan biji kopi pilihan dari petani lokal, kami berkomitmen untuk
+                        memberikan pengalaman kopi autentik. Desain interior kami menggabungkan elemen kayu
+                        alami yang menciptakan suasana hangat dan mengundang.
+                      </p>
+                      <p class="text-custom fs-8">
+                        Selain menyajikan kopi, kami juga menawarkan berbagai pastry dan makanan ringan yang
+                        dibuat segar setiap hari. Kami percaya bahwa kopi adalah lebih dari sekedar minuman,
+                        tapi juga tentang pengalaman dan komunitas.
+                      </p>
+                      <p class="text-custom fs-8">
+                        Kedai Kopi Kayu hadir sebagai ruang di mana cerita-cerita baru tercipta, ide-ide
+                        mengalir, dan persahabatan terjalin. Bergabunglah dengan kami dan rasakan perbedaannya!
+                      </p>
                     </div>
+                  </div>
                 </div>
-            </div>
+              </div>
+           
 
             <!-- Panel 3 -->
             <div class="col-10 col-md-3 d-flex justify-content-center">
@@ -172,6 +181,7 @@
     <div id="menu">
         <div class="container mt-5">
             <h1 class="text-center h1-menu mb-4">Menu Kedai Kopi Kayu</h1>
+            
             <div class="accordion" id="menuAccordion">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
@@ -427,22 +437,22 @@
                 <!-- Member 4 -->
                 <div class="col-sm-6 col-md-6 col-lg mb-4 px-3">
                     <div class="team-member">
-                        <img src="assets/img/foto team/zaki.jpg" alt="Zaky Riefani">
-                        <h4>Zaky Riefani</h4>
-                        <p>23.11.5446</p>
-                        <div class="job-info">UI/UX</div>
-                    </div>
-                </div>
-
-                <!-- Member 5 -->
-                <div class="col-sm-6 col-md-6 col-lg mb-4 px-3">
-                    <div class="team-member">
                         <img src="assets/img/foto team/sobron.jpg" alt="Alfan Sobron">
                         <h4>Alfan Sobron</h4>
                         <p>23.11.5438</p>
                         <div class="job-info">UI/UX</div>
                     </div>
                 </div>
+
+                <!-- Member 5 -->
+               <div class="col-sm-6 col-md-6 col-lg mb-4 px-3">
+                    <div class="team-member">
+                        <img src="assets/img/foto team/zaki.jpg" alt="Zaky Riefani">
+                        <h4>Zaky Riefani</h4>
+                        <p>23.11.5446</p>
+                        <div class="job-info">UI/UX</div>
+                    </div>
+               </div>
 
             </div>
         </div>

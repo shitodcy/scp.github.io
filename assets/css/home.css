@@ -1,90 +1,156 @@
-/* Background dengan overlay */
-#home { 
-    background: url('../img/background/fotolokasi.depan.png') no-repeat center center/cover; 
-    background-color: rgba(0, 0, 0, 0.2); 
-    background-attachment: fixed; /* Membuat background tetap diam saat scroll */
-    background-blend-mode: multiply;
+#home {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)), 
+                url('../img/background/fotolokasi.depan.png') no-repeat center center/cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#home::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 1;
 }
 
-/* Wrapper utama */
-.content-wrapper {
-    background: transparent;
-    padding: 40px;
+.content-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1400px;
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    padding: 0 20px;
 }
 
-/* Kotak gambar dengan carousel */
 .image-box {
-    width: auto;
-    height: auto;
-    background-color: #6f4e37; /* Coklat */
-    border-radius: 20px;
+    flex: 1;
+    max-width: 600px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
     overflow: hidden;
-    padding: 10px;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    margin-right: 40px;
 }
 
-.d-block {
-    border-radius: 1rem;
-    object-fit: cover;
+.image-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
+#imageCarousel {
+    border-radius: 15px;
+    overflow: hidden;
+}
 
-/* Teks di sebelah kanan dengan efek blur */
-.text-content {
-    text-align: left;
-    padding: 20px;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
-    background-color: rgba(117, 73, 31, 0);
-    color: #F2E3C6;
-    padding: 20px;
+#imageCarousel .carousel-inner {
     border-radius: 15px;
 }
 
-.ss-kanan {
-    text-align: center;
-    color: #F2E3C6;
-    margin-bottom: 30px;
-    background-color: #301507;
-    border-radius: 10px;
-    padding: 10px 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
+#imageCarousel .carousel-item {
+    height: 0;
+    padding-bottom: 75%;
+    position: relative;
+    overflow: hidden;
+}
 
+#imageCarousel .carousel-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+}
+
+.text-content {
+    flex: 1;
+    color: #fff;
+    max-width: 600px;
+    animation: fadeIn 1.5s ease-in-out;
+}
 
 .text-content h1 {
-    font-size: 36px;
-    font-weight: bold;
-    color: #F2E3C6;
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #fff;
 }
 
 .text-content p {
-    font-size: 18px;
-    margin: 15px 0;
-    color: white;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
 }
 
+/* Carousel Controls */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 10%;
+    opacity: 0.7;
+}
 
-/* Responsif */
-@media (max-width: 768px) {
-    .content-wrapper {
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    height: 25px;
+    width: 25x;
+    background-color: rgba(111, 78, 55, 0.7);
+    border-radius: 50%;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .content-container {
         flex-direction: column;
-        text-align: center;
-        padding: 20px;
+        padding: 30px 20px;
     }
-
+    
     .image-box {
-        margin-bottom: 20px;
+        margin-right: 0;
+        margin-bottom: 30px;
+        max-width: 90%;
     }
-
+    
     .text-content {
+        max-width: 90%;
         text-align: center;
+    }
+    
+    .text-content h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .image-box, .text-content {
+        max-width: 100%;
+    }
+    
+    .text-content h1 {
+        font-size: 2rem;
     }
 }
