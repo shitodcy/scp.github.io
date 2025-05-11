@@ -1,16 +1,15 @@
-/* Team Section Styling */
 .team-section {
     padding: 48px 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), /* Overlay transparan */
-    url('/assets/img//background/') no-repeat center center/cover; /* Background image */
-    background-attachment: fixed; /* Membuat background tetap diam saat scroll */
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('/assets/img/background/bg-team.png') no-repeat center center/cover;
+    background-attachment: fixed;
     width: 100%;
     height: 100%;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative; /* Diperlukan untuk konten di dalamnya */
+    position: relative;
 }
 
 /* Styling untuk Member */
@@ -22,31 +21,13 @@
     border-radius: 8px;
     margin: 10px auto;
     backdrop-filter: blur(10px);
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
     height: 100%;
-    transform-style: preserve-3d;
-    perspective: 1000px;
 }
 
 /* Hover Effect untuk Transparansi */
 .team-member:hover {
     background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-10px);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
-}
-
-/* Member image container for animations */
-.member-image {
-    overflow: hidden;
-    border-radius: 50%;
-    width: 150px;
-    height: 150px;
-    margin: 0 auto;
-    position: relative;
-    border: 3px solid rgba(242, 227, 198, 0.5);
-    padding: 3px;
-    background: rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Styling untuk Gambar */
@@ -55,17 +36,14 @@
     height: 150px;
     object-fit: cover;
     border-radius: 50%;
+    padding: 5px;
     transition: all 0.3s ease;
 }
 
 /* Hover Effect - Zoom & Glow */
-.team-member:hover img {
-    transform: scale(1.1);
-}
-
-.team-member:hover .member-image {
-    border-color: #F2E3C6;
+.team-member img:hover {
     box-shadow: 0px 0px 20px rgba(189, 147, 249, 0.9);
+    transform: scale(1.05);
 }
 
 /* Job Info - Muncul Saat Hover */
@@ -80,35 +58,26 @@
     border-radius: 20px;
     font-size: 14px;
     opacity: 0;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease;
+    transition: opacity 0.3s ease-in-out;
 }
 
 /* Saat Hover, Tampilkan Job Info */
 .team-member:hover .job-info {
     opacity: 1;
-    transform: translateX(-50%) translateY(5px);
 }
 
-/* Styling untuk Nama */
+/* Styling untuk Nama & ID */
 .team-member h4 {
     font-size: 18px;
     font-weight: bold;
     color: #F2E3C6;
-    margin-top: 15px;
-    transition: all 0.3s ease;
+    margin-top: 10px;
 }
 
 .team-member p {
     font-size: 16px;
     color: #F2E3C6;
     margin-top: 5px;
-    transition: all 0.3s ease;
-}
-
-.team-member:hover h4, 
-.team-member:hover p {
-    color: #fff;
-    text-shadow: 0 0 5px rgba(242, 227, 198, 0.7);
 }
 
 .text {
@@ -116,49 +85,10 @@
     font-weight: bold;
     color: #F2E3C6;
     text-align: center;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Role-based highlight colors */
-.team-member[data-member="leader"] {
-    border-bottom: 3px solid #ffcc00;
-}
-
-.team-member[data-member="frontend"] {
-    border-bottom: 3px solid #00ccff;
-}
-
-.team-member[data-member="uiux"] {
-    border-bottom: 3px solid #ff66cc;
-}
-
-/* Active state for click effects */
-.team-member.active {
-    transform: scale(1.05);
-    background: rgba(255, 255, 255, 0.25);
-    box-shadow: 0 10px 30px rgba(189, 147, 249, 0.4);
-}
-
-/* Animation classes */
-.fade-in {
-    animation: fadeIn 1s forwards;
-}
-
-.slide-up {
-    animation: slideUp 0.7s forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-/* Responsive design */
 @media (min-width: 992px) {
     .col-lg {
         flex: 0 0 20%;
@@ -190,24 +120,17 @@
         flex: 0 0 50%;
         max-width: 50%;
     }
-
-    .member-image {
+    .team-member img {
         width: 90px;
         height: 90px;
-        border-width: 2px;
-        padding: 2px;
+        padding: 3px;
     }
-
-    .team-member p {
-        font-size: 14px;
-        margin-top: 5px;
-    }
-    
     .team-member h4 {
         font-size: 16px;
-        margin-top: 10px;
     }
-
+    .team-member p {
+        font-size: 14px;
+    }
     .team-member .job-info {
         opacity: 1;
         margin-top: 10px;
@@ -216,7 +139,6 @@
         left: auto;
         display: inline-block;
     }
-
     .text {
         font-size: 32px;
     }
