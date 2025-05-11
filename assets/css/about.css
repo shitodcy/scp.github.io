@@ -1,9 +1,48 @@
+/* About Section Styling */
 #about {
     background: url('../img/bg-team.png') no-repeat center center/cover;
     background-color: rgba(0, 0, 0, 0.5);
     background-blend-mode: multiply;
     background-attachment: fixed;
     padding: 4rem 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+#about h2 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #F2E3C6;
+    position: relative;
+    display: inline-block;
+}
+
+#about h2:after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 3px;
+    background-color: #bda77b;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 0.5s ease;
+}
+
+#about h2:hover:after {
+    width: 100px;
+}
+
+.about-row {
+    position: relative;
+}
+
+/* Panel Styling */
+.panel-wrapper {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
 }
 
 .card-custom {
@@ -20,48 +59,15 @@
     box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
 }
 
-.img-rounded {
-    border-radius: 1rem;
-    object-fit: cover;
-}
-
-.celebration-title {
-    font-family: 'Roboto Slab', serif;
-    font-size: 2.5rem;
-    font-style: italic;
-    font-weight: 600;
-    color: #bda77b;
-}
-
-.celebration-text{
-    font-family: 'Roboto Slab', serif;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: #bda77b;
-    text-align: auto;
-}
-
-.text-custom {
-    font-family: 'Roboto Slab', serif;
-    color: #F2E3C6;
-    line-height: 1.6;
-}
-
-.fw-bold {
-    font-family: 'Roboto Slab', serif;
-    color: #F2E3C6;
-}
-
-/* Custom layout panels */
-.panel-wrapper {
-    display: flex;
-    align-items: stretch;
-    width: 100%;
-}
-
 .panel-small {
-    height: fit-content; /* Set fixed height for consistency */
+    height: fit-content;
     width: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease;
+}
+
+.panel-small:hover {
+    transform: translateY(-5px);
 }
 
 .panel-main {
@@ -70,6 +76,52 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    transition: all 0.5s ease;
+}
+
+.panel-main:hover {
+    transform: translateY(-5px);
+}
+
+/* Panel Content */
+.celebration-title {
+    font-family: 'Roboto Slab', serif;
+    font-size: 2.5rem;
+    font-style: italic;
+    font-weight: 600;
+    color: #bda77b;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.celebration-text {
+    font-family: 'Roboto Slab', serif;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #bda77b;
+    text-align: auto;
+}
+
+.celebration-text p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+/* Image styling */
+.img-rounded {
+    border-radius: 1rem;
+    object-fit: cover;
+    width: auto;        /* Ubah dari width: 100% */
+    max-width: 100%;    /* Maksimal 100% dari parent */
+    height: auto;
+    max-height: 250px;  /* Batasi tinggi maksimal */
+    margin: 0 auto;     /* Tengah secara horizontal */
+    display: block;     /* Penting untuk margin auto bekerja */
+    transition: transform 0.5s ease;
+}
+
+.img-rounded:hover {
+    transform: scale(1.03);
 }
 
 .text-content {
@@ -77,17 +129,16 @@
     margin: 0 auto;
 }
 
-/* Scrollable content styles */
+/* Scrollable content */
 .scrollable-content {
     overflow-y: auto;
-    max-height: 200px; /* Adjust this value as needed */
+    max-height: 200px;
     padding-right: 5px;
     margin: 0 auto;
     width: 100%;
     max-width: 480px;
 }
 
-/* Scrollbar styling */
 .scrollable-content::-webkit-scrollbar {
     width: 6px;
 }
@@ -108,13 +159,138 @@
     scrollbar-color: #dbc8a4 rgba(111, 78, 55, 0.5);
 }
 
-/* Make sure all panels have consistent heights */
-@media (min-width: 768px) {
+.scroll-text p {
+    text-align: left;
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+.text-custom {
+    font-family: 'Roboto Slab', serif;
+    color: #F2E3C6;
+    line-height: 1.6;
+}
+
+.fw-bold {
+    font-family: 'Roboto Slab', serif;
+    color: #F2E3C6;
+}
+
+/* Highlight effect for timeline */
+.highlight-line {
+    position: absolute;
+    height: 80%;
+    width: 3px;
+    background: #bda77b;
+    left: 50%;
+    top: 15%;
+    transform: translateX(-50%);
+    z-index: -1;
+    opacity: 0.5;
+}
+
+/* Animation classes */
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+
+.fade-in.active {
+    opacity: 1;
+}
+
+.slide-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+}
+
+.slide-up.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Floating animation */
+@keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.float-animation {
+    animation: floating 3s ease-in-out infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    #about {
+        padding: 3rem 1rem;
+    }
+    
+    #about h2 {
+        font-size: 2.5rem;
+    }
+    
+    .celebration-title {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .panel-small, .panel-main {
+        margin-bottom: 30px;
+    }
+    
+    #about h2 {
+        font-size: 2.2rem;
+    }
+    
+    .celebration-title {
+        font-size: 2rem;
+    }
+    
+    /* Panel 3 shows below on mobile */
+    .panel-order {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .order-1-mobile {
+        order: 1;
+    }
+    
+    .order-2-mobile {
+        order: 2;
+    }
+    
+    .order-3-mobile {
+        order: 3;
+    }
+
+    /* Make sure all panels have consistent heights */
     .about-row {
         align-items: stretch;
     }
     
     .panel-main, .panel-small {
         height: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    #about {
+        padding: 2rem 0.5rem;
+    }
+    
+    #about h2 {
+        font-size: 2rem;
+    }
+    
+    .celebration-title {
+        font-size: 1.8rem;
+    }
+    
+    .panel-small, .panel-main {
+        padding: 15px !important;
     }
 }
