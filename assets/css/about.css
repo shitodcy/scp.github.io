@@ -1,6 +1,6 @@
 /* About Section Styling */
 #about {
-    background: url('../img/bg-team.png') no-repeat center center/cover;
+    background: url('../img/background/bg-team.png') no-repeat center center/cover;
     background-color: rgba(0, 0, 0, 0.5);
     background-blend-mode: multiply;
     background-attachment: fixed;
