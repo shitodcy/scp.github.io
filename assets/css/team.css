@@ -89,6 +89,35 @@
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+/* Title with a single animated underline */
+.h2-menu {
+    font-weight: 700;
+    color: var(--text-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+    position: relative;
+    display: inline-block;
+    padding: 0 15px 15px;
+    letter-spacing: 1px;
+  }
+  
+  .h2-menu::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    height: 1px;
+    width: 30%;  /* Standby width */
+    background: var(--underline-color);
+    box-shadow: 0 1px 3px rgba(242, 227, 198, 0.5);
+    transition: width 0.5s ease;
+  }
+  
+  .h2-menu:hover::after {
+    width: 50%;  /* Extended width on hover */
+  }
+
 @media (min-width: 992px) {
     .col-lg {
         flex: 0 0 20%;
