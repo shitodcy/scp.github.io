@@ -15,6 +15,33 @@
   width: 100%;
 }
 
+#menu h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #F2E3C6;
+  position: relative;
+  display: inline-block;
+}
+
+#menu h1::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 3px;
+  background-color: #bda77b;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: width 0.5s ease;
+}
+
+#menu h1:hover::after {
+  width: 100px;
+}
+
+
+
 .container-menu {
   max-width: 1200px;
   margin: 0 auto;
@@ -134,48 +161,6 @@
   color: var(--text-color);
 }
 
-/* Back to top button */
-#backToTop {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.3s, transform 0.3s;
-  z-index: 1000;
-}
-
-#backToTop.visible {
-  opacity: 1;
-}
-
-#backToTop:hover {
-  transform: translateY(-5px);
-  background-color: var(--primary-dark);
-}
-
-/* No results message */
-#noResults {
-  display: none;
-  text-align: center;
-  color: var(--text-color);
-  font-size: 18px;
-  padding: 20px;
-  background-color: rgba(111, 78, 55, 0.8);
-  border-radius: 10px;
-  margin-top: 20px;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .menu-items-container {
@@ -213,3 +198,5 @@
       font-size: 24px;
   }
 }
+
+

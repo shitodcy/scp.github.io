@@ -1,20 +1,33 @@
-/* Navbar Dasar */
+/* Navbar Styles - Berdasarkan CSS asli yang diunggah */
 .navbar {
   position: fixed;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 70%;
+  width: 80%; /* Diubah untuk responsif di semua device tapi tetap lebar */
   border-radius: 10px;
   padding: 10px 20px;
   z-index: 1000;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease-in-out;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
   display: flex;
   justify-content: space-between;
   align-items: center;
   backdrop-filter: blur(5px);
-  background: rgba(44, 62, 80, 0.6); /* Background semi-transparan */
+  background: rgba(44, 62, 80, 0.9); /* Background lebih solid untuk keterbacaan */
+}
+
+/* Animasi melayang (floating) */
+@keyframes float {
+  0% {
+      transform: translateX(-50%) translateY(0px);
+  }
+  50% {
+      transform: translateX(-50%) translateY(-10px);
+  }
+  100% {
+      transform: translateX(-50%) translateY(0px);
+  }
 }
 
 /* Efek Navbar Saat di-scroll */
@@ -22,8 +35,19 @@
   background: rgba(44, 62, 80, 0.95); /* Dark Navy saat scroll */
   box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.4);
   top: 0;
-  width: 100%;
+  width: 50%; /* Tetap setengah saat discroll */
   border-radius: 0 0 15px 15px;
+  animation: slideDown 0.5s ease forwards;
+  margin-top: 0;
+}
+
+@keyframes slideDown {
+  from {
+      transform: translateY(-100%) translateX(-50%);
+  }
+  to {
+      transform: translateY(0) translateX(-50%);
+  }
 }
 
 /* Link Navbar */
@@ -85,7 +109,18 @@
   color: #F2E3C6;
   font-size: 1.5rem;
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
+
+.navbar .toggle-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Animasi Toggle */
+.navbar .toggle-btn.active {
+  transform: rotate(90deg);
+}
+
 
 /* Section Styling */
 .section {
@@ -99,41 +134,76 @@
   background-position: center;
 }
 
+/* Menu Items Animation */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+      opacity: 1;
+      transform: translateY(0);
+  }
+  to {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+}
+
 /* Responsif */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   .navbar {
-    width: 90%;
-    padding: 10px 15px;
+      width: 90%;
+      padding: 10px 15px;
+      flex-direction: column;
+      animation: none; /* Matikan animasi melayang di mobile */
   }
   
   .navbar.scrolled {
-    width: 100%;
+      width: 100%;
   }
   
   .navbar .menu-items {
-    display: none;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 10px;
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 10px;
+      overflow: hidden;
   }
   
   .navbar .menu-items.active {
-    display: flex;
+      display: flex;
+      animation: fadeIn 0.4s ease forwards;
+  }
+  
+  .navbar .menu-items.closing {
+      display: flex;
+      animation: fadeOut 0.4s ease forwards;
   }
   
   .navbar .top-row {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
   }
   
   .navbar .toggle-btn {
     display: block;
+    font-size: 2rem; /* <<< lebih besar saat tablet */
   }
   
   .navbar a {
-    margin: 8px 0;
+      margin: 8px 0;
+      animation: fadeIn 0.3s ease forwards;
+      animation-delay: calc(var(--item-index) * 0.1s);
   }
 }
