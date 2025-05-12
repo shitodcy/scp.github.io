@@ -1,21 +1,29 @@
-/* About Section Styling */
+/* About Section Styling - Versi yang lebih dioptimasi */
 #about {
     background: url('../img/background/bg-team.webp') no-repeat center center/cover;
     background-color: rgba(0, 0, 0, 0.5);
     background-blend-mode: multiply;
-    background-attachment: fixed;
+    background-attachment: scroll; /* Diganti dari fixed untuk performa di mobile */
     padding: 4rem 1rem;
     position: relative;
     overflow: hidden;
 }
 
+/* Untuk perangkat non-mobile, aktifkan background-attachment: fixed */
+@media (min-width: 992px) {
+    #about {
+        background-attachment: fixed;
+    }
+}
+
 #about h2 {
-    font-size: 2.8rem;
+    font-size: 2.6rem;
     font-weight: 700;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     color: #F2E3C6;
     position: relative;
     display: inline-block;
+    will-change: transform; /* Optimalkan rendering */
 }
 
 #about h2:after {
@@ -24,10 +32,10 @@
     width: 60px;
     height: 3px;
     background-color: #bda77b;
-    bottom: -10px;
+    bottom: -8px;
     left: 50%;
-    transform: translateX(-50%);
-    transition: width 0.5s ease;
+    transform: translateX(-50%); 
+    transition: width 0.3s ease-out; /* Transisi lebih cepat */
 }
 
 #about h2:hover:after {
@@ -46,28 +54,28 @@
 }
 
 .card-custom {
-    border-radius: 2rem;
+    border-radius: 1.5rem; /* Sedikit lebih kecil untuk ringan */
     background-color: #6f4e37;
-    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 12px rgba(0,0,0,0.1); /* Shadow lebih ringan */
     color: #dbc8a4;
     height: 100%;
-    transition: all 0.3s ease-in-out;
+    transition: transform 0.25s ease-out, box-shadow 0.25s ease-out; /* Transisi lebih cepat */
+    will-change: transform; /* Optimalkan rendering */
 }
 
 .card-custom:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px); /* Lebih sedikit pergerakan */
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.12);
 }
 
 .panel-small {
     height: fit-content;
     width: 100%;
-    transform-style: preserve-3d;
-    transition: transform 0.8s ease;
+    transition: transform 0.25s ease-out; /* Transisi lebih cepat, tanpa preserve-3d */
 }
 
 .panel-small:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px); /* Lebih sedikit pergerakan */
 }
 
 .panel-main {
@@ -76,22 +84,22 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    transition: all 0.5s ease;
+    transition: transform 0.25s ease-out; /* Transisi lebih cepat */
 }
 
 .panel-main:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px); /* Lebih sedikit pergerakan */
 }
 
 /* Panel Content */
 .celebration-title {
     font-family: 'Roboto Slab', serif;
-    font-size: 2.5rem;
+    font-size: 2.2rem; /* Ukuran font lebih kecil */
     font-style: italic;
     font-weight: 600;
     color: #bda77b;
     position: relative;
-    padding-bottom: 10px;
+    padding-bottom: 8px;
 }
 
 .celebration-text {
@@ -103,25 +111,26 @@
 }
 
 .celebration-text p {
-    margin-bottom: 1rem;
-    line-height: 1.7;
+    margin-bottom: 0.8rem; /* Lebih pendek */
+    line-height: 1.6;
 }
 
 /* Image styling */
 .img-rounded {
-    border-radius: 1rem;
+    border-radius: 0.8rem; /* Sedikit lebih kecil */
     object-fit: cover;
-    width: auto;        /* Ubah dari width: 100% */
-    max-width: 100%;    /* Maksimal 100% dari parent */
+    width: auto;
+    max-width: 100%;
     height: auto;
-    max-height: 250px;  /* Batasi tinggi maksimal */
-    margin: 0 auto;     /* Tengah secara horizontal */
-    display: block;     /* Penting untuk margin auto bekerja */
-    transition: transform 0.5s ease;
+    max-height: 220px; /* Sedikit lebih kecil */
+    margin: 0 auto;
+    display: block;
+    transition: transform 0.25s ease-out; /* Transisi lebih cepat */
+    will-change: transform; /* Optimalkan rendering */
 }
 
 .img-rounded:hover {
-    transform: scale(1.03);
+    transform: scale(1.02); /* Efek scale lebih kecil */
 }
 
 .text-content {
@@ -132,43 +141,45 @@
 /* Scrollable content */
 .scrollable-content {
     overflow-y: auto;
-    max-height: 200px;
+    max-height: 180px; /* Sedikit lebih kecil */
     padding-right: 5px;
     margin: 0 auto;
     width: 100%;
     max-width: 480px;
+    -webkit-overflow-scrolling: touch; /* Untuk scroll yang lebih mulus di iOS */
 }
 
 .scrollable-content::-webkit-scrollbar {
-    width: 6px;
+    width: 4px; /* Lebih tipis */
 }
 
 .scrollable-content::-webkit-scrollbar-track {
-    background: rgba(111, 78, 55, 0.5);
+    background: rgba(111, 78, 55, 0.3); /* Lebih transparan */
     border-radius: 10px;
 }
 
 .scrollable-content::-webkit-scrollbar-thumb {
-    background-color: #dbc8a4;
+    background-color: rgba(219, 200, 164, 0.7); /* Lebih transparan */
     border-radius: 10px;
 }
 
 /* For Firefox */
 .scrollable-content {
     scrollbar-width: thin;
-    scrollbar-color: #dbc8a4 rgba(111, 78, 55, 0.5);
+    scrollbar-color: rgba(219, 200, 164, 0.7) rgba(111, 78, 55, 0.3);
 }
 
 .scroll-text p {
     text-align: left;
-    margin-bottom: 1rem;
-    line-height: 1.7;
+    margin-bottom: 0.8rem; /* Lebih pendek */
+    line-height: 1.6;
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out; /* Transisi lebih cepat */
 }
 
 .text-custom {
     font-family: 'Roboto Slab', serif;
     color: #F2E3C6;
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 .fw-bold {
@@ -176,23 +187,10 @@
     color: #F2E3C6;
 }
 
-/* Highlight effect for timeline */
-.highlight-line {
-    position: absolute;
-    height: 80%;
-    width: 3px;
-    background: #bda77b;
-    left: 50%;
-    top: 15%;
-    transform: translateX(-50%);
-    z-index: -1;
-    opacity: 0.5;
-}
-
 /* Animation classes */
 .fade-in {
     opacity: 0;
-    transition: opacity 1s ease-in;
+    transition: opacity 0.6s ease-out; /* Lebih cepat */
 }
 
 .fade-in.active {
@@ -201,8 +199,9 @@
 
 .slide-up {
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.6s ease;
+    transform: translateY(12px); /* Lebih sedikit jarak */
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* Lebih cepat */
+    will-change: transform, opacity; /* Optimalkan rendering */
 }
 
 .slide-up.active {
@@ -210,15 +209,77 @@
     transform: translateY(0);
 }
 
-/* Floating animation */
+/* Floating animation - Versi lebih ringan */
 @keyframes floating {
     0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-5px); } /* Lebih sedikit pergerakan */
     100% { transform: translateY(0px); }
 }
 
 .float-animation {
-    animation: floating 3s ease-in-out infinite;
+    animation: floating 4s ease-in-out infinite; /* Lebih lambat tapi lebih halus */
+}
+
+/* Animasi untuk title */
+.title-animation {
+    animation: fadeSlideDown 0.6s ease-out forwards;
+}
+
+@keyframes fadeSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animasi untuk panel */
+.panel-animation {
+    animation: fadeScale 0.5s ease-out forwards;
+}
+
+@keyframes fadeScale {
+    from {
+        opacity: 0.5;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Animasi untuk image */
+.image-animation {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Animasi untuk text */
+.text-animation {
+    animation: fadeSlideUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive adjustments */
@@ -228,25 +289,25 @@
     }
     
     #about h2 {
-        font-size: 2.5rem;
+        font-size: 2.4rem;
     }
     
     .celebration-title {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
 }
 
 @media (max-width: 768px) {
     .panel-small, .panel-main {
-        margin-bottom: 30px;
+        margin-bottom: 20px; /* Lebih pendek */
     }
     
     #about h2 {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
     
     .celebration-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
     
     /* Panel 3 shows below on mobile */
@@ -275,6 +336,25 @@
     .panel-main, .panel-small {
         height: 100%;
     }
+    
+    /* Nonaktifkan floating animation di mobile untuk performa */
+    .float-animation {
+        animation: none;
+    }
+    
+    /* Gunakan animasi yang lebih ringan di mobile */
+    .panel-animation {
+        animation: simpleFade 0.4s ease-out forwards;
+    }
+    
+    @keyframes simpleFade {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
 }
 
 @media (max-width: 576px) {
@@ -283,14 +363,22 @@
     }
     
     #about h2 {
-        font-size: 2rem;
-    }
-    
-    .celebration-title {
         font-size: 1.8rem;
     }
     
+    .celebration-title {
+        font-size: 1.6rem;
+    }
+    
     .panel-small, .panel-main {
-        padding: 15px !important;
+        padding: 12px !important; /* Padding lebih kecil */
+    }
+    
+    .celebration-text {
+        font-size: 0.95rem; /* Font lebih kecil di mobile */
+    }
+    
+    .scrollable-content {
+        max-height: 150px; /* Lebih kecil di mobile */
     }
 }
