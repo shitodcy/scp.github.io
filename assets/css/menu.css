@@ -283,7 +283,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .menu-items-container {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
