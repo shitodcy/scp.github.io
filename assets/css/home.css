@@ -4,8 +4,8 @@
     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)), 
                 url('../img/background/fotolokasi.depan.webp') no-repeat center center/cover;
     background-attachment: fixed;
-    min-height: 100vh;
-    width: 100vw;
+    min-height: 100dvh;
+    width: 100dvw;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -83,14 +83,14 @@
 }
 
 .text-content h1 {
-    font-size: 3.5rem;
+    font-size: clamp(1.75rem, 5vw, 3.5rem);
     font-weight: 700;
     margin-bottom: 1rem;
     color: #F2E3C6;
 }
 
 .text-content p {
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
     line-height: 1.8;
     margin-bottom: 1.5rem;
 }
@@ -105,7 +105,7 @@
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
     height: 25px;
-    width: 25x;
+    width: 25px;
     background-color: rgba(111, 78, 55, 0.7);
     border-radius: 50%;
 }
@@ -139,18 +139,10 @@
         max-width: 90%;
         text-align: center;
     }
-    
-    .text-content h1 {
-        font-size: 2.5rem;
-    }
 }
 
 @media (max-width: 576px) {
     .image-box, .text-content {
         max-width: 100%;
-    }
-    
-    .text-content h1 {
-        font-size: 2rem;
     }
 }

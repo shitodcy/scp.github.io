@@ -11,14 +11,14 @@
 #menu {
   padding: 30px 0;
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)),
-    url('../img/background/fotolokasidaridalam.webp') no-repeat center center/cover;
+  url('../img/background/fotolokasidaridalam.webp') no-repeat center center/cover;
   background-attachment: fixed;
-  min-height: 100vh;
+  min-height: 100%;
   width: 100%;
 }
 
 #menu h1 {
-  font-size: 2.8rem;
+  font-size: clamp(1.8rem, 2.5vw, 2.8rem);
   font-weight: 700;
   margin-bottom: 2rem;
   color: #F2E3C6;
@@ -55,7 +55,7 @@
   color: var(--text-color);
   padding: 12px 20px;
   font-weight: bold;
-  font-size: 18px;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -106,7 +106,7 @@
   border: none;
   border-radius: 20px;
   padding: 8px 15px;
-  font-size: 14px;
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
   transition: all var(--transition-speed) var(--transition-timing);
   position: relative;
   overflow: hidden;
@@ -141,7 +141,8 @@
   }
 }
 
-.filter-btn:hover, .filter-btn.active {
+.filter-btn:hover,
+.filter-btn.active {
   background-color: var(--primary-dark);
   transform: translateY(-3px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -162,8 +163,14 @@
 }
 
 @keyframes activeWidth {
-  from { width: 0; left: 50%; }
-  to { width: 80%; left: 10%; }
+  from {
+    width: 0;
+    left: 50%;
+  }
+  to {
+    width: 80%;
+    left: 10%;
+  }
 }
 
 /* Menu section styling */
@@ -195,6 +202,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 10px;
+  padding-bottom: 50px;
+  min-height: 50px;
+  height: auto;
   opacity: 0;
   transform: translateY(10px);
   animation: fadeIn 0.5s var(--transition-timing) forwards;
@@ -236,7 +246,7 @@
 }
 
 .menu-item-image {
-  width: 80px;
+  width: 70px;
   height: 80px;
   object-fit: cover;
   border-radius: 50%;
@@ -251,7 +261,7 @@
 }
 
 .menu-name {
-  font-size: 14px;
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
   font-weight: bold;
   color: var(--text-color);
   margin-bottom: 5px;
@@ -267,7 +277,7 @@
 }
 
 .menu-price {
-  font-size: 13px;
+  font-size: clamp(0.8rem, 0.9vw, 0.9rem);
   color: var(--text-color);
   transition: all 0.3s var(--transition-timing);
   position: relative;
@@ -278,42 +288,12 @@
   transform: scale(1.05);
 }
 
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .menu-items-container {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-  
-  .menu-item-image {
-    width: 70px;
-    height: 70px;
-  }
-  
-  .menu-name {
-    font-size: 13px;
-    height: 50px;
-  }
-  
-  .filter-buttons {
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding-bottom: 5px;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-  }
-  
-  .filter-btn {
-    flex: 0 0 auto;
-  }
-}
-
 @media (max-width: 576px) {
   .menu-items-container {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .h1-menu {
-    font-size: 24px;
+    font-size: clamp(1.2rem, 5vw, 1.5rem);
   }
 }

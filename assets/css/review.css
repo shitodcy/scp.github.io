@@ -65,8 +65,6 @@
     transform: scale(1.2); /* Scale effect on hover */
 }
 
-
-
 /* Hover effects for social media colors */
 .social-icons a[href*="instagram"]:hover { color: #C13584; } 
 .social-icons a[href*="whatsapp"]:hover { color: #25D366; } 

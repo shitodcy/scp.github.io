@@ -56,7 +56,7 @@
     color: #F2E3C6;
     padding: 5px 15px;
     border-radius: 20px;
-    font-size: 14px;
+    font-size: clamp(9.8px, 14px, 18.2px);
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
 }
@@ -68,20 +68,20 @@
 
 /* Styling untuk Nama & ID */
 .team-member h4 {
-    font-size: 18px;
+    font-size: clamp(12.6px, 18px, 23.4px);
     font-weight: bold;
     color: #F2E3C6;
     margin-top: 10px;
 }
 
 .team-member p {
-    font-size: 16px;
+    font-size: clamp(11.2px, 16px, 20.8px);
     color: #F2E3C6;
     margin-top: 5px;
 }
 
 .text {
-    font-size: 42px;
+    font-size: clamp(29.4px, 42px, 54.6px);
     font-weight: bold;
     color: #F2E3C6;
     text-align: center;
@@ -91,15 +91,15 @@
 
 /* Title with a single animated underline */
 #team h2 {
-    font-size: 2.8rem;
+    font-size: clamp(1.96rem, 2.8rem, 3.64rem);
     font-weight: 700;
     margin-bottom: 2rem;
     color: #F2E3C6;
     position: relative;
     display: inline-block;
-  }
-  
-   #team h2::after {
+}
+
+#team h2::after {
     content: '';
     position: absolute;
     width: 60px;
@@ -109,12 +109,11 @@
     left: 50%;
     transform: translateX(-50%);
     transition: width 0.5s ease;
-  }
-  
-  #team h2:hover::after {
+}
+
+#team h2:hover::after {
     width: 100px;
-  }
-  
+}
 
 @media (min-width: 992px) {
     .col-lg {
@@ -153,10 +152,10 @@
         padding: 3px;
     }
     .team-member h4 {
-        font-size: 16px;
+        font-size: clamp(11.2px, 16px, 20.8px);
     }
     .team-member p {
-        font-size: 14px;
+        font-size: clamp(9.8px, 14px, 18.2px);
     }
     .team-member .job-info {
         opacity: 1;
@@ -167,6 +166,6 @@
         display: inline-block;
     }
     .text {
-        font-size: 32px;
+        font-size: clamp(22.4px, 32px, 41.6px);
     }
 }
