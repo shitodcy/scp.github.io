@@ -24,6 +24,7 @@ Welcome to the official repository of our SCP Website Project, created as part o
 
 ## 🧑‍💻 Team Statistic
 
+
 [![scp GitHub stats](https://github-readme-stats.vercel.app/api?username=shitodcy&include_all_commits=true&theme=dracula)](https://github.com/shitodcy/scp)
 [![scp GitHub stats](https://github-readme-stats.vercel.app/api?username=JihanPaperwork&include_all_commits=true&theme=dracula)](https://github.com/shitodcy/scp)
 [![scp GitHub stats](https://github-readme-stats.vercel.app/api?username=Iruru21&include_all_commits=true&theme=dracula)](https://github.com/shitodcy/scp)
