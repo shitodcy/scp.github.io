@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }, {
       threshold: 0.3, // Section harus terlihat minimal 30% untuk diaktifkan
-      rootMargin: "-50px 0px" // Offset untuk trigger yang lebih akurat
+      rootMargin: "0px 0px" // Offset untuk trigger yang lebih akurat
     });
     
     // Observe semua section

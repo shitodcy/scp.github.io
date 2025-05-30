@@ -2,7 +2,7 @@
     position: relative;
     overflow: hidden;
     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)), 
-                url('../img/background/fotolokasi.depan.webp') no-repeat center center/cover;
+                url('https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598325/fotolokasi.depan_av71fx.webp') no-repeat center center/cover;
     background-attachment: fixed;
     min-height: 100dvh;
     width: 100dvw;
