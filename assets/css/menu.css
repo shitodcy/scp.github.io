@@ -11,7 +11,7 @@
 #menu {
   padding: 30px 0;
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)),
-  url('../img/background/fotolokasidaridalam.webp') no-repeat center center/cover;
+  url('https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598321/lokasi_soeuze.webp') no-repeat center center/cover;
   background-attachment: fixed;
   min-height: 100%;
   width: 100%;
@@ -246,7 +246,7 @@
 }
 
 .menu-item-image {
-  width: 70px;
+  width: 80px;
   height: 80px;
   object-fit: cover;
   border-radius: 50%;

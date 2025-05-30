@@ -1,6 +1,6 @@
 /* Styles for the location section */
 #location { 
-    background: url('../img/background/lokasi.webp') no-repeat center center/cover;
+    background: url('https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598321/lokasi_soeuze.webp') no-repeat center center/cover;
     background-color: rgba(0, 0, 0, 0.4);
     background-blend-mode: multiply;
     background-size: cover;
