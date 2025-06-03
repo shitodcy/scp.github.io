@@ -15,7 +15,7 @@ html, body {
 /* Left Panel - Image Background */
 .left-panel {
   flex: 1;
-  background-image: url('/assets/img/background/bg.webp');
+  background-image: url('https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598325/fotolokasi.depan_av71fx.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
