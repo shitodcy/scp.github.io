@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Kedai Kopi Kayu</title>
   <link rel="stylesheet" href="assets/css/login.css">
+  <form action="backend/login.php" method="POST">
 </head>
 <body>
   <div class="container">
@@ -17,9 +18,9 @@
     <div class="right-panel">
       <div class="login-box">
         <h2>Login ke Akunmu</h2>
-        <form action="#" method="POST">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required>
+        <form action="backend/login.php" method="POST">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required>
 
           <label for="password">Password</label>
           <input type="password" id="password" name="password" required>
