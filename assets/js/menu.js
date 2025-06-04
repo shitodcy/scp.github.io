@@ -67,12 +67,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
-fetch('api/menu.php')
-  .then(response => response.json())
-  .then(data => {
-    console.log(data); // nanti bisa dipakai untuk render otomatis menu
-  })
-  .catch(error => {
-    console.error("Gagal mengambil data:", error);
-  });
