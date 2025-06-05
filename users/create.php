@@ -4,9 +4,13 @@ require_once '../config/database.php';
 
 $errors = [];
 $username = '';
+$email = '';
+$full_name = ''; // Initialize full_name variable
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $full_name = trim($_POST['full_name'] ?? ''); // Get full_name from POST
     $password = $_POST['password'] ?? '';
     $password_confirm = $_POST['password_confirm'] ?? '';
 
@@ -14,6 +18,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($username)) {
         $errors[] = "Username wajib diisi.";
     }
+    if (empty($email)) {
+        $errors[] = "Email wajib diisi.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Format email tidak valid.";
+    }
+    // Full name can be optional, so no 'empty' check here unless required
+    // if (empty($full_name)) {
+    //     $errors[] = "Nama Lengkap wajib diisi.";
+    // }
     if (empty($password)) {
         $errors[] = "Password wajib diisi.";
     }
@@ -30,11 +43,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Cek email sudah dipakai atau belum
+    if (empty($errors)) {
+        $stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
+        $stmt->execute([':email' => $email]);
+        if ($stmt->fetchColumn() > 0) {
+            $errors[] = "Email sudah dipakai.";
+        }
+    }
+
     // Insert ke database jika tidak ada error
     if (empty($errors)) {
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("INSERT INTO users (username, password, created_at) VALUES (:username, :password, NOW())");
+        // Add 'full_name' to the INSERT statement
+        $stmt = $conn->prepare("INSERT INTO users (username, email, full_name, password, created_at) VALUES (:username, :email, :full_name, :password, NOW())");
         $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':full_name', $full_name); // Bind full_name parameter
         $stmt->bindParam(':password', $password_hash);
 
         if ($stmt->execute()) {
@@ -75,6 +100,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form action="" method="POST">
             <label>Username:<br>
                 <input type="text" name="username" value="<?php echo htmlspecialchars($username); ?>" required>
+            </label><br><br>
+
+            <label>Email:<br>
+                <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+            </label><br><br>
+
+            <label>Nama Lengkap:<br>
+                <input type="text" name="full_name" value="<?php echo htmlspecialchars($full_name); ?>">
             </label><br><br>
 
             <label>Password:<br>
