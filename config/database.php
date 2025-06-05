@@ -13,4 +13,12 @@ try {
 } catch(PDOException $exception) {
     echo "Koneksi error: " . $exception->getMessage();
 }
+
+// Konfigurasi PHPMailer (Ganti dengan kredensial email Anda)
+define('MAIL_HOST', 'smtp.gmail.com'); // Contoh untuk Gmail SMTP
+define('MAIL_USERNAME', 'aryaputrabahari@students.amikom.ac.id'); // Email pengirim
+define('MAIL_PASSWORD', 'wallnutTh3s'); // Password aplikasi Gmail atau password email biasa
+define('MAIL_PORT', 587); // Port SMTP (misal 587 untuk TLS, 465 untuk SSL)
+define('MAIL_ENCRYPTION', 'tls'); // Enkripsi (tls atau ssl)
+define('MAIL_FROM_NAME', 'Kedai Kopi Kayu'); // Nama pengirim
 ?>
