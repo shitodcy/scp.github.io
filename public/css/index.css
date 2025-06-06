@@ -33,10 +33,57 @@
         .alert .close:hover {
             opacity: .75;
         }
+        /* Styling untuk pesan sukses/error (AdminLTE alert) */
+        .alert-dismissible .close {
+            position: absolute;
+            top: 50%;
+            right: 1.25rem;
+            transform: translateY(-50%);
+            padding: 0;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: inherit;
+            opacity: .5;
+        }
+        .alert-dismissible .close:hover {
+            opacity: .75;
+        }
         .user-panel .image img {
             width: 40px; /* Ukuran default gambar user di sidebar */
             height: 40px;
             object-fit: cover; /* Pastikan gambar tidak terdistorsi */
+        }
+        /* Tambahan jika ingin tombol close di sidebar saat dibuka (seperti di index.php) */
+        .brand-link .pushmenu-btn {
+           position: absolute;
+           right: 10px;
+           top: 50%;
+           transform: translateY(-50%);
+           color: white;
+           padding: 5px;
+           background: none;
+           border: none;
+           font-size: 1.2rem;
+           cursor: pointer;
+           display: none; 
+        }
+        .user-panel .image img {
+            width: 40px; /* Ukuran default gambar user di sidebar */
+            height: 40px;
+            object-fit: cover; /* Pastikan gambar tidak terdistorsi */
+        }
+        .profile-image-preview {
+         width: 150px;
+         height: 150px;
+         object-fit: cover; /* Penting: Pastikan gambar menutupi area tanpa terdistorsi */
+         border-radius: 50%; /* Membuat gambar menjadi bulat */
+         border: 3px solid #ddd;
+         margin-bottom: 15px;
+         display: block;
+         margin-left: auto; /* Memusatkan gambar */
+         margin-right: auto; /* Memusatkan gambar */
         }
         /* Style untuk tombol close di sidebar (Opsional, tergantung penempatan) */
         .brand-link .pushmenu-btn {

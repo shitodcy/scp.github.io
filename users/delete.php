@@ -6,7 +6,7 @@ require_once '../config/database.php';
 if (!isset($_GET['id'])) {
     $_SESSION['message'] = "ID user tidak ditemukan.";
     $_SESSION['message_type'] = "error";
-    header("Location: index.php");
+    header("Location: dashboard.php");
     exit;
 }
 
@@ -16,7 +16,7 @@ $userIdToDelete = (int) $_GET['id'];
 if ($userIdToDelete === (int)$_SESSION['user_id']) {
     $_SESSION['message'] = "Anda tidak bisa menghapus user sendiri.";
     $_SESSION['message_type'] = "error";
-    header("Location: index.php");
+    header("Location: dashboard.php");
     exit;
 }
 
@@ -39,5 +39,5 @@ try {
 }
 
 // Redirect kembali ke halaman manajemen user
-header("Location: index.php");
+header("Location: dashboard.php");
 exit;
