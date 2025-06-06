@@ -6,6 +6,33 @@ $errors = [];
 $user = null; // Initialize user data as null
 $user_id = $_GET['id'] ?? null; // Get user ID from URL
 
+// --- Variabel untuk sidebar (mengambil data user yang sedang login) ---
+$current_user_profile_image = ''; 
+$current_user_full_name = $_SESSION['full_name'] ?? 'Pengguna'; // Default jika full_name tidak ada di session
+
+// Ambil gambar profil dan nama lengkap untuk user yang sedang login dari database
+$logged_in_user_id = $_SESSION['user_id'] ?? null;
+if ($logged_in_user_id) {
+    try {
+        $stmt_logged_in_user = $conn->prepare("SELECT profile_image, full_name FROM users WHERE id = :id");
+        $stmt_logged_in_user->bindParam(':id', $logged_in_user_id, PDO::PARAM_INT);
+        $stmt_logged_in_user->execute();
+        $logged_in_user_data = $stmt_logged_in_user->fetch(PDO::FETCH_ASSOC);
+        if ($logged_in_user_data) {
+            if ($logged_in_user_data['profile_image']) {
+                $current_user_profile_image = $logged_in_user_data['profile_image'];
+            }
+            if ($logged_in_user_data['full_name']) {
+                $current_user_full_name = $logged_in_user_data['full_name'];
+            }
+        }
+    } catch (PDOException $e) {
+        error_log("Error fetching current user data for sidebar: " . $e->getMessage());
+    }
+}
+// --- Akhir bagian sidebar ---
+
+
 // Redirect if no ID is provided or ID is invalid
 if (!isset($user_id) || !is_numeric($user_id)) {
     $_SESSION['message'] = "ID user tidak valid.";
@@ -181,42 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-    <style>
-        .content-wrapper {
-            background-color: #f4f6f9; /* Warna latar belakang AdminLTE default */
-            padding: 20px;
-        }
-        .card-header {
-            background-color: #007bff; /* Warna header card */
-            color: white;
-        }
-        .profile-image-preview {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 3px solid #ddd;
-            margin-bottom: 15px;
-            display: block; /* Agar margin-bottom bekerja */
-        }
-        /* Styling untuk pesan sukses/error (AdminLTE alert) */
-        .alert-dismissible .close {
-            position: absolute;
-            top: 50%;
-            right: 1.25rem;
-            transform: translateY(-50%);
-            padding: 0;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            line-height: 1;
-            color: inherit;
-            opacity: .5;
-        }
-        .alert-dismissible .close:hover {
-            opacity: .75;
-        }
-    </style>
+    <link rel="stylesheet" href="../public/css/edit.css"> 
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -243,27 +235,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
         </ul>
     </nav>
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <a href="#" class="brand-link">
-            <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598314/logof_xww7ju.png" alt="KKK Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-            <span class="brand-text font-weight-light">Kedai Kopi Kayu</span>
-        </a>
 
         <div class="sidebar">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
                     <?php 
-                    $profile_image_src = 'https://placehold.co/160x160/cccccc/ffffff?text=User'; // Placeholder default
-                    if ($user && $user['profile_image']) {
-                        $profile_image_path = '../public/uploads/profile_pictures/' . htmlspecialchars($user['profile_image']);
-                        if (file_exists($profile_image_path)) {
-                            $profile_image_src = $profile_image_path;
+                    // Path relatif untuk public folder dari lokasi file PHP ini
+                    $upload_dir_public_for_sidebar = '../public/uploads/profile_pictures/'; 
+                    $sidebar_profile_image_src = 'https://placehold.co/160x160/cccccc/ffffff?text=User'; // Placeholder default
+                    
+                    if ($current_user_profile_image) {
+                        $image_path_full = $upload_dir_public_for_sidebar . htmlspecialchars($current_user_profile_image);
+                        // Periksa apakah file gambar benar-benar ada di server
+                        if (file_exists($image_path_full)) {
+                            $sidebar_profile_image_src = $image_path_full;
                         }
                     }
                     ?>
-                    <img src="<?php echo $profile_image_src; ?>" class="img-circle elevation-2" alt="User Image">
+                    <img src="<?php echo $sidebar_profile_image_src; ?>" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info">
-                    <a href="#" class="d-block"><?php echo htmlspecialchars($_SESSION['full_name'] ?? 'Pengguna'); ?></a>
+                    <a href="#" class="d-block"><?php echo htmlspecialchars($current_user_full_name); ?></a>
                 </div>
             </div>
 
@@ -290,7 +282,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                                     <p>Manajemen User</p>
                                 </a>
                             </li>
-                            </ul>
+                            <li class="nav-item">
+                                <a href="content_management.php" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Manajemen Konten</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a href="../auth/logout.php" class="nav-link">
@@ -346,13 +344,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                                         <div class="form-group text-center">
                                             <label>Gambar Profil Saat Ini:</label><br>
                                             <?php
-                                            $profile_image_url = '../public/uploads/profile_pictures/' . htmlspecialchars($user['profile_image'] ?? 'default.png');
+                                            $profile_image_url_form = '../public/uploads/profile_pictures/' . htmlspecialchars($user['profile_image'] ?? 'default.png');
                                             // Fallback ke placeholder jika gambar tidak ada atau default.png
                                             if (!($user['profile_image'] && file_exists('../public/uploads/profile_pictures/' . $user['profile_image']))) {
-                                                $profile_image_url = 'https://placehold.co/150x150/cccccc/ffffff?text=No+Image';
+                                                $profile_image_url_form = 'https://placehold.co/150x150/cccccc/ffffff?text=No+Image';
                                             }
                                             ?>
-                                            <img src="<?php echo $profile_image_url; ?>" alt="Gambar Profil" class="profile-image-preview">
+                                            <img src="<?php echo $profile_image_url_form; ?>" alt="Gambar Profil" class="profile-image-preview">
                                             
                                             <?php if ($user['profile_image']): ?>
                                                 <div class="form-check text-center mb-3">
