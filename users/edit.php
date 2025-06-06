@@ -37,7 +37,7 @@ if ($logged_in_user_id) {
 if (!isset($user_id) || !is_numeric($user_id)) {
     $_SESSION['message'] = "ID user tidak valid.";
     $_SESSION['message_type'] = "danger"; // Menggunakan 'danger' untuk pesan error
-    header("Location: index.php");
+    header("Location: dashboard.php");
     exit;
 }
 
@@ -58,7 +58,7 @@ try {
     if (!$user) {
         $_SESSION['message'] = "User tidak ditemukan.";
         $_SESSION['message_type'] = "danger";
-        header("Location: index.php");
+        header("Location: dashboard.php");
         exit;
     }
 } catch (PDOException $e) {
@@ -183,8 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                 $user['full_name'] = $full_name;
                 $user['profile_image'] = $profile_image_filename;
 
-                // Redirect ke halaman index.php setelah update sukses
-                header("Location: index.php");
+                header("Location: dashboard.php");
                 exit;
 
             } else {
@@ -226,11 +225,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <span class="nav-link">Halo, <b><?php echo htmlspecialchars($_SESSION['username']); ?></b></span>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../auth/logout.php" role="button">
-                    Logout
-                </a>
             </li>
         </ul>
     </nav>
@@ -277,15 +271,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="index.php" class="nav-link active">
+                                <a href="dashboard.php" class="nav-link active">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Manajemen User</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="content_management.php" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Manajemen Konten</p>
                                 </a>
                             </li>
                         </ul>
@@ -310,7 +298,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                     </div><div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Manajemen</a></li>
-                            <li class="breadcrumb-item"><a href="index.php">User</a></li>
+                            <li class="breadcrumb-item"><a href="dashboard.php">User</a></li>
                             <li class="breadcrumb-item active">Edit</li>
                         </ol>
                     </div></div></div></div>
@@ -323,7 +311,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                                 <h5 class="m-0">Form Edit User</h5>
                             </div>
                             <div class="card-body">
-                                <p><a href="index.php" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Kembali ke daftar user</a></p>
+                                <p><a href="dashboard.php" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Kembali ke daftar user</a></p>
 
                                 <?php if (!empty($errors)): ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">

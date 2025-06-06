@@ -4,7 +4,7 @@ require_once '../config/database.php';
 
 // Jika sudah login, arahkan ke halaman dashboard
 if (isset($_SESSION['user_id'])) {
-    header("Location: ../users/index.php");
+    header("Location: ../users/dashboard.php");
     exit();
 }
 
