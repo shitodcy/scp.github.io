@@ -9,21 +9,28 @@ $user_id = $_GET['id'] ?? null; // Get user ID from URL
 // Redirect if no ID is provided or ID is invalid
 if (!isset($user_id) || !is_numeric($user_id)) {
     $_SESSION['message'] = "ID user tidak valid.";
-    $_SESSION['message_type'] = "errors";
+    $_SESSION['message_type'] = "danger"; // Menggunakan 'danger' untuk pesan error
     header("Location: index.php");
     exit;
 }
 
+// Path untuk menyimpan gambar profil (PASTIKAN FOLDER INI ADA DAN BISA DITULIS OLEH WEB SERVER)
+$upload_dir = '../public/uploads/profile_pictures/';
+if (!is_dir($upload_dir)) {
+    mkdir($upload_dir, 0777, true); // Buat direktori jika belum ada
+}
+
 // Fetch user data for pre-filling the form
 try {
-    $stmt = $conn->prepare("SELECT id, username, email, full_name FROM users WHERE id = :id");
+    // Tambahkan kolom 'profile_image' ke query SELECT
+    $stmt = $conn->prepare("SELECT id, username, email, full_name, profile_image FROM users WHERE id = :id");
     $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
         $_SESSION['message'] = "User tidak ditemukan.";
-        $_SESSION['message_type'] = "errors";
+        $_SESSION['message_type'] = "danger";
         header("Location: index.php");
         exit;
     }
@@ -74,13 +81,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
         }
     }
 
+    // Handle profile image upload
+    $profile_image_filename = $user['profile_image']; // Default to existing image
+
+    if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
+        $file_tmp_name = $_FILES['profile_image']['tmp_name'];
+        $file_name = $_FILES['profile_image']['name'];
+        $file_size = $_FILES['profile_image']['size'];
+        $file_type = $_FILES['profile_image']['type'];
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+        $max_file_size = 5 * 1024 * 1024; // 5 MB
+
+        if (!in_array($file_ext, $allowed_extensions)) {
+            $errors[] = "Ekstensi file tidak diizinkan. Hanya JPG, JPEG, PNG, dan GIF.";
+        }
+        if ($file_size > $max_file_size) {
+            $errors[] = "Ukuran file terlalu besar. Maksimal 5 MB.";
+        }
+        
+        if (empty($errors)) {
+            // Hapus gambar lama jika ada dan berbeda dengan yang baru diunggah
+            if ($profile_image_filename && file_exists($upload_dir . $profile_image_filename) && $profile_image_filename !== $file_name) {
+                unlink($upload_dir . $profile_image_filename);
+            }
+
+            $new_file_name = uniqid('profile_') . '.' . $file_ext; // Nama file unik
+            $destination_path = $upload_dir . $new_file_name;
+
+            if (move_uploaded_file($file_tmp_name, $destination_path)) {
+                $profile_image_filename = $new_file_name; // Update dengan nama file baru
+            } else {
+                $errors[] = "Gagal mengunggah gambar profil.";
+            }
+        }
+    } elseif (isset($_POST['remove_profile_image']) && $_POST['remove_profile_image'] === 'true') {
+        // Hapus gambar jika checkbox "Hapus Gambar Profil" dicentang
+        if ($user['profile_image'] && file_exists($upload_dir . $user['profile_image'])) {
+            unlink($upload_dir . $user['profile_image']);
+        }
+        $profile_image_filename = null; // Setel nama file menjadi null di database
+    }
+
+
     // Update database if no errors
     if (empty($errors)) {
-        $sql = "UPDATE users SET username = :username, email = :email, full_name = :full_name";
+        $sql = "UPDATE users SET username = :username, email = :email, full_name = :full_name, profile_image = :profile_image";
         $params = [
             ':username' => $username,
             ':email' => $email,
             ':full_name' => $full_name,
+            ':profile_image' => $profile_image_filename, // Tambahkan ini
             ':id' => $user_id
         ];
 
@@ -98,8 +150,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
             if ($stmt->execute($params)) {
                 $_SESSION['message'] = "Data user berhasil diperbarui.";
                 $_SESSION['message_type'] = "success";
+                // Perbarui data user di variabel $user setelah sukses update
+                $user['username'] = $username;
+                $user['email'] = $email;
+                $user['full_name'] = $full_name;
+                $user['profile_image'] = $profile_image_filename;
+
+                // Redirect ke halaman index.php setelah update sukses
                 header("Location: index.php");
                 exit;
+
             } else {
                 $errors[] = "Gagal memperbarui user.";
             }
@@ -115,50 +175,259 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Edit User</title>
-    <link rel="stylesheet" href="../public/css/style.css" />
+    <title>Edit User - Kedai Kopi Kayu</title>
+    <link rel="icon" href="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598314/logokkk_rtchku.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <style>
+        .content-wrapper {
+            background-color: #f4f6f9; /* Warna latar belakang AdminLTE default */
+            padding: 20px;
+        }
+        .card-header {
+            background-color: #007bff; /* Warna header card */
+            color: white;
+        }
+        .profile-image-preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #ddd;
+            margin-bottom: 15px;
+            display: block; /* Agar margin-bottom bekerja */
+        }
+        /* Styling untuk pesan sukses/error (AdminLTE alert) */
+        .alert-dismissible .close {
+            position: absolute;
+            top: 50%;
+            right: 1.25rem;
+            transform: translateY(-50%);
+            padding: 0;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: inherit;
+            opacity: .5;
+        }
+        .alert-dismissible .close:hover {
+            opacity: .75;
+        }
+    </style>
 </head>
-<body>
-    <div class="container">
-        <h2>Edit User</h2>
-        <p><a href="index.php">← Kembali ke daftar user</a></p>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
 
-        <?php if (!empty($errors)): ?>
-            <div class="errors">
-                <ul>
-                    <?php foreach ($errors as $err): ?>
-                        <li><?php echo htmlspecialchars($err); ?></li>
-                    <?php endforeach; ?>
-                </ul>
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/index.html" class="nav-link">Halaman Utama</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <span class="nav-link">Halo, <b><?php echo htmlspecialchars($_SESSION['username']); ?></b></span>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../auth/logout.php" role="button">
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <a href="#" class="brand-link">
+            <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598314/logof_xww7ju.png" alt="KKK Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light">Kedai Kopi Kayu</span>
+        </a>
+
+        <div class="sidebar">
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
+                    <?php 
+                    $profile_image_src = 'https://placehold.co/160x160/cccccc/ffffff?text=User'; // Placeholder default
+                    if ($user && $user['profile_image']) {
+                        $profile_image_path = '../public/uploads/profile_pictures/' . htmlspecialchars($user['profile_image']);
+                        if (file_exists($profile_image_path)) {
+                            $profile_image_src = $profile_image_path;
+                        }
+                    }
+                    ?>
+                    <img src="<?php echo $profile_image_src; ?>" class="img-circle elevation-2" alt="User Image">
+                </div>
+                <div class="info">
+                    <a href="#" class="d-block"><?php echo htmlspecialchars($_SESSION['full_name'] ?? 'Pengguna'); ?></a>
+                </div>
             </div>
-        <?php endif; ?>
 
-        <?php if ($user): ?>
-            <form action="" method="POST">
-                <label>Username:<br>
-                    <input type="text" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
-                </label><br><br>
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-item">
+                        <a href="/index.html" class="nav-link">
+                            <i class="nav-icon fas fa-home"></i>
+                            <p>Halaman Utama</p>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-open">
+                        <a href="#" class="nav-link active">
+                            <i class="nav-icon fas fa-cogs"></i>
+                            <p>
+                                Manajemen
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="index.php" class="nav-link active">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Manajemen User</p>
+                                </a>
+                            </li>
+                            </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../auth/logout.php" class="nav-link">
+                            <i class="nav-icon fas fa-sign-out-alt"></i>
+                            <p>Logout</p>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            </div>
+        </aside>
 
-                <label>Email:<br>
-                    <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
-                </label><br><br>
+    <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Edit User</h1>
+                    </div><div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Manajemen</a></li>
+                            <li class="breadcrumb-item"><a href="index.php">User</a></li>
+                            <li class="breadcrumb-item active">Edit</li>
+                        </ol>
+                    </div></div></div></div>
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h5 class="m-0">Form Edit User</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><a href="index.php" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Kembali ke daftar user</a></p>
 
-                <label>Nama Lengkap:<br>
-                    <input type="text" name="full_name" value="<?php echo htmlspecialchars($user['full_name'] ?? ''); ?>">
-                </label><br><br>
+                                <?php if (!empty($errors)): ?>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <h5><i class="icon fas fa-ban"></i> Error!</h5>
+                                        <ul>
+                                            <?php foreach ($errors as $err): ?>
+                                                <li><?php echo htmlspecialchars($err); ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                <?php endif; ?>
 
-                <p>Biarkan kosong jika tidak ingin mengubah password.</p>
-                <label>Password Baru:<br>
-                    <input type="password" name="password">
-                </label><br><br>
+                                <?php if ($user): ?>
+                                    <form action="" method="POST" enctype="multipart/form-data">
+                                        <div class="form-group text-center">
+                                            <label>Gambar Profil Saat Ini:</label><br>
+                                            <?php
+                                            $profile_image_url = '../public/uploads/profile_pictures/' . htmlspecialchars($user['profile_image'] ?? 'default.png');
+                                            // Fallback ke placeholder jika gambar tidak ada atau default.png
+                                            if (!($user['profile_image'] && file_exists('../public/uploads/profile_pictures/' . $user['profile_image']))) {
+                                                $profile_image_url = 'https://placehold.co/150x150/cccccc/ffffff?text=No+Image';
+                                            }
+                                            ?>
+                                            <img src="<?php echo $profile_image_url; ?>" alt="Gambar Profil" class="profile-image-preview">
+                                            
+                                            <?php if ($user['profile_image']): ?>
+                                                <div class="form-check text-center mb-3">
+                                                    <input class="form-check-input" type="checkbox" name="remove_profile_image" value="true" id="removeProfileImage">
+                                                    <label class="form-check-label" for="removeProfileImage">
+                                                        Hapus Gambar Profil
+                                                    </label>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
 
-                <label>Konfirmasi Password Baru:<br>
-                    <input type="password" name="password_confirm">
-                </label><br><br>
+                                        <div class="form-group">
+                                            <label for="profile_image">Unggah Gambar Profil Baru:</label>
+                                            <div class="input-group">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="profile_image" name="profile_image" accept="image/*">
+                                                    <label class="custom-file-label" for="profile_image">Pilih file</label>
+                                                </div>
+                                            </div>
+                                            <small class="form-text text-muted">Maks. 5MB, format JPG, JPEG, PNG, GIF.</small>
+                                        </div>
 
-                <button type="submit" class="btn">Perbarui</button>
-            </form>
-        <?php endif; ?>
-    </div>
+                                        <div class="form-group">
+                                            <label for="username">Username:</label>
+                                            <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="email">Email:</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="full_name">Nama Lengkap:</label>
+                                            <input type="text" class="form-control" id="full_name" name="full_name" value="<?php echo htmlspecialchars($user['full_name'] ?? ''); ?>">
+                                        </div>
+
+                                        <hr>
+                                        <p class="text-muted">Biarkan kolom password kosong jika tidak ingin mengubah password.</p>
+                                        <div class="form-group">
+                                            <label for="password">Password Baru:</label>
+                                            <input type="password" class="form-control" id="password" name="password">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="password_confirm">Konfirmasi Password Baru:</label>
+                                            <input type="password" class="form-control" id="password_confirm" name="password_confirm">
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-save"></i> Perbarui</button>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div></div>
+        </div>
+    <footer class="main-footer">
+        <div class="float-right d-none d-sm-inline">
+            Version 1.0
+        </div>
+        <strong>©SCP9242. All rights reserved.</strong>
+    </footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#profile_image').on('change', function () {
+            var fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').html(fileName);
+        });
+    });
+</script>
 </body>
 </html>

@@ -4,7 +4,7 @@ require_once '../config/database.php';
 
 // Jika sudah login, arahkan ke halaman dashboard user
 if (isset($_SESSION['user_id'])) {
-    header("Location: ../users/manajemen.php");
+    header("Location: ../users/index.php");
     exit();
 }
 
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (password_verify($password, $user['password'])) {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['username'] = $user['username'];
-                    header("Location: ../users/manajemen.php");
+                    header("Location: ../users/index.php");
                     exit();
                 } else {
                     $errors[] = "Username atau password salah.";
