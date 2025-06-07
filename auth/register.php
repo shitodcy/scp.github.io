@@ -11,12 +11,13 @@ if (isset($_SESSION['user_id'])) {
 $errors = [];
 $username = "";
 $email = "";
-$fullname = "";
+$full_name = ""; // Renamed from $fullname to $full_name
+// Variable for password confirmation is handled directly in POST, no need to declare here.
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
-    $fullname = trim($_POST['fullname']);
+    $full_name = trim($_POST['full_name']); // Changed to 'full_name' from 'fullname'
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     
@@ -37,9 +38,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors[] = "Email harus menggunakan domain @students.amikom.ac.id";
     }
     
-    if (empty($fullname)) {
+    // Validation for full_name (was fullname) - kept as required as per original HTML
+    if (empty($full_name)) {
         $errors[] = "Nama lengkap wajib diisi.";
-    } elseif (strlen($fullname) < 2) {
+    } elseif (strlen($full_name) < 2) {
         $errors[] = "Nama lengkap minimal 2 karakter.";
     }
     
@@ -54,8 +56,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif ($password !== $confirm_password) {
         $errors[] = "Password dan konfirmasi password tidak sama.";
     }
+
+    // Check if the email exists in the approved_emails table
+    if (empty($errors)) { // Only proceed if no previous errors
+        try {
+            $stmt_approved = $conn->prepare("SELECT id FROM approved_emails WHERE email = :email LIMIT 1");
+            $stmt_approved->bindParam(':email', $email);
+            $stmt_approved->execute();
+
+            if ($stmt_approved->rowCount() == 0) {
+                $errors[] = "Email Anda tidak terdaftar dalam daftar email yang disetujui. Silakan hubungi administrator.";
+            }
+        } catch (PDOException $e) {
+            $errors[] = "Error database saat memeriksa email yang disetujui: " . $e->getMessage();
+        }
+    }
     
-    // Cek apakah username sudah ada
+    // Cek apakah username sudah ada di tabel users
     if (empty($errors)) {
         try {
             $stmt = $conn->prepare("SELECT id FROM users WHERE username = :username LIMIT 1");
@@ -70,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     
-    // Cek apakah email sudah terdaftar
+    // Cek apakah email sudah terdaftar di tabel users (penting untuk mencegah registrasi ganda dari email yang disetujui)
     if (empty($errors)) {
         try {
             $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email LIMIT 1");
@@ -90,10 +107,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
-            $stmt = $conn->prepare("INSERT INTO users (username, email, fullname, password, created_at) VALUES (:username, :email, :fullname, :password, NOW())");
+            // Insert into users table, binding $full_name to the 'fullname' column
+            $stmt = $conn->prepare("INSERT INTO users (username, email, full_name, password, created_at) VALUES (:username, :email, :full_name, :password, NOW())");
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':fullname', $fullname);
+            $stmt->bindParam(':full_name', $full_name); // Bind $full_name to database column 'fullname'
             $stmt->bindParam(':password', $hashed_password);
             
             if ($stmt->execute()) {
@@ -138,8 +156,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php endif; ?>
                 
                 <form action="register.php" method="POST">
-                    <label for="fullname">Nama Lengkap</label>
-                    <input type="text" id="fullname" name="fullname" value="<?= htmlspecialchars($fullname); ?>" required>
+                    <label for="full_name">Nama Lengkap</label>
+                    <input type="text" id="full_name" name="full_name" value="<?= htmlspecialchars($full_name); ?>" required>
                     
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" value="<?= htmlspecialchars($username); ?>" required>

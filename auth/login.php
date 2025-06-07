@@ -2,7 +2,7 @@
 session_start();
 require_once '../config/database.php';
 
-// Jika sudah login, arahkan ke halaman dashboard user
+// Redirect if already logged in
 if (isset($_SESSION['user_id'])) {
     header("Location: ../users/dashboard.php");
     exit();
@@ -11,7 +11,7 @@ if (isset($_SESSION['user_id'])) {
 $errors = [];
 $username = "";
 
-// Tampilkan pesan sukses dari registrasi jika ada
+// Display success message from registration if present
 if (isset($_SESSION['success_message'])) {
     $success_message = $_SESSION['success_message'];
     unset($_SESSION['success_message']);
@@ -21,9 +21,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
+    // Input validation
     if (empty($username)) { $errors[] = "Username wajib diisi."; }
     if (empty($password)) { $errors[] = "Password wajib diisi."; }
 
+    // Attempt login if no validation errors
     if (empty($errors)) {
         try {
             $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username = :username LIMIT 1");
@@ -56,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Kedai Kopi Kayu</title>
-  <link rel="stylesheet" href="../public/css/login.css"> <!-- Sesuaikan path-nya -->
+  <link rel="stylesheet" href="../public/css/login.css">
 </head>
 <body>
   <div class="container">
