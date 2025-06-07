@@ -66,6 +66,9 @@ switch ($requested_page) {
         $db_status_class = 'bg-success'; // Default warna box
         $db_status_icon = 'fas fa-database'; // Default icon
 
+        // NEW: Inisialisasi jumlah user aktif
+        $active_users_count = 0;
+
         try {
             // Coba lakukan kueri sederhana untuk memeriksa koneksi database
             // Misalnya, ambil waktu saat ini dari database
@@ -86,9 +89,15 @@ switch ($requested_page) {
             $stmt_time = $conn->query("SELECT NOW()");
             $last_update_db = $stmt_time->fetchColumn();
             $last_update = date('d M Y, H:i:s', strtotime($last_update_db));
+
+            // NEW: Ambil jumlah user terdaftar (dianggap sebagai user aktif untuk saat ini)
+            $stmt_active_users = $conn->query("SELECT COUNT(id) FROM users");
+            $active_users_count = $stmt_active_users->fetchColumn();
+
         } catch (PDOException $e) {
-            // Jika gagal ambil waktu dari DB, gunakan waktu PHP
+            // Jika gagal ambil waktu atau hitung user dari DB, gunakan waktu PHP dan set count ke 0
             $last_update = date('d M Y, H:i:s') . ' (dari server PHP)';
+            $active_users_count = 'N/A'; // Not available if DB is offline
         }
         break;
 
@@ -126,6 +135,33 @@ switch ($requested_page) {
             $menu_items = [];
         }
         break;
+    
+    case 'file_manager': // NEW CASE for File Manager
+        $page_title = 'Manajemen File';
+        $breadcrumb_active = 'File Manager';
+        $file_list = [];
+        $file_manager_dir = '../public/uploads/'; // Directory to list files from
+
+        if (is_dir($file_manager_dir)) {
+            $scanned_files = scandir($file_manager_dir);
+            foreach ($scanned_files as $file) {
+                if ($file !== '.' && $file !== '..') {
+                    $file_path = $file_manager_dir . $file;
+                    $file_type = is_dir($file_path) ? 'Direktori' : 'File';
+                    $file_size = is_file($file_path) ? round(filesize($file_path) / 1024, 2) . ' KB' : '-';
+                    $file_list[] = [
+                        'name' => htmlspecialchars($file),
+                        'type' => $file_type,
+                        'size' => $file_size,
+                        'path' => htmlspecialchars($file_path) // For potential future actions
+                    ];
+                }
+            }
+        } else {
+            $page_error = "Direktori file manager tidak ditemukan atau tidak dapat diakses: " . htmlspecialchars($file_manager_dir);
+        }
+        break;
+
 
     default:
         // Jika parameter page tidak valid, kembali ke default (users)
@@ -199,8 +235,8 @@ switch ($requested_page) {
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item <?php echo ($requested_page == 'users' || $requested_page == 'menu_items') ? 'menu-open' : ''; ?>">
-                        <a href="#" class="nav-link <?php echo ($requested_page == 'users' || $requested_page == 'menu_items') ? 'active' : ''; ?>">
+                    <li class="nav-item <?php echo ($requested_page == 'users' || $requested_page == 'menu_items' || $requested_page == 'file_manager') ? 'menu-open' : ''; ?>">
+                        <a href="#" class="nav-link <?php echo ($requested_page == 'users' || $requested_page == 'menu_items' || $requested_page == 'file_manager') ? 'active' : ''; ?>">
                             <i class="nav-icon fas fa-cogs"></i>
                             <p>
                                 Manajemen
@@ -216,8 +252,14 @@ switch ($requested_page) {
                             </li>
                             <li class="nav-item">
                                 <a href="?page=menu_items" class="nav-link <?php echo ($requested_page == 'menu_items') ? 'active' : ''; ?>">
-                                    <i class="fas fa-coffee nav-icon"></i> <!-- New icon for menu -->
+                                    <i class="fas fa-coffee nav-icon"></i>
                                     <p>Manajemen Menu</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="?page=file_manager" class="nav-link <?php echo ($requested_page == 'file_manager') ? 'active' : ''; ?>">
+                                    <i class="fas fa-folder nav-icon"></i>
+                                    <p>Manajemen File</p>
                                 </a>
                             </li>
                         </ul>
@@ -290,9 +332,9 @@ switch ($requested_page) {
                                     </a>
                                 </div>
                             </div>
-                            <div class="card-body p-0">
+                            <div class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
                                 <?php if (count($users) > 0): ?>
-                                    <table class="table table-striped table-valign-middle">
+                                    <table class="table table-striped table-valign-middle mb-0">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -370,6 +412,15 @@ switch ($requested_page) {
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Status Database</span>
                                                 <span class="info-box-number"><?php echo $db_status; ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="info-box bg-primary"> <!-- New info box for active users -->
+                                            <span class="info-box-icon"><i class="fas fa-users"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Total User Terdaftar</span>
+                                                <span class="info-box-number"><?php echo htmlspecialchars($active_users_count); ?></span>
                                             </div>
                                         </div>
                                     </div>
@@ -456,11 +507,17 @@ switch ($requested_page) {
                                                 <tr>
                                                     <td><?php echo htmlspecialchars($item['id']); ?></td>
                                                     <td>
-                                                        <?php if ($item['image_url']): ?>
-                                                            <img src="../public/uploads/menu_images/<?php echo htmlspecialchars($item['image_url']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
-                                                        <?php else: ?>
-                                                            <img src="https://placehold.co/50x50/cccccc/ffffff?text=No+Img" alt="No Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
-                                                        <?php endif; ?>
+                                                        <?php
+                                                        $image_src = 'https://placehold.co/50x50/cccccc/ffffff?text=No+Img';
+                                                        if (!empty($item['image_url'])) {
+                                                            if (filter_var($item['image_url'], FILTER_VALIDATE_URL)) {
+                                                                $image_src = htmlspecialchars($item['image_url']);
+                                                            } else {
+                                                                $image_src = '../public/uploads/menu_images/' . htmlspecialchars($item['image_url']);
+                                                            }
+                                                        }
+                                                        ?>
+                                                        <img src="<?php echo $image_src; ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                                                     </td>
                                                     <td><?php echo htmlspecialchars($item['name']); ?></td>
                                                     <td>Rp<?php echo number_format($item['price'], 0, ',', '.'); ?></td>
@@ -485,6 +542,51 @@ switch ($requested_page) {
                                 <?php else: ?>
                                     <div class="p-3">
                                         <p>Belum ada item menu terdaftar untuk kategori ini atau tidak ada hasil untuk pencarian Anda.</p>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php
+                        break;
+
+                    case 'file_manager':
+                        // KONTEN MANAJEMEN FILE
+                        ?>
+                        <?php if (!empty($page_error)): ?>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <?php echo htmlspecialchars($page_error); ?>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        <?php endif; ?>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Daftar File dan Direktori di `../public/uploads/`</h3>
+                            </div>
+                            <div class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
+                                <?php if (!empty($file_list)): ?>
+                                    <table class="table table-striped table-valign-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama</th>
+                                                <th>Tipe</th>
+                                                <th>Ukuran</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($file_list as $file): ?>
+                                                <tr>
+                                                    <td><?php echo $file['name']; ?></td>
+                                                    <td><?php echo $file['type']; ?></td>
+                                                    <td><?php echo $file['size']; ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <div class="p-3">
+                                        <p>Tidak ada file atau direktori ditemukan di `../public/uploads/`.</p>
                                     </div>
                                 <?php endif; ?>
                             </div>
