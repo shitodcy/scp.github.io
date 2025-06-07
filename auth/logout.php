@@ -15,6 +15,12 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
+// --- Tambahkan ini untuk menghapus cookie 'remember_me' ---
+if (isset($_COOKIE['remember_me'])) {
+    setcookie('remember_me', '', time() - 120, "/"); // Set cookie to expire in the past
+}
+// --- Akhir penambahan ---
+
 // Akhirnya, hancurkan session.
 session_destroy();
 

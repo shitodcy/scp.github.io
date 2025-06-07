@@ -1,4 +1,3 @@
-/* Navbar Styles - Versi yang lebih halus dan ringan */
 .navbar {
   position: fixed;
   top: 20px;
@@ -15,6 +14,8 @@
   align-items: center;
   backdrop-filter: blur(8px);
   background: rgba(44, 62, 80, 0.8);
+  /* --- TAMBAHKAN INI UNTUK ANIMASI MELAYANG SAAT TIDAK DI-SCROLL --- */
+  animation: float 3s ease-in-out infinite; /* Sesuaikan durasi dan timing */
 }
 
 /* Animasi melayang (floating) yang lebih halus */
@@ -23,7 +24,7 @@
     transform: translateX(-50%) translateY(0px);
   }
   50% {
-    transform: translateX(-50%) translateY(-5px);
+    transform: translateX(-50%) translateY(-5px); /* Sedikit naik */
   }
   100% {
     transform: translateX(-50%) translateY(0px);
@@ -37,8 +38,9 @@
   top: 0;
   width: 60%;
   border-radius: 0 0 12px 12px;
-  animation: slideDown 0.4s ease-out forwards;
+  animation: slideDown 0.4s ease-out forwards; /* Ini akan menimpa animasi 'float' */
   margin-top: 0;
+  /* Penting: Pastikan tidak ada transform tambahan yang bertentangan dengan slideDown */
 }
 
 @keyframes slideDown {
@@ -51,6 +53,7 @@
     opacity: 1;
   }
 }
+
 
 /* Link Navbar */
 .navbar a {
