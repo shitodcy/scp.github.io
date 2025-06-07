@@ -104,13 +104,13 @@ foreach ($menu_items_db as $item) {
           </div>
           <div class="carousel-inner">
             <div class="carousel-item active">
-              <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598321/lokasi_soeuze.webp" alt="Kedai Kopi Kayu Interior">
+              <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598325/fotolokasi.depan_av71fx.webp" alt="Kedai Kopi Kayu Interior">
             </div>
             <div class="carousel-item">
-              <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598321/lokasi_soeuze.webp" alt="Barista menyajikan kopi">
+              <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598328/fotolokasidaridalam_jdtdyf.webp" alt="Barista menyajikan kopi">
             </div>
             <div class="carousel-item">
-              <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598321/lokasi_soeuze.webp" alt="Suasana kedai">
+              <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598324/foto_dapur_fvvsvn.webp" alt="Suasana kedai">
             </div>
           </div>
           <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
