@@ -38,8 +38,9 @@ $page_error = '';
 $users = []; // Untuk halaman manajemen user
 $monitoring_status = 'Data monitoring akan ditampilkan di sini.'; // Untuk halaman monitoring
 $last_update = date('d M Y, H:i:s'); // Untuk halaman monitoring
-$backup_message = ''; // Untuk halaman backup
-$backup_type = 'info'; // Untuk halaman backup
+$menu_items = []; // Variabel untuk menyimpan item menu
+$category_filter = $_GET['category_filter'] ?? 'all'; // Filter kategori default: 'all'
+$search_query = $_GET['search_query'] ?? ''; // New: Variable to capture search query
 
 // Logika kondisional untuk mengambil data sesuai halaman yang diminta
 switch ($requested_page) {
@@ -57,58 +58,73 @@ switch ($requested_page) {
         break;
 
     case 'monitoring':
-        // Logika untuk halaman monitoring (sesuai monitoring.php)
-        // Di sini Anda bisa menambahkan logika pengambilan data monitoring yang sesungguhnya
         $page_title = 'Monitoring Website';
         $breadcrumb_active = 'Monitoring';
+
+        // Inisialisasi status database
+        $db_status = 'Online'; // Default status
+        $db_status_class = 'bg-success'; // Default warna box
+        $db_status_icon = 'fas fa-database'; // Default icon
+
+        try {
+            // Coba lakukan kueri sederhana untuk memeriksa koneksi database
+            // Misalnya, ambil waktu saat ini dari database
+            $stmt_check_db = $conn->query("SELECT NOW()");
+            $stmt_check_db->fetch(); // Coba ambil hasilnya
+            // Jika berhasil sampai sini, database online
+        } catch (PDOException $e) {
+            // Jika ada exception, berarti koneksi database gagal atau database offline
+            $db_status = 'Offline';
+            $db_status_class = 'bg-danger'; // Ganti warna menjadi merah
+            $db_status_icon = 'fas fa-exclamation-triangle'; // Ganti icon menjadi peringatan
+            error_log("Database connection check failed: " . $e->getMessage()); // Log error untuk debugging
+            // $page_error = "Koneksi database bermasalah: " . $e->getMessage(); // Opsional: Tampilkan error di bagian atas halaman
+        }
+
+        // Ambil waktu terakhir diperbarui dari database (atau gunakan waktu server jika DB offline)
+        try {
+            $stmt_time = $conn->query("SELECT NOW()");
+            $last_update_db = $stmt_time->fetchColumn();
+            $last_update = date('d M Y, H:i:s', strtotime($last_update_db));
+        } catch (PDOException $e) {
+            // Jika gagal ambil waktu dari DB, gunakan waktu PHP
+            $last_update = date('d M Y, H:i:s') . ' (dari server PHP)';
+        }
         break;
 
-    case 'backup':
-        // Logika untuk halaman backup (sesuai backup_db.php)
-        if (isset($_POST['backup_now'])) {
-            // Ini akan membutuhkan kredensial DB yang harus didefinisikan atau diakses di sini
-            $db_host = 'localhost'; // Ganti dengan host database Anda
-            $db_name = 'nama_database_anda'; // Ganti dengan nama database Anda
-            $db_user = 'user_database_anda'; // Ganti dengan user database Anda
-            $db_pass = 'password_database_anda'; // Ganti dengan password database Anda
+    case 'menu_items': // New case for menu management
+        $page_title = 'Manajemen Menu';
+        $breadcrumb_active = 'Menu';
+        try {
+            $sql_query = "SELECT id, name, price, category, image_url, is_active FROM menu_items";
+            $conditions = [];
+            $params = [];
 
-            $backup_dir = '../backups/';
-            if (!is_dir($backup_dir)) {
-                mkdir($backup_dir, 0777, true);
+            if ($category_filter !== 'all') {
+                $conditions[] = "category = :category_filter";
+                $params[':category_filter'] = $category_filter;
             }
-            $filename = $db_name . '_' . date('Y-m-d_H-i-s') . '.sql';
-            $filepath = $backup_dir . $filename;
 
-            $command = sprintf(
-                'mysqldump --opt -h%s -u%s -p%s %s > %s',
-                escapeshellarg($db_host),
-                escapeshellarg($db_user),
-                escapeshellarg($db_pass),
-                escapeshellarg($db_name),
-                escapeshellarg($filepath)
-            );
-
-            try {
-                if (function_exists('exec')) {
-                    exec($command, $output, $return_var);
-                    if ($return_var === 0) {
-                        $backup_message = "Backup database berhasil dibuat: <a href='" . htmlspecialchars($filepath) . "' download>". htmlspecialchars($filename) . "</a>";
-                        $backup_type = 'success';
-                    } else {
-                        $backup_message = "Gagal membuat backup database menggunakan mysqldump. Error: " . implode("<br>", $output);
-                        $backup_type = 'danger';
-                    }
-                } else {
-                    $backup_message = "Fungsi exec() PHP tidak diizinkan. Mohon hubungi administrator server atau gunakan metode backup manual.";
-                    $backup_type = 'warning';
-                }
-            } catch (Exception $e) {
-                $backup_message = "Terjadi kesalahan saat membuat backup: " . $e->getMessage();
-                $backup_type = 'danger';
+            // New: Add search query condition
+            if (!empty($search_query)) {
+                $conditions[] = "(name LIKE :search_query_name OR category LIKE :search_query_category)";
+                $params[':search_query_name'] = '%' . $search_query . '%';
+                $params[':search_query_category'] = '%' . $search_query . '%';
             }
+
+            if (!empty($conditions)) {
+                $sql_query .= " WHERE " . implode(" AND ", $conditions);
+            }
+
+            $sql_query .= " ORDER BY category, name ASC";
+
+            $stmt = $conn->prepare($sql_query);
+            $stmt->execute($params);
+            $menu_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $page_error = "Error mengambil data menu: " . $e->getMessage();
+            $menu_items = [];
         }
-        $page_title = 'Backup Database';
-        $breadcrumb_active = 'Backup Database';
         break;
 
     default:
@@ -139,7 +155,7 @@ switch ($requested_page) {
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="?page=monitoring" class="nav-link">Monitoring Website</a>
+                <a href="?page=monitoring" class="nav-link">Kedai Kopi Kayu Dashboard</a>
             </li>
         </ul>
 
@@ -183,8 +199,8 @@ switch ($requested_page) {
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item <?php echo ($requested_page == 'users' || $requested_page == 'backup') ? 'menu-open' : ''; ?>">
-                        <a href="#" class="nav-link <?php echo ($requested_page == 'users' || $requested_page == 'backup') ? 'active' : ''; ?>">
+                    <li class="nav-item <?php echo ($requested_page == 'users' || $requested_page == 'menu_items') ? 'menu-open' : ''; ?>">
+                        <a href="#" class="nav-link <?php echo ($requested_page == 'users' || $requested_page == 'menu_items') ? 'active' : ''; ?>">
                             <i class="nav-icon fas fa-cogs"></i>
                             <p>
                                 Manajemen
@@ -196,6 +212,12 @@ switch ($requested_page) {
                                 <a href="?page=users" class="nav-link <?php echo ($requested_page == 'users') ? 'active' : ''; ?>">
                                     <i class="far fa-user nav-icon"></i>
                                     <p>Manajemen User</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="?page=menu_items" class="nav-link <?php echo ($requested_page == 'menu_items') ? 'active' : ''; ?>">
+                                    <i class="fas fa-coffee nav-icon"></i> <!-- New icon for menu -->
+                                    <p>Manajemen Menu</p>
                                 </a>
                             </li>
                         </ul>
@@ -323,6 +345,14 @@ switch ($requested_page) {
                             <div class="card-body">
                                 <p><?php echo htmlspecialchars($monitoring_status); ?></p>
                                 <p>Terakhir diperbarui: **<?php echo htmlspecialchars($last_update); ?>**</p>
+                                <?php if (!empty($page_error) && $requested_page == 'monitoring'): ?>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <?php echo htmlspecialchars($page_error); ?>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="row mt-4">
                                     <div class="col-md-4">
                                         <div class="info-box bg-info">
@@ -334,11 +364,12 @@ switch ($requested_page) {
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="info-box bg-success">
-                                            <span class="info-box-icon"><i class="fas fa-database"></i></span>
+                                        <!-- Ini adalah bagian yang diperbarui untuk status database -->
+                                        <div class="info-box <?php echo $db_status_class; ?>">
+                                            <span class="info-box-icon"><i class="<?php echo $db_status_icon; ?>"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Status Database</span>
-                                                <span class="info-box-number">Online</span>
+                                                <span class="info-box-number"><?php echo $db_status; ?></span>
                                             </div>
                                         </div>
                                     </div>
@@ -352,6 +383,110 @@ switch ($requested_page) {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <?php
+                        break;
+
+                    case 'menu_items':
+                        // KONTEN MANAJEMEN MENU
+                        ?>
+                        <?php if (isset($_SESSION['message'])): ?>
+                            <div class="alert alert-<?php echo isset($_SESSION['message_type']) ? htmlspecialchars($_SESSION['message_type']) : 'success'; ?> alert-dismissible fade show" role="alert">
+                                <?php echo htmlspecialchars($_SESSION['message']); ?>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <?php
+                                unset($_SESSION['message']);
+                                unset($_SESSION['message_type']);
+                            ?>
+                        <?php endif; ?>
+
+                        <?php if (!empty($page_error)): ?>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <?php echo htmlspecialchars($page_error); ?>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Daftar Menu</h3>
+                                <div class="card-tools">
+                                    <a href="create_menu_item.php" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-plus"></i> Tambah Menu Baru
+                                    </a>
+                                    <div class="input-group input-group-sm" style="width: 250px; display: inline-flex;">
+                                        <input type="text" name="search_query" class="form-control float-right" placeholder="Cari nama/kategori" value="<?= htmlspecialchars($search_query); ?>" onkeyup="if(event.keyCode === 13) this.form.submit();">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-default" onclick="this.form.submit();">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                        <select class="form-control float-right ml-2" id="categoryFilter" onchange="window.location.href='dashboard.php?page=menu_items&category_filter=' + this.value + '&search_query=<?= htmlspecialchars($search_query); ?>';">
+                                            <option value="all" <?= ($category_filter == 'all') ? 'selected' : ''; ?>>Semua Kategori</option>
+                                            <option value="coffee" <?= ($category_filter == 'coffee') ? 'selected' : ''; ?>>Kopi</option>
+                                            <option value="tea" <?= ($category_filter == 'tea') ? 'selected' : ''; ?>>Teh</option>
+                                            <option value="snack" <?= ($category_filter == 'snack') ? 'selected' : ''; ?>>Snack</option>
+                                            <option value="other" <?= ($category_filter == 'other') ? 'selected' : ''; ?>>Lain-lain</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
+                                <?php if (count($menu_items) > 0): ?>
+                                    <table class="table table-striped table-valign-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Gambar</th>
+                                                <th>Nama</th>
+                                                <th>Harga</th>
+                                                <th>Kategori</th>
+                                                <th>Status</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($menu_items as $item): ?>
+                                                <tr>
+                                                    <td><?php echo htmlspecialchars($item['id']); ?></td>
+                                                    <td>
+                                                        <?php if ($item['image_url']): ?>
+                                                            <img src="../public/uploads/menu_images/<?php echo htmlspecialchars($item['image_url']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                                        <?php else: ?>
+                                                            <img src="https://placehold.co/50x50/cccccc/ffffff?text=No+Img" alt="No Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td><?php echo htmlspecialchars($item['name']); ?></td>
+                                                    <td>Rp<?php echo number_format($item['price'], 0, ',', '.'); ?></td>
+                                                    <td><?php echo htmlspecialchars(ucfirst($item['category'])); ?></td>
+                                                    <td>
+                                                        <span class="badge badge-<?php echo $item['is_active'] ? 'success' : 'secondary'; ?>">
+                                                            <?php echo $item['is_active'] ? 'Aktif' : 'Tidak Aktif'; ?>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <a href="edit_menu_item.php?id=<?php echo $item['id']; ?>" class="btn btn-info btn-sm btn-action">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a>
+                                                        <a href="delete_menu_item.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-sm btn-action" onclick="return confirm('Apakah Anda yakin ingin menghapus menu ini?');">
+                                                            <i class="fas fa-trash"></i> Hapus
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <div class="p-3">
+                                        <p>Belum ada item menu terdaftar untuk kategori ini atau tidak ada hasil untuk pencarian Anda.</p>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <?php

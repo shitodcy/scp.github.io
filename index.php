@@ -1,3 +1,32 @@
+<?php
+// Include database connection
+require_once 'config/database.php';
+
+// Fetch menu items from database
+$menu_items_db = [];
+try {
+    $stmt = $conn->prepare("SELECT id, name, price, category, image_url FROM menu_items WHERE is_active = TRUE ORDER BY category, name ASC");
+    $stmt->execute();
+    $menu_items_db = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log("Error fetching menu items for frontend: " . $e->getMessage());
+    // In a production environment, you might display a user-friendly error message
+    // or load default/placeholder menu items.
+}
+
+$categorized_menu = [
+    'coffee' => [],
+    'tea' => [],
+    'snack' => [],
+    'other' => [] // Include 'other' category if you plan to use it
+];
+
+foreach ($menu_items_db as $item) {
+    if (isset($categorized_menu[$item['category']])) {
+        $categorized_menu[$item['category']][] = $item;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -14,8 +43,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- SwiperJS CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -23,7 +50,6 @@
     <!-- public/index.html -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
 
     <!-- CSS Custom -->
@@ -204,82 +230,30 @@
             </div>
             <div class="category-content" id="coffeeContent">
                 <div class="menu-items-container">
-                    <!-- Coffee menu items -->
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599318/kopitubrukarabika_fugbpi.webp" alt="Kopi Tubruk Robusta" class="menu-item-image">
-                        <div class="menu-name">Kopi Tubruk Robusta</div>
-                        <div class="menu-price">Rp6.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599318/kopitubrukarabika_fugbpi.webp" alt="Kopi Tubruk Arabica" class="menu-item-image">
-                        <div class="menu-name">Kopi Tubruk Arabica</div>
-                        <div class="menu-price">Rp8.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599312/v60_japanese_bqcrip.webp" alt="V60 Arabika" class="menu-item-image">
-                        <div class="menu-name">V60 Arabika</div>
-                        <div class="menu-price">Rp12.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599312/v60_japanese_bqcrip.webp" alt="V60 Japanese" class="menu-item-image">
-                        <div class="menu-name">V60 Japanese</div>
-                        <div class="menu-price">Rp15.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599313/kpsusugularen_ncntkc.webp" alt="Americano" class="menu-item-image">
-                        <div class="menu-name">Americano</div>
-                        <div class="menu-price">Rp10.000 (Hot) <br> Rp12.000 (Cold)</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599313/kpsusugularen_ncntkc.webp" alt="Kopi Susu Klasik" class="menu-item-image">
-                        <div class="menu-name">Kopi Susu Klasik</div>
-                        <div class="menu-price">Rp12.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599313/kpsusugularen_ncntkc.webp" alt="Kopi Susu Gula Aren" class="menu-item-image">
-                        <div class="menu-name">Kopi Susu Gula Aren</div>
-                        <div class="menu-price">Rp12.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599316/kpsusuborrasus_l0j5au.webp" alt="Kopi Susu Borassus" class="menu-item-image">
-                        <div class="menu-name">Kopi Susu Borassus</div>
-                        <div class="menu-price">Rp12.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599321/kopisusuhazel_qmxp3a.webp" alt="Kopi Susu Butterscotch" class="menu-item-image">
-                        <div class="menu-name">Kopi Susu Butterscotch</div>
-                        <div class="menu-price">Rp13.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599321/kopisusuhazel_qmxp3a.webp" alt="Kopi Susu Hazelnut" class="menu-item-image">
-                        <div class="menu-name">Kopi Susu Hazelnut</div>
-                        <div class="menu-price">Rp13.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599318/kpsusualmod_bzog24.webp" alt="Kopi Susu Almond" class="menu-item-image">
-                        <div class="menu-name">Kopi Susu Almond</div>
-                        <div class="menu-price">Rp13.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599314/kpsusuhazelnutGA_rdaigb.webp" alt="Kopi Susu Hazelnut Gula Aren" class="menu-item-image">
-                        <div class="menu-name">Kopi Susu Hazelnut Gula Aren</div>
-                        <div class="menu-price">Rp15.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599314/kpsusubtrscGA_crhiio.webp" alt="Kopi Susu Butterscotch Gula Aren" class="menu-item-image">
-                        <div class="menu-name">Kopi Susu Butterscotch Gula Aren</div>
-                        <div class="menu-price">Rp15.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599312/kpsususltdcrml_dlo9wr.webp" alt="Kopi Susu Salted Caramel" class="menu-item-image">
-                        <div class="menu-name">Kopi Susu Salted Caramel</div>
-                        <div class="menu-price">Rp18.000</div>
-                    </div>
-                    <div class="menu-item" data-category="coffee">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599322/kopilatte_i4hi1e.webp" alt="Spanish Latte" class="menu-item-image">
-                        <div class="menu-name">Spanish Latte</div>
-                        <div class="menu-price">Rp18.000</div>
-                    </div>
+                    <?php if (!empty($categorized_menu['coffee'])): ?>
+                        <?php foreach ($categorized_menu['coffee'] as $item): ?>
+                            <?php
+                            // Determine the correct image source
+                            $image_src = 'https://placehold.co/100x100/cccccc/ffffff?text=No+Img'; // Default placeholder
+                            if (!empty($item['image_url'])) {
+                                // Check if it's a full URL
+                                if (filter_var($item['image_url'], FILTER_VALIDATE_URL)) {
+                                    $image_src = htmlspecialchars($item['image_url']);
+                                } else {
+                                    // Otherwise, assume it's a local file path
+                                    $image_src = '../public/uploads/menu_images/' . htmlspecialchars($item['image_url']);
+                                }
+                            }
+                            ?>
+                            <div class="menu-item" data-category="coffee">
+                                <img src="<?php echo $image_src; ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" class="menu-item-image">
+                                <div class="menu-name"><?php echo htmlspecialchars($item['name']); ?></div>
+                                <div class="menu-price">Rp<?php echo number_format($item['price'], 0, ',', '.'); ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>Belum ada menu Kopi yang tersedia.</p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -292,27 +266,30 @@
             </div>
             <div class="category-content" id="teaContent">
                 <div class="menu-items-container">
-                    <!-- Tea menu items -->
-                    <div class="menu-item" data-category="tea">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599125/teh_fk8c6i.webp" alt="Iced Tea" class="menu-item-image">
-                        <div class="menu-name">Iced Tea</div>
-                        <div class="menu-price">Rp4.000</div>
-                    </div>
-                    <div class="menu-item" data-category="tea">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599127/lemontea_bmv6q0.webp" alt="Iced Lemonade Tea" class="menu-item-image">
-                        <div class="menu-name">Iced Lemonade Tea</div>
-                        <div class="menu-price">Rp6.000</div>
-                    </div>
-                    <div class="menu-item" data-category="tea">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599127/lycheetea_ll3cfq.webp" alt="Iced Lychee Tea" class="menu-item-image">
-                        <div class="menu-name">Iced Lychee Tea</div>
-                        <div class="menu-price">Rp6.000</div>
-                    </div>
-                    <div class="menu-item" data-category="tea">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599125/vanillatea_dudafv.webp" alt="Iced Vanilla Tea" class="menu-item-image">
-                        <div class="menu-name">Iced Vanilla Tea</div>
-                        <div class="menu-price">Rp6.000</div>
-                    </div>
+                    <?php if (!empty($categorized_menu['tea'])): ?>
+                        <?php foreach ($categorized_menu['tea'] as $item): ?>
+                            <?php
+                            // Determine the correct image source
+                            $image_src = 'https://placehold.co/100x100/cccccc/ffffff?text=No+Img'; // Default placeholder
+                            if (!empty($item['image_url'])) {
+                                // Check if it's a full URL
+                                if (filter_var($item['image_url'], FILTER_VALIDATE_URL)) {
+                                    $image_src = htmlspecialchars($item['image_url']);
+                                } else {
+                                    // Otherwise, assume it's a local file path
+                                    $image_src = '../public/uploads/menu_images/' . htmlspecialchars($item['image_url']);
+                                }
+                            }
+                            ?>
+                            <div class="menu-item" data-category="tea">
+                                <img src="<?php echo $image_src; ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" class="menu-item-image">
+                                <div class="menu-name"><?php echo htmlspecialchars($item['name']); ?></div>
+                                <div class="menu-price">Rp<?php echo number_format($item['price'], 0, ',', '.'); ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>Belum ada menu Teh yang tersedia.</p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -325,35 +302,34 @@
             </div>
             <div class="category-content" id="snackContent">
                 <div class="menu-items-container">
-                    <!-- Snack menu items -->
-                    <div class="menu-item" data-category="snack">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599034/frenchfries_bj3z4c.webp" alt="French Fries" class="menu-item-image">
-                        <div class="menu-name">French Fries</div>
-                        <div class="menu-price">Rp8.000</div>
-                    </div>
-                    <div class="menu-item" data-category="snack">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599033/mixplat_qefyii.webp" alt="Mix Platter" class="menu-item-image">
-                        <div class="menu-name">Mix Platter</div>
-                        <div class="menu-price">Rp10.000</div>
-                    </div>
-                    <div class="menu-item" data-category="snack">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599032/pisanggoreng_u2cc09.webp" alt="Pisang Goreng" class="menu-item-image">
-                        <div class="menu-name">Pisang Goreng</div>
-                        <div class="menu-price">Rp10.000</div>
-                    </div>
-                    <div class="menu-item" data-category="snack">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599034/mendoan_dmevhd.webp" alt="Mendoan" class="menu-item-image">
-                        <div class="menu-name">Mendoan</div>
-                        <div class="menu-price">Rp8.000</div>
-                    </div>
-                    <div class="menu-item" data-category="snack">
-                        <img src="https://res.cloudinary.com/dbdmqec1q/image/upload/v1748599034/indomietelur_t2pwpr.webp" alt="Indomie Telur" class="menu-item-image">
-                        <div class="menu-name">Indomie Telur</div>
-                        <div class="menu-price">Rp10.000</div>
-                    </div>
+                    <?php if (!empty($categorized_menu['snack'])): ?>
+                        <?php foreach ($categorized_menu['snack'] as $item): ?>
+                            <?php
+                            // Determine the correct image source
+                            $image_src = 'https://placehold.co/100x100/cccccc/ffffff?text=No+Img'; // Default placeholder
+                            if (!empty($item['image_url'])) {
+                                // Check if it's a full URL
+                                if (filter_var($item['image_url'], FILTER_VALIDATE_URL)) {
+                                    $image_src = htmlspecialchars($item['image_url']);
+                                } else {
+                                    // Otherwise, assume it's a local file path
+                                    $image_src = '../public/uploads/menu_images/' . htmlspecialchars($item['image_url']);
+                                }
+                            }
+                            ?>
+                            <div class="menu-item" data-category="snack">
+                                <img src="<?php echo $image_src; ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" class="menu-item-image">
+                                <div class="menu-name"><?php echo htmlspecialchars($item['name']); ?></div>
+                                <div class="menu-price">Rp<?php echo number_format($item['price'], 0, ',', '.'); ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>Belum ada menu Snack yang tersedia.</p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
+        <!-- You can add more sections for 'other' categories if needed -->
     </div>
 </div>
 
@@ -422,7 +398,7 @@
 </section>
 
 
-    <!-- Section Lokasi Kami -->
+     <!-- Section Lokasi Kami -->
     <section id="location" class="section">
         <div class="content">            
             <h2 class="mb-4 h2-menu text">Lokasi Kami</h2>
@@ -484,6 +460,11 @@
         </div>
     </div>
 </footer>
+
+<!-- Bootstrap 5 JS (Moved to end of body for performance) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE JS (If still needed for some reason, though less likely for frontend) -->
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
 </body>
 </html>

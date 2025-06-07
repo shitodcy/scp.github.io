@@ -1,9 +1,10 @@
+/* login.css */
 html, body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   height: 100%;
-  overflow: hidden;
+  overflow: hidden; /* Prevent scrolling on main body */
 }
 
 .container {
@@ -12,7 +13,7 @@ html, body {
   height: 100vh;
 }
 
-/* Left Panel - Image Background */
+/* Left Panel */
 .left-panel {
   flex: 1;
   background-image: url('https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598325/fotolokasi.depan_av71fx.webp');
@@ -20,15 +21,16 @@ html, body {
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
-  width: 50%;
-  height: 100%;
+  display: flex; /* Use flex to center overlay content */
+  align-items: center;
+  justify-content: center;
 }
 
 .left-panel .overlay {
   position: absolute;
   top: 0;
   left: 0;
-  width: 888px;
+  width: 100%; /* Full width overlay */
   height: 100%;
   background-color: rgba(0,0,0,0.4);
   color: white;
@@ -57,6 +59,8 @@ html, body {
   justify-content: center;
   align-items: center;
   background-color: #fdf8f1;
+  padding: 20px; /* Add padding for smaller screens */
+  box-sizing: border-box; /* Include padding in element's total width */
 }
 
 .login-box {
@@ -64,7 +68,14 @@ html, body {
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  width: 320px;
+  width: 100%; /* Make it responsive */
+  max-width: 320px; /* Max width for desktop */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hover animation */
+}
+
+.login-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
 .login-box h2 {
@@ -87,13 +98,19 @@ input {
   border: 1px solid #d3c1a1;
   border-radius: 8px;
   font-size: 14px;
-  transition: border 0.3s ease;
+  transition: all 0.3s ease; /* Smooth transition for all input properties */
+  box-sizing: border-box; /* Include padding in element's total width */
 }
 
 input:focus {
   outline: none;
   border-color: #a3794f;
   box-shadow: 0 0 4px #d2aa7b;
+}
+
+input:hover {
+  background-color: #fffaf2;
+  border-color: #b38a61;
 }
 
 button {
@@ -107,30 +124,122 @@ button {
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease; /* Smooth transition for all button properties */
 }
 
 button:hover {
   background-color: #8c5831;
 }
 
-/* 1. Hover Animasi pada .login-box (sedikit naik dan glow) */
-.login-box {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.login-box p {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
 }
 
-.login-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+.login-box a {
+  color: #a76c3e;
+  text-decoration: none;
+  font-weight: bold;
 }
 
-/* 2. Hover Efek pada input */
-input:hover {
-  background-color: #fffaf2;
-  border-color: #b38a61;
+.login-box a:hover {
+  text-decoration: underline;
 }
 
-/* 3. Transisi halus di semua input */
-input, button {
-  transition: all 0.3s ease;
+/* Messages */
+.errors, .success {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.errors {
+  background-color: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #ef9a9a;
+}
+
+.success {
+  background-color: #e8f5e9;
+  color: #388e3c;
+  border: 1px solid #a5d6a7;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column; /* Stack panels vertically on smaller screens */
+    overflow: auto; /* Allow scrolling if content overflows on mobile */
+  }
+
+  .left-panel {
+    width: 90%;
+    height: 30vh; /* Adjust height for mobile view */
+    min-height: 150px; /* Minimum height for the image panel */
+  }
+
+  .left-panel .overlay {
+    width: 100%; /* Ensure overlay covers full width */
+  }
+
+  .left-panel h1 {
+    font-size: 28px; /* Smaller font on mobile */
+  }
+
+  .left-panel p {
+    font-size: 16px; /* Smaller font on mobile */
+    max-width: 80%; /* Allow text to spread more */
+  }
+
+  .right-panel {
+    width: 100%;
+    height: auto; /* Allow height to adjust based on content */
+    padding: 15px; /* Reduce padding for smaller screens */
+  }
+
+  .login-box {
+    padding: 25px; /* Reduce padding inside the login box */
+    box-shadow: none; /* Remove shadow on small screens for cleaner look */
+    border-radius: 0; /* Remove border-radius on small screens */
+    max-width: 95%; /* Adjust max-width for better fit */
+  }
+
+  /* Specific adjustments for smaller mobile screens */
+  @media (max-width: 480px) {
+    .left-panel {
+      height: 25vh; /* Further reduce height on very small screens */
+    }
+
+    .left-panel h1 {
+      font-size: 24px;
+    }
+
+    .left-panel p {
+      font-size: 14px;
+      max-width: 90%;
+    }
+
+    .login-box {
+      padding: 20px; /* Even less padding */
+    }
+
+    .login-box h2 {
+      font-size: 22px; /* Smaller heading for tight spaces */
+      margin-bottom: 20px;
+    }
+
+    label, input, button, .login-box p {
+      font-size: 13px; /* Slightly smaller text for all form elements */
+    }
+
+    button {
+      padding: 10px; /* Smaller button padding */
+    }
+
+    .errors, .success {
+      font-size: 13px; /* Smaller message text */
+    }
+  }
 }
