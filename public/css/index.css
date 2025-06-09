@@ -3,7 +3,7 @@
             padding: 20px;
         }
         .card-header {
-            background-color: grey /* Warna header card */
+            background-color: grey; /* Warna header card */
             color: white;
         }
         .table thead th {
