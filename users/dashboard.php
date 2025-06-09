@@ -42,6 +42,14 @@ $menu_items = []; // Variabel untuk menyimpan item menu
 $category_filter = $_GET['category_filter'] ?? 'all'; // Filter kategori default: 'all'
 $search_query = $_GET['search_query'] ?? ''; // New: Variable to capture search query
 
+// Define the absolute path to the project root for secure directory access
+// This assumes 'admin' is directly inside 'your_project_root'
+$project_root = dirname(__DIR__); // Go up one level from 'admin' to 'your_project_root'
+
+// Define the secure backup directory
+$backup_dir = $project_root . '/backups/';
+
+
 // Logika kondisional untuk mengambil data sesuai halaman yang diminta
 switch ($requested_page) {
     case 'users':
@@ -135,30 +143,73 @@ switch ($requested_page) {
             $menu_items = [];
         }
         break;
-    
-    case 'file_manager': // NEW CASE for File Manager
-        $page_title = 'Manajemen File';
-        $breadcrumb_active = 'File Manager';
-        $file_list = [];
-        $file_manager_dir = '../public/uploads/'; // Directory to list files from
 
-        if (is_dir($file_manager_dir)) {
-            $scanned_files = scandir($file_manager_dir);
-            foreach ($scanned_files as $file) {
-                if ($file !== '.' && $file !== '..') {
-                    $file_path = $file_manager_dir . $file;
-                    $file_type = is_dir($file_path) ? 'Direktori' : 'File';
-                    $file_size = is_file($file_path) ? round(filesize($file_path) / 1024, 2) . ' KB' : '-';
-                    $file_list[] = [
-                        'name' => htmlspecialchars($file),
-                        'type' => $file_type,
-                        'size' => $file_size,
-                        'path' => htmlspecialchars($file_path) // For potential future actions
-                    ];
-                }
+    case 'backup_data': // Case for Backup Data MySQL
+        $page_title = 'Backup Data MySQL';
+        $breadcrumb_active = 'Backup Data';
+        $backup_message = '';
+        $backup_message_type = '';
+
+        // Ensure the backup directory exists and is writable
+        if (!is_dir($backup_dir)) {
+            if (!mkdir($backup_dir, 0755, true)) { // Use 0755 for permissions
+                $backup_message = 'Gagal membuat direktori backup: ' . htmlspecialchars($backup_dir) . '. Pastikan izin server sudah benar.';
+                $backup_message_type = 'danger';
+                error_log("Failed to create backup directory: " . $backup_dir);
             }
-        } else {
-            $page_error = "Direktori file manager tidak ditemukan atau tidak dapat diakses: " . htmlspecialchars($file_manager_dir);
+        } elseif (!is_writable($backup_dir)) {
+            $backup_message = 'Direktori backup tidak dapat ditulis: ' . htmlspecialchars($backup_dir) . '. Pastikan izin server sudah benar.';
+            $backup_message_type = 'danger';
+            error_log("Backup directory is not writable: " . $backup_dir);
+        }
+
+        // Check if the backup action is triggered and directory is writable
+        if (isset($_POST['action']) && $_POST['action'] == 'backup_database' && empty($backup_message)) {
+            try {
+                // Get database credentials from database.php constants
+                $dbHost = DB_HOST;
+                $dbName = DB_NAME;
+                $dbUser = DB_USER;
+                $dbPass = DB_PASS;
+
+                $filename = $dbName . '_' . date('Y-m-d_H-i-s') . '.sql';
+                $filepath = $backup_dir . $filename;
+
+                // Determine the path to mysqldump
+                // IMPORTANT: Adjust this path based on your server environment.
+                // Linux/macOS: /usr/bin/mysqldump or /usr/local/bin/mysqldump
+                // Windows (XAMPP/WAMP): C:\xampp\mysql\bin\mysqldump.exe
+                $mysqldump_path = '/usr/bin/mysqldump'; // Default, CHANGE THIS!
+
+                // Build the command
+                // Add --single-transaction and --skip-lock-tables forInnoDB tables for less disruption
+                $command = sprintf(
+                    '%s -h%s -u%s -p%s %s --single-transaction --skip-lock-tables > %s 2>&1', // 2>&1 redirects stderr to stdout
+                    escapeshellarg($mysqldump_path),
+                    escapeshellarg($dbHost),
+                    escapeshellarg($dbUser),
+                    escapeshellarg($dbPass),
+                    escapeshellarg($dbName),
+                    escapeshellarg($filepath)
+                );
+
+                $output = null;
+                $return_var = null;
+                exec($command, $output, $return_var);
+
+                if ($return_var === 0) {
+                    $backup_message = 'Backup database berhasil dibuat: <strong>' . htmlspecialchars($filename) . '</strong>';
+                    $backup_message_type = 'success';
+                } else {
+                    $backup_message = 'Gagal membuat backup database. Pastikan `mysqldump` terinstal dan path-nya benar. Pesan error: ' . implode("\n", $output);
+                    $backup_message_type = 'danger';
+                    error_log("MySQL backup failed (command: $command, return: $return_var, output: " . implode("\n", $output));
+                }
+            } catch (Exception $e) {
+                $backup_message = 'Terjadi kesalahan saat mencoba backup database: ' . $e->getMessage();
+                $backup_message_type = 'danger';
+                error_log("Exception during MySQL backup: " . $e->getMessage());
+            }
         }
         break;
 
@@ -201,7 +252,7 @@ switch ($requested_page) {
             </li>
         </ul>
     </nav>
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-white elevation-4">
 
         <div class="sidebar">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -235,8 +286,8 @@ switch ($requested_page) {
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item <?php echo ($requested_page == 'users' || $requested_page == 'menu_items' || $requested_page == 'file_manager') ? 'menu-open' : ''; ?>">
-                        <a href="#" class="nav-link <?php echo ($requested_page == 'users' || $requested_page == 'menu_items' || $requested_page == 'file_manager') ? 'active' : ''; ?>">
+                    <li class="nav-item <?php echo ($requested_page == 'users' || $requested_page == 'menu_items' || $requested_page == 'backup_data') ? 'menu-open' : ''; ?>">
+                        <a href="#" class="nav-link <?php echo ($requested_page == 'users' || $requested_page == 'menu_items' || $requested_page == 'backup_data') ? 'active' : ''; ?>">
                             <i class="nav-icon fas fa-cogs"></i>
                             <p>
                                 Manajemen
@@ -257,9 +308,9 @@ switch ($requested_page) {
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="?page=file_manager" class="nav-link <?php echo ($requested_page == 'file_manager') ? 'active' : ''; ?>">
-                                    <i class="fas fa-folder nav-icon"></i>
-                                    <p>Manajemen File</p>
+                                <a href="?page=backup_data" class="nav-link <?php echo ($requested_page == 'backup_data') ? 'active' : ''; ?>">
+                                    <i class="fas fa-database nav-icon"></i>
+                                    <p>Backup Data MySQL</p>
                                 </a>
                             </li>
                         </ul>
@@ -406,7 +457,6 @@ switch ($requested_page) {
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <!-- Ini adalah bagian yang diperbarui untuk status database -->
                                         <div class="info-box <?php echo $db_status_class; ?>">
                                             <span class="info-box-icon"><i class="<?php echo $db_status_icon; ?>"></i></span>
                                             <div class="info-box-content">
@@ -416,8 +466,7 @@ switch ($requested_page) {
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="info-box bg-primary"> <!-- New info box for active users -->
-                                            <span class="info-box-icon"><i class="fas fa-users"></i></span>
+                                        <div class="info-box bg-primary"> <span class="info-box-icon"><i class="fas fa-users"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Total User Terdaftar</span>
                                                 <span class="info-box-number"><?php echo htmlspecialchars($active_users_count); ?></span>
@@ -471,22 +520,22 @@ switch ($requested_page) {
                                     <a href="create_menu_item.php" class="btn btn-primary btn-sm">
                                         <i class="fas fa-plus"></i> Tambah Menu Baru
                                     </a>
-                                    <div class="input-group input-group-sm" style="width: 250px; display: inline-flex;">
-                                        <input type="text" name="search_query" class="form-control float-right" placeholder="Cari nama/kategori" value="<?= htmlspecialchars($search_query); ?>" onkeyup="if(event.keyCode === 13) this.form.submit();">
+                                    <form action="dashboard.php" method="GET" class="input-group input-group-sm d-inline-flex ml-2" style="width: 250px;">
+                                        <input type="hidden" name="page" value="menu_items"> <input type="text" name="search_query" class="form-control float-right" placeholder="Cari nama/kategori" value="<?= htmlspecialchars($search_query); ?>">
                                         <div class="input-group-append">
-                                            <button type="submit" class="btn btn-default" onclick="this.form.submit();">
+                                            <button type="submit" class="btn btn-default">
                                                 <i class="fas fa-search"></i>
                                             </button>
                                         </div>
-                                        <select class="form-control float-right ml-2" id="categoryFilter" onchange="window.location.href='dashboard.php?page=menu_items&category_filter=' + this.value + '&search_query=<?= htmlspecialchars($search_query); ?>';">
+                                        <select class="form-control float-right ml-2" id="categoryFilter" name="category_filter" onchange="this.form.submit();">
                                             <option value="all" <?= ($category_filter == 'all') ? 'selected' : ''; ?>>Semua Kategori</option>
                                             <option value="coffee" <?= ($category_filter == 'coffee') ? 'selected' : ''; ?>>Kopi</option>
                                             <option value="tea" <?= ($category_filter == 'tea') ? 'selected' : ''; ?>>Teh</option>
                                             <option value="snack" <?= ($category_filter == 'snack') ? 'selected' : ''; ?>>Snack</option>
                                             <option value="other" <?= ($category_filter == 'other') ? 'selected' : ''; ?>>Lain-lain</option>
                                         </select>
+                                    </form>
                                     </div>
-                                </div>
                             </div>
                             <div class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
                                 <?php if (count($menu_items) > 0): ?>
@@ -549,44 +598,87 @@ switch ($requested_page) {
                         <?php
                         break;
 
-                    case 'file_manager':
-                        // KONTEN MANAJEMEN FILE
+                    case 'backup_data':
+                        // KONTEN BACKUP DATA MYSQL
                         ?>
-                        <?php if (!empty($page_error)): ?>
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <?php echo htmlspecialchars($page_error); ?>
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        <?php endif; ?>
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Daftar File dan Direktori di `../public/uploads/`</h3>
+                                <h3 class="card-title">Buat Backup Database MySQL</h3>
                             </div>
-                            <div class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
-                                <?php if (!empty($file_list)): ?>
-                                    <table class="table table-striped table-valign-middle mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th>Nama</th>
-                                                <th>Tipe</th>
-                                                <th>Ukuran</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($file_list as $file): ?>
+                            <div class="card-body">
+                                <?php if (!empty($backup_message)): ?>
+                                    <div class="alert alert-<?php echo htmlspecialchars($backup_message_type); ?> alert-dismissible fade show" role="alert">
+                                        <?php echo $backup_message; ?>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                <?php endif; ?>
+
+                                <p>Klik tombol di bawah untuk membuat file backup database MySQL Anda. File backup akan disimpan di direktori <code><?php echo htmlspecialchars($backup_dir); ?></code>.</p>
+                                <form action="dashboard.php?page=backup_data" method="POST">
+                                    <input type="hidden" name="action" value="backup_database">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-download"></i> Buat Backup Sekarang
+                                    </button>
+                                </form>
+
+                                <h4 class="mt-4">Daftar File Backup</h4>
+                                <?php
+                                $backup_files = [];
+                                if (is_dir($backup_dir)) {
+                                    $scanned_backups = scandir($backup_dir);
+                                    foreach ($scanned_backups as $file) {
+                                        if ($file !== '.' && $file !== '..' && pathinfo($file, PATHINFO_EXTENSION) == 'sql') {
+                                            $file_path = $backup_dir . $file;
+                                            $backup_files[] = [
+                                                'name' => htmlspecialchars($file),
+                                                'size' => round(filesize($file_path) / 1024, 2) . ' KB',
+                                                'created_at' => date('d M Y, H:i:s', filemtime($file_path)),
+                                                'download_url' => 'download_backup.php?file=' . urlencode($file) // Secure download via PHP script
+                                            ];
+                                        }
+                                    }
+                                    // Sort by creation date (newest first)
+                                    usort($backup_files, function($a, $b) {
+                                        return strtotime($b['created_at']) - strtotime($a['created_at']);
+                                    });
+                                }
+                                ?>
+
+                                <?php if (!empty($backup_files)): ?>
+                                    <div class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table table-striped table-valign-middle mb-0 mt-3">
+                                            <thead>
                                                 <tr>
-                                                    <td><?php echo $file['name']; ?></td>
-                                                    <td><?php echo $file['type']; ?></td>
-                                                    <td><?php echo $file['size']; ?></td>
+                                                    <th>Nama File</th>
+                                                    <th>Ukuran</th>
+                                                    <th>Tanggal Dibuat</th>
+                                                    <th>Aksi</th>
                                                 </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($backup_files as $backup_file): ?>
+                                                    <tr>
+                                                        <td><?php echo $backup_file['name']; ?></td>
+                                                        <td><?php echo $backup_file['size']; ?></td>
+                                                        <td><?php echo $backup_file['created_at']; ?></td>
+                                                        <td>
+                                                            <a href="<?php echo $backup_file['download_url']; ?>" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-download"></i> Download
+                                                            </a>
+                                                            <a href="delete_backup.php?file=<?php echo urlencode($backup_file['name']); ?>" class="btn btn-sm btn-danger ml-1" onclick="return confirm('Apakah Anda yakin ingin menghapus file backup \'<?php echo htmlspecialchars($backup_file['name']); ?>\'? Tindakan ini tidak dapat dibatalkan.');">
+                                                                <i class="fas fa-trash"></i> Hapus
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 <?php else: ?>
                                     <div class="p-3">
-                                        <p>Tidak ada file atau direktori ditemukan di `../public/uploads/`.</p>
+                                        <p>Tidak ada file backup ditemukan.</p>
                                     </div>
                                 <?php endif; ?>
                             </div>

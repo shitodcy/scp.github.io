@@ -1,13 +1,13 @@
 .content-wrapper {
-            background-color: #f4f6f9; /* Warna latar belakang AdminLTE default */
+            background-color: #ffffff; /* Warna latar belakang AdminLTE default */
             padding: 20px;
         }
         .card-header {
-            background-color: #007bff; /* Warna header card */
+            background-color: grey /* Warna header card */
             color: white;
         }
         .table thead th {
-            background-color: #e9ecef; /* Warna header tabel */
+            background-color: #ffffff; /* Warna header tabel */
         }
         .btn-action {
             margin-right: 5px;
