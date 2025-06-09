@@ -1,0 +1,329 @@
+#about {
+    background: url('https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598324/foto_dapur_fvvsvn.webp') no-repeat center center/cover;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: multiply;
+    background-attachment: scroll;
+    padding: 4rem 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Untuk perangkat non-mobile, aktifkan background-attachment: fixed */
+@media (min-width: 992px) {
+    #about {
+        background-attachment: fixed;
+    }
+}
+
+#about h2 {
+    font-size: clamp(1.75rem, 4vw, 2.6rem);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #F2E3C6;
+    position: relative;
+    display: inline-block;
+    will-change: transform;
+}
+
+#about h2:after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 3px;
+    background-color: #bda77b;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 0.3s ease-out;
+}
+
+#about h2:hover:after {
+    width: 100px;
+}
+
+.about-row {
+    position: relative;
+}
+
+.panel-wrapper {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+}
+
+.card-custom {
+    border-radius: 1.5rem;
+    background-color: #6f4e37;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    color: #dbc8a4;
+    height: 100%;
+    transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+    will-change: transform;
+}
+
+.card-custom:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.12);
+}
+
+.panel-small {
+    height: fit-content;
+    width: 100%;
+    transition: transform 0.25s ease-out;
+}
+
+.panel-small:hover {
+    transform: translateY(-3px);
+}
+
+.panel-main {
+    min-height: fit-content;
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease-out;
+}
+
+.panel-main:hover {
+    transform: translateY(-3px);
+}
+
+/* Panel Content */
+.celebration-title {
+    font-family: 'Roboto Slab', serif;
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-style: italic;
+    font-weight: 600;
+    color: #bda77b;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.celebration-text {
+    font-family: 'Roboto Slab', serif;
+    font-size: clamp(0.95rem, 2.5vw, 1rem);
+    margin-bottom: 0.5rem;
+    color: #bda77b;
+    text-align: auto;
+}
+
+.celebration-text p {
+    margin-bottom: 0.8rem;
+    line-height: 1.6;
+}
+
+.img-rounded {
+    border-radius: 0.8rem;
+    object-fit: cover;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 220px;
+    margin: 0 auto;
+    display: block;
+    transition: transform 0.25s ease-out;
+    will-change: transform;
+}
+
+.img-rounded:hover {
+    transform: scale(1.02);
+}
+
+.text-content {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.scrollable-content {
+    overflow-y: auto;
+    max-height: 180px;
+    padding-right: 5px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 480px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.scrollable-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+    background: rgba(111, 78, 55, 0.3);
+    border-radius: 10px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+    background-color: rgba(219, 200, 164, 0.7);
+    border-radius: 10px;
+}
+
+.scrollable-content {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(219, 200, 164, 0.7) rgba(111, 78, 55, 0.3);
+}
+
+.scroll-text p {
+    text-align: left;
+    margin-bottom: 0.8rem;
+    line-height: 1.6;
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.text-custom {
+    font-family: 'Roboto Slab', serif;
+    color: #F2E3C6;
+    line-height: 1.5;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+}
+
+.fw-bold {
+    font-family: 'Roboto Slab', serif;
+    color: #F2E3C6;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+}
+
+/* Animation classes */
+.fade-in {
+    opacity: 0;
+    transition: opacity 0.6s ease-out;
+}
+
+.fade-in.active {
+    opacity: 1;
+}
+
+.slide-up {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    will-change: transform, opacity;
+}
+
+.slide-up.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Floating animation */
+@keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+}
+
+.float-animation {
+    animation: floating 4s ease-in-out infinite;
+}
+
+/* Animasi untuk title */
+.title-animation {
+    animation: fadeSlideDown 0.6s ease-out forwards;
+}
+
+@keyframes fadeSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animasi untuk panel */
+.panel-animation {
+    animation: fadeScale 0.5s ease-out forwards;
+}
+
+@keyframes fadeScale {
+    from {
+        opacity: 0.5;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Animasi untuk image */
+.image-animation {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Animasi untuk text */
+.text-animation {
+    animation: fadeSlideUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .panel-small, .panel-main {
+        margin-bottom: 20px;
+    }
+
+    .panel-order {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .order-1-mobile {
+        order: 1;
+    }
+
+    .order-2-mobile {
+        order: 2;
+    }
+
+    .order-3-mobile {
+        order: 3;
+    }
+
+    .about-row {
+        align-items: stretch;
+    }
+
+    .panel-main, .panel-small {
+        height: 100%;
+    }
+
+    .float-animation {
+        animation: none;
+    }
+
+    .panel-animation {
+        animation: simpleFade 0.4s ease-out forwards;
+    }
+
+    @keyframes simpleFade {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+}

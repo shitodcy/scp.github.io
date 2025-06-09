@@ -1,0 +1,111 @@
+.content-wrapper {
+            background-color: #ffffff; /* Warna latar belakang AdminLTE default */
+            padding: 20px;
+        }
+        .card-header {
+            background-color: grey; /* Warna header card */
+            color: white;
+        }
+        .table thead th {
+            background-color: #ffffff; /* Warna header tabel */
+        }
+        .btn-action {
+            margin-right: 5px;
+        }
+        /* Styling untuk pesan sukses/error */
+        .alert-dismissible {
+            position: relative;
+            padding-right: 3rem; /* Ruang untuk tombol tutup */
+        }
+        .alert .close {
+            position: absolute;
+            top: 50%;
+            right: 1.25rem;
+            transform: translateY(-50%);
+            padding: 0;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: inherit;
+            opacity: .5;
+        }
+        .alert .close:hover {
+            opacity: .75;
+        }
+        /* Styling untuk pesan sukses/error (AdminLTE alert) */
+        .alert-dismissible .close {
+            position: absolute;
+            top: 50%;
+            right: 1.25rem;
+            transform: translateY(-50%);
+            padding: 0;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: inherit;
+            opacity: .5;
+        }
+        .alert-dismissible .close:hover {
+            opacity: .75;
+        }
+        .user-panel .image img {
+            width: 40px; /* Ukuran default gambar user di sidebar */
+            height: 40px;
+            object-fit: cover; /* Pastikan gambar tidak terdistorsi */
+        }
+        /* Tambahan jika ingin tombol close di sidebar saat dibuka (seperti di index.php) */
+        .brand-link .pushmenu-btn {
+           position: absolute;
+           right: 10px;
+           top: 50%;
+           transform: translateY(-50%);
+           color: white;
+           padding: 5px;
+           background: none;
+           border: none;
+           font-size: 1.2rem;
+           cursor: pointer;
+           display: none; 
+        }
+        .user-panel .image img {
+            width: 40px; /* Ukuran default gambar user di sidebar */
+            height: 40px;
+            object-fit: cover; /* Pastikan gambar tidak terdistorsi */
+        }
+        .profile-image-preview {
+         width: 150px;
+         height: 150px;
+         object-fit: cover; /* Penting: Pastikan gambar menutupi area tanpa terdistorsi */
+         border-radius: 50%; /* Membuat gambar menjadi bulat */
+         border: 3px solid #ddd;
+         margin-bottom: 15px;
+         display: block;
+         margin-left: auto; /* Memusatkan gambar */
+         margin-right: auto; /* Memusatkan gambar */
+        }
+        /* Style untuk tombol close di sidebar (Opsional, tergantung penempatan) */
+        .brand-link .pushmenu-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            padding: 5px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            /* Hanya tampil di layar kecil saat sidebar overlay */
+            display: none; 
+        }
+        /* Tampilkan tombol close di sidebar saat AdminLTE dalam mode overlay/collapsed pada layar kecil */
+        @media (max-width: 767.98px) {
+            .sidebar-open .brand-link .pushmenu-btn {
+                display: block; /* Tampilkan ketika sidebar terbuka pada layar kecil */
+            }
+            .sidebar-mini.sidebar-collapse .brand-link .pushmenu-btn {
+                display: none; /* Sembunyikan ketika sidebar kecil/tertutup */
+            }
+        }
