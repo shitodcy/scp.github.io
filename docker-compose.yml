@@ -1,0 +1,74 @@
+# docker-compose.yml
+# Versi Docker Compose file format
+version: '3.8'
+
+# Definisi layanan (container) yang akan dijalankan
+services:
+  # Layanan MySQL Database
+  mysql:
+    image: mysql/mysql-server:latest # Menggunakan image resmi MySQL Server
+    container_name: my_mysql_server # Nama spesifik untuk container MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: newpassword # Ganti dengan password root yang kuat!
+      MYSQL_ROOT_HOST: "%" # Mengizinkan koneksi dari host manapun (penting untuk phpMyAdmin)
+    volumes:
+      - db_data:/var/lib/mysql # Volume untuk persistensi data database
+                               # Data akan tetap ada meskipun container dihapus/dibuat ulang
+    ports:
+      - "3306:3306" # Membuka port 3306 container ke port 3306 di host Anda
+                   # Ini opsional jika Anda hanya mengakses dari container lain
+                   # tapi berguna untuk tool database di luar Docker
+    networks:
+      - my-app-network # Menghubungkan ke network kustom 'my-app-network'
+
+  # Layanan phpMyAdmin (Antarmuka Web untuk MySQL)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest # Menggunakan image resmi phpMyAdmin
+    container_name: my_phpmyadmin # Nama spesifik untuk container phpMyAdmin
+    environment:
+      PMA_HOST: my_mysql_server # Menghubungkan ke container MySQL berdasarkan namanya di network
+      MYSQL_ROOT_PASSWORD: newpassword # Gunakan password root MySQL yang sama
+      # PMA_PORT: 3306 # Opsional, port default MySQL
+      # UPLOAD_LIMIT: 2048K # Contoh konfigurasi phpMyAdmin lainnya
+      # MEMORY_LIMIT: 512M
+    ports:
+      - "8000:80" # Membuka port 80 container phpMyAdmin ke port 8000 di host Anda
+                   # Anda akan mengakses phpMyAdmin di http://localhost:8000
+    depends_on:
+      - mysql # Memastikan MySQL berjalan sebelum phpMyAdmin dimulai
+    networks:
+      - my-app-network # Menghubungkan ke network kustom 'my-app-network'
+
+  # Layanan Aplikasi PHP Anda
+  app:
+    build:
+      context: . # Konteks build adalah direktori tempat docker-compose.yml berada
+      dockerfile: Dockerfile_app # Menggunakan Dockerfile_App yang kita buat di atas
+    container_name: my_php_app # Nama spesifik untuk container aplikasi PHP
+    ports:
+      - "80:80" # Membuka port 80 container aplikasi ke port 80 di host Anda
+               # Anda akan mengakses aplikasi PHP di http://localhost/
+    volumes:
+      - ./src:/var/www/html # ***BAGIAN PENTING UNTUK PENGEMBANGAN***
+                             # Ini me-mount folder 'src' lokal Anda ke '/var/www/html' di dalam container
+                             # Perubahan di 'src' lokal akan langsung terlihat di container
+    depends_on:
+      - mysql # Aplikasi tergantung pada MySQL
+    networks:
+      - my-app-network # Menghubungkan ke network kustom 'my-app-network'
+
+# Definisi volume untuk persistensi data
+volumes:
+  db_data: {} # Volume bernama untuk data MySQL
+
+# Definisi network kustom
+networks:
+  my-app-network:
+    # Anda bisa memilih salah satu dari opsi di bawah:
+    # 1. Biarkan kosong agar Docker Compose membuat network baru dengan nama ini
+    #    (ini adalah default dan paling sederhana jika network belum ada)
+    # 2. Jika Anda sudah memiliki network 'my-app-network' yang ingin digunakan
+    #    dan tidak ingin Docker Compose membuatnya ulang (misal untuk container lain),
+    #    hapus komentar baris di bawah:
+    # external: true
+    # name: my-app-network
