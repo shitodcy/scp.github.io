@@ -430,6 +430,7 @@ switch ($requested_page) {
 
                     case 'monitoring':
                         // KONTEN MONITORING WEBSITE
+                        
                         ?>
                         <div class="card">
                             <div class="card-header">
@@ -485,6 +486,17 @@ switch ($requested_page) {
                                 </div>
                             </div>
                         </div>
+
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h3 class="card-title">Visits by Week of Year</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-responsive">
+                                    <canvas id="visitsChart" style="height: 250px;"></canvas>
+                                </div>
+                        </div>
+    </div>
                         <?php
                         break;
 
