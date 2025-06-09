@@ -4,3 +4,4 @@ login.html
 assets/login.css
 Dockerfile_app
 docker-compose.yml
+*.sql
