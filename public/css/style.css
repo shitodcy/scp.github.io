@@ -64,7 +64,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #007bff;
+    color: #7abaff;
     text-decoration: none;
     font-weight: bold;
 }
@@ -97,9 +97,9 @@ form select {
 }
 
 form input:focus, form select:focus {
-    border-color: #007bff;
+    border-color: #7abaff;
     outline: none;
-    box-shadow: 0 0 5px rgba(0,123,255,0.25);
+    box-shadow: 0 0 5px rgb(119, 183, 252);
 }
 
 form small {
@@ -111,7 +111,7 @@ form small {
 
 button, .btn, .btn-edit, .btn-delete {
     display: inline-block;
-    background-color: #007bff;
+    background-color: #80bdff;
     color: white;
     padding: 10px 18px;
     border: none;
@@ -123,22 +123,22 @@ button, .btn, .btn-edit, .btn-delete {
 }
 
 button:hover, .btn:hover {
-    background-color: #0056b3;
+    background-color: #cadef3;
 }
 
 .btn-edit {
-    background-color: #ffc107; /* Kuning */
+    background-color: #fddd7c; /* Kuning */
     color: #212529;
 }
 .btn-edit:hover {
-    background-color: #e0a800;
+    background-color: #fddd7c;
 }
 
 .btn-delete {
-    background-color: #dc3545; /* Merah */
+    background-color: #db6a75; /* Merah */
 }
 .btn-delete:hover {
-    background-color: #c82333;
+    background-color: #db6a75;
 }
 
 
