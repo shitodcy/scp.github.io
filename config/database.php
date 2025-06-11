@@ -1,7 +1,7 @@
 <?php
 // config/database.php
 
-define('DB_HOST', 'localhost'); // atau alamat IP server database kamu
+define('DB_HOST', 'mysql-server'); // atau alamat IP server database kamu
 define('DB_NAME', 'scp');
 define('DB_USER', 'root'); // username database kamu
 define('DB_PASS', 'newpassword'); // password database kamu (kosongkan jika tidak ada)
