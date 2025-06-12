@@ -1,23 +1,15 @@
 <?php
-// Pastikan sesi sudah dimulai
-session_start();
-
-// Ganti auth_check.php dengan logika pengecekan sesi Anda
-// Contoh sederhana:
-// if (!isset($_SESSION['user_id'])) {
-//     header('Location: login.php');
-//     exit;
-// }
-
-// Memanggil koneksi database
+// Ensure user is logged in (auth_check.php)
+require_once 'auth_check.php';
+// Database configuration (../config/database.php)
 require_once '../config/database.php';
 
 $errors = [];
 $username = '';
 $email = '';
-$full_name = '';
+$full_name = ''; // Initialize full_name variable for form pre-filling
 
-// Proses formulir saat di-submit
+// Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
@@ -25,296 +17,137 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $password_confirm = $_POST['password_confirm'] ?? '';
 
-    // Validasi Dasar
+    // Basic validation
     if (empty($username)) {
-        $errors[] = "Username wajib diisi.";
+        $errors[] = "Username is required.";
     }
     if (empty($email)) {
-        $errors[] = "Email wajib diisi.";
+        $errors[] = "Email is required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Format email tidak valid.";
+        $errors[] = "Invalid email format.";
     }
+    // full_name is optional, so no empty check is needed here
     if (empty($password)) {
-        $errors[] = "Password wajib diisi.";
+        $errors[] = "Password is required.";
     }
     if ($password !== $password_confirm) {
-        $errors[] = "Konfirmasi password tidak cocok.";
+        $errors[] = "Password confirmation does not match.";
     }
 
-    // Cek duplikasi username
+    // Check if username already exists
     if (empty($errors)) {
         $stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
         $stmt->execute([':username' => $username]);
         if ($stmt->fetchColumn() > 0) {
-            $errors[] = "Username sudah digunakan.";
+            $errors[] = "Username already taken.";
         }
     }
 
-    // Cek duplikasi email
+    // Check if email already exists
     if (empty($errors)) {
         $stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
         $stmt->execute([':email' => $email]);
         if ($stmt->fetchColumn() > 0) {
-            $errors[] = "Email sudah digunakan.";
+            $errors[] = "Email already taken.";
         }
     }
 
-    // Masukkan user ke database jika tidak ada error
+    // Insert user into database if no errors
     if (empty($errors)) {
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
-        
-        $stmt = $conn->prepare(
-            "INSERT INTO users (username, email, full_name, password, created_at) 
-             VALUES (:username, :email, :full_name, :password, NOW())"
-        );
-        
-        $params = [
-            ':username' => $username,
-            ':email' => $email,
-            ':full_name' => $full_name,
-            ':password' => $password_hash,
-        ];
+        // Prepare and execute the insert statement, including full_name
+        $stmt = $conn->prepare("INSERT INTO users (username, email, full_name, password, created_at) VALUES (:username, :email, :full_name, :password, NOW())");
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':full_name', $full_name);
+        $stmt->bindParam(':password', $password_hash);
 
-        if ($stmt->execute($params)) {
-            $_SESSION['message'] = "User baru berhasil ditambahkan.";
+        if ($stmt->execute()) {
+            $_SESSION['message'] = "New user successfully added.";
             $_SESSION['message_type'] = "success";
-            header("Location: dashboard.php");
+            header("Location: dashboard.php"); // Redirect to dashboard
             exit;
         } else {
-            $errors[] = "Gagal menambahkan user.";
+            $errors[] = "Failed to add user.";
         }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tambah User Baru</title>
-    
-    <link 
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-        rel="stylesheet" 
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
-        crossorigin="anonymous"
-    >
-    
-    <link 
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" 
-        rel="stylesheet"
-    >
-
+    <!-- Tailwind CSS CDN for minimalist styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter for clean typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* === BAGIAN STYLING UTAMA === */
-
-        /* Definisi variabel warna dan font dasar */
-        :root {
-            --brand-card-bg: #543a2d;
-            --brand-input-bg: #4a3428;
-            --brand-input-border: #6b5a53;
-            --brand-text-primary: #f8f9fa;
-            --brand-text-secondary: #adb5bd;
-            --brand-accent: #e2b79b;
-            --brand-button-bg: #8a6855;
-            --brand-button-border: #8a6855;
-            --brand-button-hover-bg: #a17a65;
-            --brand-button-hover-border: #a17a65;
-            --brand-focus-ring: rgba(226, 183, 155, 0.5);
-            --bs-body-font-family: 'Inter', sans-serif;
-        }
-
         body {
-            margin: 0;
-            background-color: #0c0c0c; /* Warna background gelap agar animasi terlihat */
-            overflow: hidden; /* Mencegah scrollbar dari animasi */
-        }
-
-        /* === BAGIAN STYLING ANIMASI BACKGROUND (BARU) === */
-
-        .background-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
-
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.6;
-        }
-
-        .blob1 {
-            width: 450px;
-            height: 450px;
-            top: -150px;
-            left: -200px;
-            background: #8a6855; /* Warna dari tombol */
-            animation: move1 25s infinite alternate;
-        }
-
-        .blob2 {
-            width: 350px;
-            height: 350px;
-            bottom: -150px;
-            right: -150px;
-            background: #e2b79b; /* Warna dari link accent */
-            animation: move2 20s infinite alternate;
-        }
-        
-        .blob3 {
-            width: 250px;
-            height: 250px;
-            top: 20%;
-            right: 20%;
-            background: #4a3428; /* Warna dari input */
-            animation: move1 18s infinite alternate-reverse; /* Gerakan berbeda */
-        }
-
-        @keyframes move1 {
-            from { transform: translate(0, 0) rotate(0deg) scale(1.2); }
-            to { transform: translate(200px, 400px) rotate(180deg) scale(1); }
-        }
-
-        @keyframes move2 {
-            from { transform: translate(0, 0) rotate(0deg) scale(1); }
-            to { transform: translate(-400px, -200px) rotate(-180deg) scale(1.3); }
-        }
-
-
-        /* === BAGIAN STYLING FORM ANDA === */
-
-        /* Wrapper untuk konten agar bisa ditaruh di atas background */
-        .content-wrapper {
-            position: relative;
-            z-index: 1;
-        }
-
-        .card {
-            background-color: var(--brand-card-bg);
-            color: var(--brand-text-primary);
-            border: none;
-            max-width: 450px;
-            border-radius: 20px;
-        }
-
-        .form-label {
-            color: var(--brand-text-secondary);
-        }
-
-        .form-control {
-            background-color: var(--brand-input-bg);
-            border-color: var(--brand-input-border);
-            color: var(--brand-text-primary);
-            border-radius: 15px;
-            width: 100%;
-        }
-
-        .form-control::placeholder {
-            color: var(--brand-text-secondary);
-        }
-
-        .form-control:focus {
-            background-color: var(--brand-input-bg);
-            color: var(--brand-text-primary);
-            border-color: var(--brand-accent);
-            box-shadow: 0 0 0 0.25rem var(--brand-focus-ring);
-        }
-
-        .btn-primary {
-            --bs-btn-bg: var(--brand-button-bg);
-            --bs-btn-border-color: var(--brand-button-border);
-            --bs-btn-hover-bg: var(--brand-button-hover-bg);
-            --bs-btn-hover-border-color: var(--brand-button-hover-border);
-            --bs-btn-active-bg: var(--brand-button-hover-bg);
-            --bs-btn-active-border-color: var(--brand-button-hover-border);
-            --bs-btn-focus-shadow-rgb: 226, 183, 155;
-            font-weight: 600;
-            border-radius: 15px;
-        }
-
-        .link-accent {
-            color: var(--brand-accent);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .link-accent:hover {
-            color: white;
+            font-family: 'Inter', sans-serif; /* Apply Inter font */
         }
     </style>
 </head>
-<body>
-    <div class="background-container">
-        <div class="blob blob1"></div>
-        <div class="blob blob2"></div>
-        <div class="blob blob3"></div>
-    </div>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Tambah User Baru</h2>
+        <p class="text-center mb-6">
+            <a href="dashboard.php" class="text-blue-600 hover:text-blue-800 transition-colors duration-200">
+                &larr; Kembali ke daftar user
+            </a>
+        </p>
 
-    <div class="content-wrapper container d-flex align-items-center justify-content-center min-vh-100">
-        <div class="card p-4 shadow-lg">
-            <div class="card-body">
-                <h2 class="card-title text-center mb-4">Tambah User Baru</h2>
-                <p class="text-center mb-4">
-                    <a href="dashboard.php" class="link-accent">&larr; Kembali ke daftar user</a>
-                </p>
-
-                <?php if (!empty($errors)): ?>
-                    <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Error!</h4>
-                        <ul class="mb-0">
-                            <?php foreach ($errors as $err): ?>
-                                <li><?php echo htmlspecialchars($err); ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                <?php endif; ?>
-
-                <form action="tambah_user.php" method="POST" class="row g-3">
-                    <div class="col-12">
-                        <label for="username" class="form-label">Username:</label>
-                        <input type="text" id="username" name="username" class="form-control" value="<?php echo htmlspecialchars($username); ?>" required>
-                    </div>
-
-                    <div class="col-12">
-                        <label for="email" class="form-label">Email:</label>
-                        <input type="email" id="email" name="email" class="form-control" value="<?php echo htmlspecialchars($email); ?>" required>
-                    </div>
-
-                    <div class="col-12">
-                        <label for="full_name" class="form-label">Nama Lengkap (Optional):</label>
-                        <input type="text" id="full_name" name="full_name" class="form-control" value="<?php echo htmlspecialchars($full_name); ?>">
-                    </div>
-
-                    <div class="col-12">
-                        <label for="password" class="form-label">Password:</label>
-                        <input type="password" id="password" name="password" class="form-control" required>
-                    </div>
-
-                    <div class="col-12">
-                        <label for="password_confirm" class="form-label">Konfirmasi Password:</label>
-                        <input type="password" id="password_confirm" name="password_confirm" class="form-control" required>
-                    </div>
-
-                    <div class="col-12 mt-4">
-                        <button type="submit" class="btn btn-primary w-100">
-                            Simpan
-                        </button>
-                    </div>
-                </form>
+        <?php if (!empty($errors)): ?>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">Error!</strong>
+                <span class="block sm:inline">
+                    <ul>
+                        <?php foreach ($errors as $err): ?>
+                            <li><?php echo htmlspecialchars($err); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </span>
             </div>
-        </div>
-    </div>
+        <?php endif; ?>
 
-    <script 
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
-        crossorigin="anonymous">
-    </script>
+        <form action="" method="POST" class="space-y-4">
+            <div>
+                <label for="username" class="block text-gray-700 text-sm font-medium mb-1">Username:</label>
+                <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+
+            <div>
+                <label for="email" class="block text-gray-700 text-sm font-medium mb-1">Email:</label>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+
+            <div>
+                <label for="full_name" class="block text-gray-700 text-sm font-medium mb-1">Nama Lengkap (Optional):</label>
+                <input type="text" id="full_name" name="full_name" value="<?php echo htmlspecialchars($full_name); ?>"
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+
+            <div>
+                <label for="password" class="block text-gray-700 text-sm font-medium mb-1">Password:</label>
+                <input type="password" id="password" name="password" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+
+            <div>
+                <label for="password_confirm" class="block text-gray-700 text-sm font-medium mb-1">Konfirmasi Password:</label>
+                <input type="password" id="password_confirm" name="password_confirm" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200">
+                Simpan
+            </button>
+        </form>
+    </div>
 </body>
 </html>
