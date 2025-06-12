@@ -1,0 +1,79 @@
+/* Definisi variabel warna dan font dasar */
+:root {
+    --brand-bg: #e2b79b; /* Latar belakang utama */
+    --brand-card-bg: #543a2d; /* Latar belakang form cokelat */
+    --brand-input-bg: #4a3428; /* Latar belakang input */
+    --brand-input-border: #6b5a53;
+    --brand-text-primary: #f8f9fa; /* Teks utama putih */
+    --brand-text-secondary: #adb5bd; /* Teks label abu-abu */
+    --brand-accent: #e2b79b; /* Teks link */
+    --brand-button-bg: #8a6855; /* Tombol */
+    --brand-button-border: #8a6855;
+    --brand-button-hover-bg: #a17a65;
+    --brand-button-hover-border: #a17a65;
+    --brand-focus-ring: rgba(226, 183, 155, 0.5); /* Efek focus */
+    --bs-body-font-family: 'Inter', sans-serif;
+}
+
+/* Mengaplikasikan warna latar belakang utama */
+body {
+    background-color: var(--brand-bg);
+}
+
+/* Kustomisasi Card Bootstrap */
+.card {
+    background-color: var(--brand-card-bg);
+    color: var(--brand-text-primary);
+    border: none;
+    max-width: 450px;
+    border-radius: 20px;
+}
+
+/* Kustomisasi Form Label */
+.form-label {
+    color: var(--brand-text-secondary);
+}
+
+/* Kustomisasi Form Control (Input) Bootstrap */
+.form-control {
+    background-color: var(--brand-input-bg);
+    border-color: var(--brand-input-border);
+    color: var(--brand-text-primary);
+    border-radius: 15px;
+    width: 100%;
+}
+
+.form-control::placeholder {
+    color: var(--brand-text-secondary);
+}
+
+.form-control:focus {
+    background-color: var(--brand-input-bg);
+    color: var(--brand-text-primary);
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 0.25rem var(--brand-focus-ring);
+}
+
+/* Kustomisasi Tombol (Button) Bootstrap */
+.btn-primary {
+    --bs-btn-bg: var(--brand-button-bg);
+    --bs-btn-border-color: var(--brand-button-border);
+    --bs-btn-hover-bg: var(--brand-button-hover-bg);
+    --bs-btn-hover-border-color: var(--brand-button-hover-border);
+    --bs-btn-active-bg: var(--brand-button-hover-bg);
+    --bs-btn-active-border-color: var(--brand-button-hover-border);
+    --bs-btn-focus-shadow-rgb: 226, 183, 155;
+    font-weight: 600;
+    border-radius: 15px;
+}
+
+/* Kustomisasi Link */
+.link-accent {
+    color: var(--brand-accent);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.link-accent:hover {
+    color: white;
+}
