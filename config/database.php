@@ -4,7 +4,7 @@
 define('DB_HOST', 'mysql-server'); // atau alamat IP server database kamu
 define('DB_NAME', 'scp');
 define('DB_USER', 'root'); // username database kamu
-define('DB_PASS', ''); // password database kamu (kosongkan jika tidak ada)
+define('DB_PASS', 'newpassword'); // password database kamu (kosongkan jika tidak ada)
 
 try {
     $conn = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
