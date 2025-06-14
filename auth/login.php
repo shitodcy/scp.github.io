@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../utils/logger.php'; // <<< ADD THIS LINE
 
 // --- REMEMBER ME: Check for remember me cookie before redirecting ---
 if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
@@ -21,22 +22,29 @@ if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
 
             // Optionally, refresh the remember me cookie with a new token for security
             $new_token = bin2hex(random_bytes(32)); // Generate a new token
-            $hashed_new_token = password_hash($new_token, PASSWORD_DEFAULT); // Hash if you prefer to hash tokens in DB
+            // For security, it's better to store the hash of the token in DB and compare with hash_equals
+            // But if you're comparing directly with stored token, ensure it's also not hashed here.
             $stmt_update = $conn->prepare("UPDATE users SET remember_token = :new_token WHERE id = :id");
-            $stmt_update->bindParam(':new_token', $new_token); // Store unhashed in cookie, hashed in DB
+            $stmt_update->bindParam(':new_token', $new_token);
             $stmt_update->bindParam(':id', $user['id']);
             $stmt_update->execute();
             setcookie('remember_me', $user['id'] . ':' . $new_token, time() + (86400 * 30), "/"); // 30 days
 
+            // <<< ADD LOGGING FOR SUCCESSFUL REMEMBER ME LOGIN
+            log_activity("User '{$user['username']}' logged in via remember me cookie.", 'INFO', $user['username']);
             header("Location: ../users/dashboard.php");
             exit();
         } else {
             // Invalid or tampered remember me cookie, clear it
             setcookie('remember_me', '', time() - 3600, "/");
+            // <<< ADD LOGGING FOR INVALID REMEMBER ME ATTEMPT
+            log_activity("Invalid or tampered remember me cookie attempt detected.", 'WARNING', 'UNKNOWN');
         }
     } catch (PDOException $e) {
         // Log the error but don't show it to the user for security
         error_log("Remember Me Error: " . $e->getMessage());
+        // <<< ADD LOGGING FOR REMEMBER ME DATABASE ERROR
+        log_activity("Database error during remember me check: " . $e->getMessage(), 'ERROR', 'SYSTEM');
     }
 }
 
@@ -52,11 +60,11 @@ $username = ""; // Changed from email to username based on your form
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
-    $remember_me = isset($_POST['remember_me']); // --- REMEMBER ME: Get checkbox state ---
+    $remember_me = isset($_POST['remember_me']);
 
     // Input validation
-    if (empty($username)) { $errors[] = "Username wajib diisi."; }
-    if (empty($password)) { $errors[] = "Password wajib diisi."; }
+    if (empty($username)) { $errors[] = "Username wajib diisi."; log_activity("Login attempt with empty username.", 'WARNING', 'UNKNOWN'); } // <<< ADD LOGGING
+    if (empty($password)) { $errors[] = "Password wajib diisi."; log_activity("Login attempt with empty password for username '{$username}'.", 'WARNING', $username); } // <<< ADD LOGGING
 
     // Attempt login if no validation errors
     if (empty($errors)) {
@@ -75,27 +83,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     // --- REMEMBER ME: Set remember me cookie if checked ---
                     if ($remember_me) {
-                        // Generate a unique token for remember me
                         $token = bin2hex(random_bytes(32));
-                        // Update user's remember_token in the database
                         $stmt_update = $conn->prepare("UPDATE users SET remember_token = :token WHERE id = :id");
                         $stmt_update->bindParam(':token', $token);
                         $stmt_update->bindParam(':id', $user['id']);
                         $stmt_update->execute();
-                        // Set the cookie with user ID and token, valid for 30 days
-                        setcookie('remember_me', $user['id'] . ':' . $token, time() + (86400 * 30), "/"); // 86400 = 1 day
+                        setcookie('remember_me', $user['id'] . ':' . $token, time() + (86400 * 30), "/");
                     }
 
+                    // <<< ADD LOGGING FOR SUCCESSFUL LOGIN
+                    log_activity("User '{$user['username']}' logged in successfully.", 'INFO', $user['username']);
                     header("Location: ../users/dashboard.php");
                     exit();
                 } else {
                     $errors[] = "Username atau password salah.";
+                    // <<< ADD LOGGING FOR FAILED PASSWORD ATTEMPT
+                    log_activity("Failed login attempt for username '{$username}' (incorrect password).", 'WARNING', $username);
                 }
             } else {
                 $errors[] = "Username atau password salah.";
+                // <<< ADD LOGGING FOR NON-EXISTENT USER
+                log_activity("Failed login attempt for non-existent username '{$username}'.", 'WARNING', 'UNKNOWN');
             }
         } catch (PDOException $e) {
             $errors[] = "Error database: " . $e->getMessage();
+            // <<< ADD LOGGING FOR LOGIN DATABASE ERROR
+            log_activity("Database error during login process: " . $e->getMessage(), 'ERROR', 'SYSTEM');
+        }
+    } else {
+        // Log validation errors if they exist and haven't been logged yet
+        foreach ($errors as $error) {
+            if (strpos($error, "wajib diisi") === false) { // Avoid double logging for empty fields
+                 log_activity("Login validation error for username '{$username}': {$error}", 'WARNING', $username);
+            }
         }
     }
 }
@@ -163,7 +183,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <input type="checkbox" id="remember_me" name="remember_me">
               <label for="remember_me">Remember me</label>
             </div>
-            <a href="#" class="forgot-password">Forgot Password</a>
+           <a href="/auth/forgot_password.php" class="forgot-password">Forgot Password</a>
           </div>
 
           <button type="submit" class="btn-sign-in">Sign In</button>

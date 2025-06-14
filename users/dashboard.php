@@ -4,12 +4,15 @@
 require_once 'auth_check.php';
 // Pastikan file ini ada dan berfungsi untuk koneksi database
 require_once '../config/database.php';
+// Pastikan file ini ada dan berfungsi untuk fungsi logging
+require_once '../utils/logger.php'; // Pastikan ini sudah ada
 
 // --- Logika Umum yang Dibutuhkan untuk Sidebar ---
 $current_user_profile_image = ''; // Variabel untuk menyimpan gambar profil user yang sedang login
 $current_user_full_name = $_SESSION['full_name'] ?? 'Pengguna'; // Default jika full_name tidak ada di session
 
 $current_user_id = $_SESSION['user_id'] ?? null;
+$current_admin_username = $_SESSION['username'] ?? 'UNKNOWN_ADMIN'; // Digunakan untuk logging
 
 if ($current_user_id && isset($conn)) {
     try {
@@ -26,6 +29,7 @@ if ($current_user_id && isset($conn)) {
         }
     } catch (PDOException $e) {
         error_log("Error fetching current user profile for sidebar: " . $e->getMessage());
+        log_activity("Database error fetching current user profile for sidebar: " . $e->getMessage(), 'ERROR', 'SYSTEM');
     }
 }
 // --- END Logika Umum ---
@@ -41,14 +45,16 @@ $last_update = date('d M Y, H:i:s'); // Untuk halaman monitoring
 $menu_items = []; // Variabel untuk menyimpan item menu
 $category_filter = $_GET['category_filter'] ?? 'all'; // Filter kategori default: 'all'
 $search_query = $_GET['search_query'] ?? ''; // New: Variable to capture search query
+$activity_logs = []; // For activity log page
+
 
 // Define the absolute path to the project root for secure directory access
-// This assumes 'admin' is directly inside 'your_project_root'
-$project_root = dirname(__DIR__); // Go up one level from 'admin' to 'your_project_root'
+$project_root = dirname(__DIR__);
 
 // Define the secure backup directory
 $backup_dir = $project_root . '/backups/';
-
+$log_dir = $project_root . '/logs/'; // Directory for activity logs
+$log_file_path = $log_dir . 'activity.log'; // Path lengkap ke file log
 
 // Logika kondisional untuk mengambil data sesuai halaman yang diminta
 switch ($requested_page) {
@@ -60,6 +66,7 @@ switch ($requested_page) {
         } catch (PDOException $e) {
             $page_error = "Error mengambil data user: " . $e->getMessage();
             $users = [];
+            log_activity("Database error fetching user list: " . $e->getMessage(), 'ERROR', $current_admin_username);
         }
         $page_title = 'Manajemen User';
         $breadcrumb_active = 'User';
@@ -79,17 +86,14 @@ switch ($requested_page) {
 
         try {
             // Coba lakukan kueri sederhana untuk memeriksa koneksi database
-            // Misalnya, ambil waktu saat ini dari database
             $stmt_check_db = $conn->query("SELECT NOW()");
-            $stmt_check_db->fetch(); // Coba ambil hasilnya
-            // Jika berhasil sampai sini, database online
+            $stmt_check_db->fetch();
         } catch (PDOException $e) {
-            // Jika ada exception, berarti koneksi database gagal atau database offline
             $db_status = 'Offline';
-            $db_status_class = 'bg-danger'; // Ganti warna menjadi merah
-            $db_status_icon = 'fas fa-exclamation-triangle'; // Ganti icon menjadi peringatan
-            error_log("Database connection check failed: " . $e->getMessage()); // Log error untuk debugging
-            // $page_error = "Koneksi database bermasalah: " . $e->getMessage(); // Opsional: Tampilkan error di bagian atas halaman
+            $db_status_class = 'bg-danger';
+            $db_status_icon = 'fas fa-exclamation-triangle';
+            error_log("Database connection check failed: " . $e->getMessage());
+            log_activity("Database connection check failed: " . $e->getMessage(), 'ERROR', 'SYSTEM');
         }
 
         // Ambil waktu terakhir diperbarui dari database (atau gunakan waktu server jika DB offline)
@@ -98,14 +102,14 @@ switch ($requested_page) {
             $last_update_db = $stmt_time->fetchColumn();
             $last_update = date('d M Y, H:i:s', strtotime($last_update_db));
 
-            // NEW: Ambil jumlah user terdaftar (dianggap sebagai user aktif untuk saat ini)
+            // NEW: Ambil jumlah user terdaftar
             $stmt_active_users = $conn->query("SELECT COUNT(id) FROM users");
             $active_users_count = $stmt_active_users->fetchColumn();
 
         } catch (PDOException $e) {
-            // Jika gagal ambil waktu atau hitung user dari DB, gunakan waktu PHP dan set count ke 0
             $last_update = date('d M Y, H:i:s') . ' (dari server PHP)';
             $active_users_count = 'N/A'; // Not available if DB is offline
+            log_activity("Database error fetching monitoring data: " . $e->getMessage(), 'ERROR', 'SYSTEM');
         }
         break;
 
@@ -141,6 +145,7 @@ switch ($requested_page) {
         } catch (PDOException $e) {
             $page_error = "Error mengambil data menu: " . $e->getMessage();
             $menu_items = [];
+            log_activity("Database error fetching menu items: " . $e->getMessage(), 'ERROR', $current_admin_username);
         }
         break;
 
@@ -156,11 +161,13 @@ switch ($requested_page) {
                 $backup_message = 'Gagal membuat direktori backup: ' . htmlspecialchars($backup_dir) . '. Pastikan izin server sudah benar.';
                 $backup_message_type = 'danger';
                 error_log("Failed to create backup directory: " . $backup_dir);
+                log_activity("Failed to create backup directory: " . $backup_dir, 'ERROR', 'SYSTEM');
             }
         } elseif (!is_writable($backup_dir)) {
             $backup_message = 'Direktori backup tidak dapat ditulis: ' . htmlspecialchars($backup_dir) . '. Pastikan izin server sudah benar.';
             $backup_message_type = 'danger';
             error_log("Backup directory is not writable: " . $backup_dir);
+            log_activity("Backup directory is not writable: " . $backup_dir, 'ERROR', 'SYSTEM');
         }
 
         // Check if the backup action is triggered and directory is writable
@@ -176,13 +183,8 @@ switch ($requested_page) {
                 $filepath = $backup_dir . $filename;
 
                 // Determine the path to mysqldump
-                // IMPORTANT: Adjust this path based on your server environment.
-                // Linux/macOS: /usr/bin/mysqldump or /usr/local/bin/mysqldump
-                // Windows (XAMPP/WAMP): C:\xampp\mysql\bin\mysqldump.exe
                 $mysqldump_path = '/usr/bin/mysqldump'; // Default, CHANGE THIS!
 
-                // Build the command
-                // Add --single-transaction and --skip-lock-tables forInnoDB tables for less disruption
                 $command = sprintf(
                     '%s -h%s -u%s -p%s %s --single-transaction --skip-lock-tables > %s 2>&1', // 2>&1 redirects stderr to stdout
                     escapeshellarg($mysqldump_path),
@@ -200,22 +202,65 @@ switch ($requested_page) {
                 if ($return_var === 0) {
                     $backup_message = 'Backup database berhasil dibuat: <strong>' . htmlspecialchars($filename) . '</strong>';
                     $backup_message_type = 'success';
+                    log_activity("Database backup '{$filename}' successfully created.", 'INFO', $current_admin_username);
                 } else {
                     $backup_message = 'Gagal membuat backup database. Pastikan `mysqldump` terinstal dan path-nya benar. Pesan error: ' . implode("\n", $output);
                     $backup_message_type = 'danger';
                     error_log("MySQL backup failed (command: $command, return: $return_var, output: " . implode("\n", $output));
+                    log_activity("Failed to create database backup. Error: " . implode("\n", $output), 'ERROR', $current_admin_username);
                 }
             } catch (Exception $e) {
                 $backup_message = 'Terjadi kesalahan saat mencoba backup database: ' . $e->getMessage();
                 $backup_message_type = 'danger';
                 error_log("Exception during MySQL backup: " . $e->getMessage());
+                log_activity("Exception during database backup: " . $e->getMessage(), 'ERROR', $current_admin_username);
             }
         }
         break;
 
+    case 'activity_log':
+        $page_title = 'Log Aktivitas';
+        $breadcrumb_active = 'Log Aktivitas';
+
+        // Handle delete log action
+        if (isset($_POST['action']) && $_POST['action'] === 'clear_logs') {
+            if (file_exists($log_file_path)) {
+                // Clear the content of the log file
+                if (file_put_contents($log_file_path, '') !== false) {
+                    $_SESSION['message'] = "Semua log aktivitas berhasil dihapus.";
+                    $_SESSION['message_type'] = "success";
+                    // Log the clearing action itself (this will be the only entry initially)
+                    log_activity("All activity logs cleared by '{$current_admin_username}'.", 'INFO', $current_admin_username);
+                } else {
+                    $page_error = "Gagal menghapus isi file log. Periksa izin tulis server.";
+                    log_activity("Failed to clear activity log file. Check server permissions.", 'ERROR', $current_admin_username);
+                }
+            } else {
+                $page_error = "File log aktivitas tidak ditemukan.";
+                log_activity("Attempted to clear non-existent activity log file.", 'WARNING', $current_admin_username);
+            }
+            // Redirect to prevent re-submission on refresh and show message
+            header("Location: dashboard.php?page=activity_log");
+            exit();
+        }
+
+        // Read and display logs
+        if (!is_dir($log_dir)) {
+            if (!mkdir($log_dir, 0755, true)) {
+                 $page_error = "Gagal membuat direktori log: {$log_dir}.";
+                 log_activity("Failed to create log directory: {$log_dir}.", 'ERROR', 'SYSTEM');
+            }
+        }
+
+        if (file_exists($log_file_path)) {
+            $activity_logs = file($log_file_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $activity_logs = array_reverse($activity_logs); // Show newest logs first
+        } else {
+            $page_error = "File log aktivitas belum ada atau tidak dapat diakses.";
+        }
+        break;
 
     default:
-        // Jika parameter page tidak valid, kembali ke default (users)
         header('Location: ?page=users');
         exit();
 }
@@ -231,13 +276,11 @@ switch ($requested_page) {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-    <link rel="stylesheet" href="../public/css/index.css">
+    <link rel="stylesheet" href="../public/css/dracula_theme.css">
 </head>
-<body class="hold-transition sidebar-mini">
-<div class="wrapper">
+<body class="hold-transition sidebar-mini dark-mode"> <div class="wrapper">
 
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-        <ul class="navbar-nav">
+    <nav class="main-header navbar navbar-expand navbar-dark navbar-gray-dark"> <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
@@ -252,9 +295,7 @@ switch ($requested_page) {
             </li>
         </ul>
     </nav>
-    <aside class="main-sidebar sidebar-dark-blue elevation-4">
-
-        <div class="sidebar">
+    <aside class="main-sidebar sidebar-dark-purple elevation-4"> <div class="sidebar">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
                     <?php
@@ -286,8 +327,8 @@ switch ($requested_page) {
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item <?php echo ($requested_page == 'users' || $requested_page == 'menu_items' || $requested_page == 'backup_data') ? 'menu-open' : ''; ?>">
-                        <a href="#" class="nav-link <?php echo ($requested_page == 'users' || $requested_page == 'menu_items' || $requested_page == 'backup_data') ? 'active' : ''; ?>">
+                    <li class="nav-item <?php echo ($requested_page == 'users' || $requested_page == 'menu_items' || $requested_page == 'backup_data' || $requested_page == 'activity_log') ? 'menu-open' : ''; ?>">
+                        <a href="#" class="nav-link <?php echo ($requested_page == 'users' || $requested_page == 'menu_items' || $requested_page == 'backup_data' || $requested_page == 'activity_log') ? 'active' : ''; ?>">
                             <i class="nav-icon fas fa-cogs"></i>
                             <p>
                                 Manajemen
@@ -311,6 +352,12 @@ switch ($requested_page) {
                                 <a href="?page=backup_data" class="nav-link <?php echo ($requested_page == 'backup_data') ? 'active' : ''; ?>">
                                     <i class="fas fa-database nav-icon"></i>
                                     <p>Backup Data MySQL</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="?page=activity_log" class="nav-link <?php echo ($requested_page == 'activity_log') ? 'active' : ''; ?>">
+                                    <i class="fas fa-history nav-icon"></i>
+                                    <p>Log Aktivitas</p>
                                 </a>
                             </li>
                         </ul>
@@ -685,19 +732,98 @@ switch ($requested_page) {
                         </div>
                         <?php
                         break;
-                       }
+
+                    case 'activity_log':
+                        // KONTEN LOG AKTIVITAS
+                        ?>
+                        <?php if (isset($_SESSION['message'])): ?>
+                            <div class="alert alert-<?php echo isset($_SESSION['message_type']) ? htmlspecialchars($_SESSION['message_type']) : 'success'; ?> alert-dismissible fade show" role="alert">
+                                <?php echo htmlspecialchars($_SESSION['message']); ?>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <?php
+                                unset($_SESSION['message']);
+                                unset($_SESSION['message_type']);
+                            ?>
+                        <?php endif; ?>
+
+                        <?php if (!empty($page_error) && $requested_page == 'activity_log'): ?>
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <?php echo htmlspecialchars($page_error); ?>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Log Aktivitas Website</h3>
+                                <div class="card-tools">
+                                    <form action="dashboard.php?page=activity_log" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus SEMUA log aktivitas? Tindakan ini tidak dapat dibatalkan.');">
+                                        <input type="hidden" name="action" value="clear_logs">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash-alt"></i> Hapus Semua Log
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card-body p-0" style="max-height: 500px; overflow-y: auto;">
+                                <?php if (!empty($activity_logs)): ?>
+                                    <table class="table table-striped table-valign-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Level</th>
+                                                <th>Timestamp</th>
+                                                <th>User</th>
+                                                <th>Aktivitas</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($activity_logs as $log_entry):
+                                                // Updated parsing for display: [LEVEL]YYYY-MM-DD HH:MM:SS - User: USERNAME - MESSAGE
+                                                preg_match('/^\[(.*?)\] (.*?) - User: (.*?) - (.*)$/', $log_entry, $matches);
+
+                                                $level = htmlspecialchars($matches[1] ?? 'N/A');
+                                                $timestamp = htmlspecialchars($matches[2] ?? 'N/A');
+                                                $username_logged = htmlspecialchars($matches[3] ?? 'N/A');
+                                                $message = htmlspecialchars($matches[4] ?? $log_entry);
+                                            ?>
+                                                <tr>
+                                                    <td><span class="badge badge-<?php
+                                                        if ($level == 'INFO') echo 'info';
+                                                        else if ($level == 'WARNING') echo 'warning';
+                                                        else if ($level == 'ERROR') echo 'danger';
+                                                        else echo 'secondary';
+                                                    ?>"><?php echo $level; ?></span></td>
+                                                    <td><?php echo $timestamp; ?></td>
+                                                    <td><?php echo $username_logged; ?></td>
+                                                    <td><?php echo $message; ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <div class="p-3">
+                                        <p>Tidak ada log aktivitas untuk ditampilkan.</p>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php
+                        break;
+
+                       } // End of switch ($requested_page)
                      ?>
-               </div>
-          </div>
-     </div>
-    <footer class="main-footer">
+               </div></div></div><footer class="main-footer">
         <div class="float-right d-none d-sm-inline">
             Version 1.0
         </div>
         <strong>©SCP9242. All rights reserved.</strong>
     </footer>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 </body>
