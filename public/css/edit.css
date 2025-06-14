@@ -7,16 +7,17 @@
     background-color: #6f4e37; /* Warna header card */
     color: #fcf6f2;
 }
-.profile-image-preview {
-    width: 150px;
-    height: 150px;
-    object-fit: cover; /* Penting: Pastikan gambar menutupi area tanpa terdistorsi */
-    border-radius: 50%; /* Membuat gambar menjadi bulat */
-    border: 3px solid #fcf6f2;
+.profile-image-preview { /* This class is used for menu item image preview as well */
+    max-width: 150px; /* Keep this for user profiles */
+    height: 150px; /* Set height equal to width for a perfect circle */
+    border-radius: 50%; /* <<-- CHANGE THIS TO 50% FOR ROUND IMAGE -- */
+    border: 1px solid #44475a; /* Dark border */
     margin-bottom: 15px;
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    /* If you want it centered: */
     display: block;
-    margin-left: auto; /* Memusatkan gambar */
-    margin-right: auto; /* Memusatkan gambar */
+    margin-left: auto;
+    margin-right: auto;
 }
 /* Styling untuk pesan sukses/error (AdminLTE alert) */
 .alert-dismissible .close {

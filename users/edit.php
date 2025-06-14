@@ -1,14 +1,16 @@
 <?php
 require_once 'auth_check.php'; // Pastikan user sudah login
 require_once '../config/database.php';
+require_once '../utils/logger.php'; // <<< Pastikan ini sudah ada
 
 $errors = [];
 $user = null; // Initialize user data as null
 $user_id = $_GET['id'] ?? null; // Get user ID from URL
 
 // --- Variabel untuk sidebar (mengambil data user yang sedang login) ---
-$current_user_profile_image = ''; 
+$current_user_profile_image = '';
 $current_user_full_name = $_SESSION['full_name'] ?? 'Pengguna'; // Default jika full_name tidak ada di session
+$current_admin_username = $_SESSION['username'] ?? 'UNKNOWN_ADMIN'; // <<< Get admin username for logging
 
 // Ambil gambar profil dan nama lengkap untuk user yang sedang login dari database
 $logged_in_user_id = $_SESSION['user_id'] ?? null;
@@ -28,6 +30,7 @@ if ($logged_in_user_id) {
         }
     } catch (PDOException $e) {
         error_log("Error fetching current user data for sidebar: " . $e->getMessage());
+        log_activity("Error fetching current user data for sidebar: " . $e->getMessage(), 'ERROR', 'SYSTEM'); // <<< ADD LOG
     }
 }
 // --- Akhir bagian sidebar ---
@@ -36,7 +39,8 @@ if ($logged_in_user_id) {
 // Redirect if no ID is provided or ID is invalid
 if (!isset($user_id) || !is_numeric($user_id)) {
     $_SESSION['message'] = "ID user tidak valid.";
-    $_SESSION['message_type'] = "danger"; // Menggunakan 'danger' untuk pesan error
+    $_SESSION['message_type'] = "danger";
+    log_activity("Attempt to edit user with invalid or missing ID: '{$user_id}'.", 'WARNING', $current_admin_username); // <<< ADD LOG
     header("Location: dashboard.php");
     exit;
 }
@@ -44,7 +48,10 @@ if (!isset($user_id) || !is_numeric($user_id)) {
 // Path untuk menyimpan gambar profil (PASTIKAN FOLDER INI ADA DAN BISA DITULIS OLEH WEB SERVER)
 $upload_dir = '../public/uploads/profile_pictures/';
 if (!is_dir($upload_dir)) {
-    mkdir($upload_dir, 0777, true); // Buat direktori jika belum ada
+    if (!mkdir($upload_dir, 0777, true)) { // Buat direktori jika belum ada
+        $errors[] = "Gagal membuat direktori upload: {$upload_dir}. Periksa izin server.";
+        log_activity("Failed to create upload directory: {$upload_dir}. Check server permissions.", 'ERROR', 'SYSTEM'); // <<< ADD LOG
+    }
 }
 
 // Fetch user data for pre-filling the form
@@ -58,15 +65,18 @@ try {
     if (!$user) {
         $_SESSION['message'] = "User tidak ditemukan.";
         $_SESSION['message_type'] = "danger";
+        log_activity("Attempt to edit non-existent user with ID: '{$user_id}'.", 'WARNING', $current_admin_username); // <<< ADD LOG
         header("Location: dashboard.php");
         exit;
     }
 } catch (PDOException $e) {
     $errors[] = "Error mengambil data user: " . $e->getMessage();
+    log_activity("Database error fetching user data for ID '{$user_id}': " . $e->getMessage(), 'ERROR', $current_admin_username); // <<< ADD LOG
 }
 
 // Handle form submission for updating user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
+    $old_user_data = $user; // Store original data for comparison in log
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $full_name = trim($_POST['full_name'] ?? '');
@@ -76,11 +86,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
     // Basic validation
     if (empty($username)) {
         $errors[] = "Username wajib diisi.";
+        log_activity("Failed to update user ID '{$user_id}': Username is empty.", 'WARNING', $current_admin_username); // <<< ADD LOG
     }
     if (empty($email)) {
         $errors[] = "Email wajib diisi.";
+        log_activity("Failed to update user ID '{$user_id}': Email is empty.", 'WARNING', $current_admin_username); // <<< ADD LOG
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Format email tidak valid.";
+        log_activity("Failed to update user ID '{$user_id}': Invalid email format for '{$email}'.", 'WARNING', $current_admin_username); // <<< ADD LOG
     }
 
     // Check if username is already taken by another user (excluding current user)
@@ -89,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
         $stmt->execute([':username' => $username, ':id' => $user_id]);
         if ($stmt->fetchColumn() > 0) {
             $errors[] = "Username sudah dipakai oleh user lain.";
+            log_activity("Failed to update user ID '{$user_id}': Username '{$username}' already taken.", 'WARNING', $current_admin_username); // <<< ADD LOG
         }
     }
 
@@ -98,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
         $stmt->execute([':email' => $email, ':id' => $user_id]);
         if ($stmt->fetchColumn() > 0) {
             $errors[] = "Email sudah dipakai oleh user lain.";
+            log_activity("Failed to update user ID '{$user_id}': Email '{$email}' already taken.", 'WARNING', $current_admin_username); // <<< ADD LOG
         }
     }
 
@@ -105,6 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
     if (!empty($password)) {
         if ($password !== $password_confirm) {
             $errors[] = "Konfirmasi password tidak cocok.";
+            log_activity("Failed to update user ID '{$user_id}': Password confirmation mismatch.", 'WARNING', $current_admin_username); // <<< ADD LOG
         }
     }
 
@@ -123,15 +139,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
 
         if (!in_array($file_ext, $allowed_extensions)) {
             $errors[] = "Ekstensi file tidak diizinkan. Hanya JPG, JPEG, PNG, dan GIF.";
+            log_activity("Failed to upload image for user ID '{$user_id}': Invalid file extension '{$file_ext}'.", 'WARNING', $current_admin_username); // <<< ADD LOG
         }
         if ($file_size > $max_file_size) {
             $errors[] = "Ukuran file terlalu besar. Maksimal 5 MB.";
+            log_activity("Failed to upload image for user ID '{$user_id}': File size too large ({$file_size} bytes).", 'WARNING', $current_admin_username); // <<< ADD LOG
         }
-        
+
         if (empty($errors)) {
             // Hapus gambar lama jika ada dan berbeda dengan yang baru diunggah
             if ($profile_image_filename && file_exists($upload_dir . $profile_image_filename) && $profile_image_filename !== $file_name) {
                 unlink($upload_dir . $profile_image_filename);
+                log_activity("Deleted old profile image '{$profile_image_filename}' for user ID '{$user_id}'.", 'INFO', $current_admin_username); // <<< ADD LOG
             }
 
             $new_file_name = uniqid('profile_') . '.' . $file_ext; // Nama file unik
@@ -139,14 +158,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
 
             if (move_uploaded_file($file_tmp_name, $destination_path)) {
                 $profile_image_filename = $new_file_name; // Update dengan nama file baru
+                log_activity("Uploaded new profile image '{$new_file_name}' for user ID '{$user_id}'.", 'INFO', $current_admin_username); // <<< ADD LOG
             } else {
                 $errors[] = "Gagal mengunggah gambar profil.";
+                log_activity("Failed to move uploaded profile image for user ID '{$user_id}'.", 'ERROR', $current_admin_username); // <<< ADD LOG
             }
         }
     } elseif (isset($_POST['remove_profile_image']) && $_POST['remove_profile_image'] === 'true') {
         // Hapus gambar jika checkbox "Hapus Gambar Profil" dicentang
         if ($user['profile_image'] && file_exists($upload_dir . $user['profile_image'])) {
             unlink($upload_dir . $user['profile_image']);
+            log_activity("Removed profile image '{$user['profile_image']}' for user ID '{$user_id}'.", 'INFO', $current_admin_username); // <<< ADD LOG
         }
         $profile_image_filename = null; // Setel nama file menjadi null di database
     }
@@ -159,9 +181,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
             ':username' => $username,
             ':email' => $email,
             ':full_name' => $full_name,
-            ':profile_image' => $profile_image_filename, // Tambahkan ini
+            ':profile_image' => $profile_image_filename,
             ':id' => $user_id
         ];
+
+        $log_message = "Updated user ID '{$user_id}' (Username: '{$old_user_data['username']}' -> '{$username}'). Changes: ";
+        $changes = [];
+
+        // Track changes for logging
+        if ($old_user_data['username'] !== $username) $changes[] = "Username changed from '{$old_user_data['username']}' to '{$username}'";
+        if ($old_user_data['email'] !== $email) $changes[] = "Email changed from '{$old_user_data['email']}' to '{$email}'";
+        if (($old_user_data['full_name'] ?? '') !== $full_name) $changes[] = "Full Name changed from '{$old_user_data['full_name']}' to '{$full_name}'";
+        if ($old_user_data['profile_image'] !== $profile_image_filename) $changes[] = "Profile image updated";
+        if (!empty($password)) $changes[] = "Password updated";
 
         // If password is provided, update it
         if (!empty($password)) {
@@ -183,14 +215,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                 $user['full_name'] = $full_name;
                 $user['profile_image'] = $profile_image_filename;
 
-                header("Location: dashboard.php");
+                if (empty($changes)) {
+                    $log_message .= "No significant data changes.";
+                } else {
+                    $log_message .= implode("; ", $changes) . ".";
+                }
+                log_activity($log_message, 'INFO', $current_admin_username); // <<< ADD LOG
+
+                header("Location: dashboard.php?page=users"); // Redirect to dashboard, specifically the users page
                 exit;
 
             } else {
                 $errors[] = "Gagal memperbarui user.";
+                $error_info = $stmt->errorInfo();
+                log_activity("Database error updating user ID '{$user_id}': " . ($error_info[2] ?? 'Unknown error'), 'ERROR', $current_admin_username); // <<< ADD LOG
             }
         } catch (PDOException $e) {
             $errors[] = "Error memperbarui data user: " . $e->getMessage();
+            log_activity("PDOException updating user ID '{$user_id}': " . $e->getMessage(), 'ERROR', $current_admin_username); // <<< ADD LOG
         }
     }
 }
@@ -207,18 +249,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-    <link rel="stylesheet" href="../public/css/edit.css"> 
+    <link rel="stylesheet" href="../public/css/dracula_theme.css">
 </head>
-<body class="hold-transition sidebar-mini">
-<div class="wrapper">
+<body class="hold-transition sidebar-mini dark-mode"> <div class="wrapper">
 
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-        <ul class="navbar-nav">
+    <nav class="main-header navbar navbar-expand navbar-dark navbar-gray-dark"> <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/index.html" class="nav-link">Halaman Utama</a>
+                <a href="dashboard.php" class="nav-link">Kedai Kopi Kayu Dashboard</a>
             </li>
         </ul>
 
@@ -228,16 +268,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
             </li>
         </ul>
     </nav>
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
-
-        <div class="sidebar">
+    <aside class="main-sidebar sidebar-dark-purple elevation-4"> <div class="sidebar">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <?php 
+                    <?php
                     // Path relatif untuk public folder dari lokasi file PHP ini
-                    $upload_dir_public_for_sidebar = '../public/uploads/profile_pictures/'; 
+                    $upload_dir_public_for_sidebar = '../public/uploads/profile_pictures/';
                     $sidebar_profile_image_src = 'https://placehold.co/160x160/cccccc/ffffff?text=User'; // Placeholder default
-                    
+
                     if ($current_user_profile_image) {
                         $image_path_full = $upload_dir_public_for_sidebar . htmlspecialchars($current_user_profile_image);
                         // Periksa apakah file gambar benar-benar ada di server
@@ -246,7 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                         }
                     }
                     ?>
-                    <img src="<?php echo $sidebar_profile_image_src; ?>" class="img-circle elevation-2" alt="User Image">
+                    <img src="<?php echo $sidebar_profile_image_src; ?>" class="img-circle elevation-2 profile-sidebar-image" alt="User Image">
                 </div>
                 <div class="info">
                     <a href="#" class="d-block"><?php echo htmlspecialchars($current_user_full_name); ?></a>
@@ -256,9 +294,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                     <li class="nav-item">
-                        <a href="/index.html" class="nav-link">
-                            <i class="nav-icon fas fa-home"></i>
-                            <p>Halaman Utama</p>
+                        <a href="?page=monitoring" class="nav-link">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>
+                                Monitoring Website
+                            </p>
                         </a>
                     </li>
                     <li class="nav-item menu-open">
@@ -271,9 +311,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="dashboard.php" class="nav-link active">
-                                    <i class="far fa-circle nav-icon"></i>
+                                <a href="dashboard.php?page=users" class="nav-link active">
+                                    <i class="far fa-user nav-icon"></i>
                                     <p>Manajemen User</p>
+                                </a>
+                            </li>
+                             <li class="nav-item">
+                                <a href="dashboard.php?page=menu_items" class="nav-link">
+                                    <i class="fas fa-coffee nav-icon"></i>
+                                    <p>Manajemen Menu</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="dashboard.php?page=backup_data" class="nav-link">
+                                    <i class="fas fa-database nav-icon"></i>
+                                    <p>Backup Data MySQL</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="dashboard.php?page=activity_log" class="nav-link">
+                                    <i class="fas fa-history nav-icon"></i>
+                                    <p>Log Aktivitas</p>
                                 </a>
                             </li>
                         </ul>
@@ -297,8 +355,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                         <h1 class="m-0">Edit User</h1>
                     </div><div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Manajemen</a></li>
-                            <li class="breadcrumb-item"><a href="dashboard.php">User</a></li>
+                            <li class="breadcrumb-item"><a href="dashboard.php?page=users">Manajemen</a></li>
+                            <li class="breadcrumb-item"><a href="dashboard.php?page=users">User</a></li>
                             <li class="breadcrumb-item active">Edit</li>
                         </ol>
                     </div></div></div></div>
@@ -311,7 +369,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                                 <h5 class="m-0">Form Edit User</h5>
                             </div>
                             <div class="card-body">
-                                <p><a href="dashboard.php" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Kembali ke daftar user</a></p>
+                                <p><a href="dashboard.php?page=users" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Kembali ke daftar user</a></p>
 
                                 <?php if (!empty($errors)): ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -339,7 +397,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
                                             }
                                             ?>
                                             <img src="<?php echo $profile_image_url_form; ?>" alt="Gambar Profil" class="profile-image-preview">
-                                            
+
                                             <?php if ($user['profile_image']): ?>
                                                 <div class="form-check text-center mb-3">
                                                     <input class="form-check-input" type="checkbox" name="remove_profile_image" value="true" id="removeProfileImage">
@@ -408,12 +466,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $('#profile_image').on('change', function () {
-            var fileName = $(this).val().split('\\').pop();
-            $(this).next('.custom-file-label').html(fileName);
-        });
+$(document).ready(function () {
+    // Update the custom file input label with the selected file name
+    $('#profile_image').on('change', function() {
+        var fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').html(fileName);
     });
+});
 </script>
 </body>
 </html>

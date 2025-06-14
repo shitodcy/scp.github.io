@@ -2,6 +2,15 @@
 // auth/logout.php
 session_start();
 
+// Include the logging utility
+require_once __DIR__ . '/../utils/logger.php'; // Adjust path if necessary
+
+// Capture username before destroying the session
+$username_logged_out = $_SESSION['username'] ?? 'UNKNOWN';
+
+// Log the logout activity BEFORE destroying the session
+log_activity("User '{$username_logged_out}' logged out.", 'INFO', $username_logged_out);
+
 // Hapus semua variabel session
 $_SESSION = array();
 

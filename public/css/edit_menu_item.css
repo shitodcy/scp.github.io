@@ -1,0 +1,151 @@
+ /* CSS KHUSUS UNTUK HALAMAN STANDALONE INI */
+        body {
+            background-color: #282a36; /* Dracula background */
+            color: #f8f8f2; /* Dracula foreground text */
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh; /* Ensure full viewport height */
+            display: flex;
+            align-items: center; /* Center content vertically */
+            justify-content: center; /* Center content horizontally */
+            padding: 20px; /* Add some padding around the content */
+        }
+
+        .page-container-standalone {
+            max-width: 700px; /* Max width for the content card */
+            width: 100%;
+            margin: auto; /* Center the container */
+        }
+
+        /* Card styling */
+        .card {
+            background-color: #2e303c; /* A slightly lighter dark for cards */
+            color: #f8f8f2;
+            border: 1px solid #44475a; /* Current Line color for border */
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            background-color: #44475a; /* Current Line color for card headers */
+            border-bottom: 1px solid #6272a4;
+            color: #f8f8f2;
+        }
+
+        /* Form labels and text */
+        .form-group label {
+            color: #f8f8f2; /* Foreground text */
+        }
+        .form-text {
+            color: #6272a4; /* Comment color for muted text */
+        }
+
+        /* Form controls (inputs, selects, custom-file) */
+        .form-control, .form-select, .form-check-input, .custom-file-input, .custom-file-label {
+            background-color: #44475a; /* Current Line background */
+            border: 1px solid #6272a4; /* Comment color for border */
+            color: #f8f8f2; /* Foreground text */
+        }
+        .form-control::placeholder, .form-select::placeholder, .custom-file-label {
+            color: #6272a4; /* Placeholder text color */
+            opacity: 1; /* Firefox fix */
+        }
+        .form-control:focus, .form-select:focus, .form-check-input:focus, .custom-file-input:focus {
+            border-color: #bd93f9; /* Purple accent on focus */
+            box-shadow: 0 0 0 0.25rem rgba(189, 147, 249, 0.25); /* Purple shadow */
+            background-color: #44475a; /* Keep dark on focus */
+            color: #f8f8f2;
+        }
+        .input-group-text {
+            background-color: #6272a4; /* Comment color for input-group add-ons */
+            border: 1px solid #6272a4;
+            color: #f8f8f2;
+        }
+
+        /* Custom file input specific styling for Bootstrap 4 */
+        .custom-file-label::after {
+            background-color: #6272a4; /* Button part of custom file input */
+            color: #f8f8f2;
+        }
+        .custom-file-input:focus ~ .custom-file-label {
+            border-color: #bd93f9; /* Purple accent on focus */
+            box-shadow: 0 0 0 0.25rem rgba(189, 147, 249, 0.25); /* Purple shadow */
+        }
+
+        /* Form check (checkboxes, radio buttons) */
+        .form-check-input {
+            background-color: #44475a; /* Default inactive color */
+            border: 1px solid #6272a4;
+        }
+        .form-check-input:checked {
+            background-color: #50fa7b; /* Green for active */
+            border-color: #50fa7b;
+        }
+        .form-check-label {
+            color: #f8f8f2; /* Label for checkbox */
+        }
+
+        /* Image preview styling for menu item */
+        .menu-image-preview { /* Use a specific class for menu images */
+            max-width: 250px; /* Adjust as needed */
+            height: auto;
+            border-radius: 5px; /* Slightly rounded corners for menu images */
+            border: 1px solid #44475a; /* Dark border */
+            margin-bottom: 15px;
+            object-fit: contain; /* Ensures entire image is visible within bounds */
+            display: block; /* Ensure it's a block element */
+            margin-left: auto; /* Center the image */
+            margin-right: auto; /* Center the image */
+        }
+
+        hr {
+            border-top: 1px solid #44475a; /* Darker hr to fit theme */
+        }
+
+        /* Breadcrumbs (for standalone page, might be removed or simplified) */
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 1rem;
+            justify-content: center; /* Memusatkan breadcrumb jika diperlukan */
+        }
+        .breadcrumb-item a {
+            color: #bd93f9; /* Purple link color */
+        }
+        .breadcrumb-item a:hover {
+            color: #ff79c6; /* Pink hover */
+        }
+        .breadcrumb-item.active {
+            color: #6272a4; /* Comment color for active breadcrumb */
+        }
+        /* Buttons are already styled globally in dracula_theme.css */
+        /* .btn-primary, .btn-secondary etc. */
+
+        /* Alerts */
+        .alert {
+            border-radius: 5px;
+            border: none;
+        }
+        .alert-danger {
+            background-color: #ff5555; /* Red */
+            color: #f8f8f2;
+            border-color: #ff5555;
+        }
+        .alert .close { /* For Bootstrap 4 close button */
+            color: #f8f8f2 !important;
+            opacity: 0.7;
+        }
+        .alert .close:hover {
+            opacity: 1;
+        }
+
+        /* AdminLTE specific styles are largely not needed for standalone body */
+        /* but common styles for .card, .form-control etc. are adapted */
+        /* Remove or comment out any AdminLTE specific body/wrapper styles from dracula_theme.css
+           that are not applicable to standalone pages, e.g., for sidebar transitions, etc. */
+
+        /* Specific for standalone layout, remove AdminLTE structure */
+        .wrapper, .main-header, .main-sidebar, .main-footer {
+            display: none !important;
+        }
+        /* Override AdminLTE .content-wrapper margin if it's not hidden by display:none */
+        /* .content-wrapper { margin-left: 0 !important; } */ /* Not needed if display: none */
