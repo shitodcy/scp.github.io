@@ -1,256 +1,73 @@
-:root {
-    --background-color: #282a36;
-    --current-line-color: #44475a;
-    --foreground-color: #f8f8f2;
-    --comment-color: #6272a4;
-    --cyan-color: #8be9fd;
-    --green-color: #50fa7b;
-    --orange-color: #ffb86c;
-    --pink-color: #bd93f9;
-    --purple-color: #bd93f9;
-    --red-color: #ff5555;
-    --yellow-color: #f1fa8c;
-
-    /* Custom variables for the provided CSS, mapped to Dracula theme */
-    --primary-color: var(--pink-color); /* Bright, distinct primary */
-    --secondary-color: var(--cyan-color); /* Good for accents or secondary buttons */
-    --dark-color: var(--foreground-color); /* Use foreground for dark text on light backgrounds or vice-versa */
-    --light-color: var(--background-color); /* Background for light elements */
-    --success-color: var(--green-color);
-    --warning-color: var(--orange-color);
-    --danger-color: var(--red-color);
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--background-color);
-    color: var(--foreground-color);
-}
-
-.page-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-}
-
-.card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); /* Darker shadow for dark theme */
-    overflow: hidden;
-    background-color: var(--current-line-color); /* Slightly lighter than background for card body */
-}
-
-.card-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--purple-color)); /* Gradient with primary and purple */
-    color: var(--foreground-color);
-    border-bottom: none;
-    padding: 1.5rem;
-    position: relative;
-}
-
-.card-header::after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    left: 0;
-    right: 0;
-    height: 20px;
-    background: var(--current-line-color); /* Matches card body background */
-    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-}
-
-.card-body {
-    padding: 2rem;
-}
-
-.form-label {
-    font-weight: 500;
-    color: var(--dark-color);
-    margin-bottom: 0.5rem;
-}
-
-.form-control, .form-select {
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--comment-color); /* Subtle border */
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background-color: var(--background-color); /* Darker input fields */
-    color: var(--foreground-color);
-}
-
-.form-control:focus, .form-select:focus {
-    box-shadow: 0 0 0 3px rgba(var(--pink-color), 0.25); /* Focus glow with primary color */
-    border-color: var(--primary-color);
-}
-
-.btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    border-radius: 10px;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    color: var(--foreground-color); /* Ensure text is visible */
-}
-
-.btn-primary:hover {
-    background-color: var(--red-color); /* A more vibrant red on hover */
-    border-color: var(--red-color);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(var(--primary-color), 0.4);
-}
-
-.btn-secondary {
-    background-color: var(--comment-color); /* Use comment color for secondary */
-    border-color: var(--comment-color);
-    color: var(--foreground-color);
-    border-radius: 10px;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.btn-secondary:hover {
-    background-color: var(--current-line-color); /* Darker on hover */
-    border-color: var(--current-line-color);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.form-check-input:checked {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.alert {
-    border-radius: 10px;
-    border: none;
-}
-
-.alert-danger {
-    background-color: rgba(var(--red-color), 0.2); /* Lighter red for alert background */
-    color: var(--red-color);
-}
-
-.image-preview {
-    width: 100%;
-    height: 200px;
-    border-radius: 10px;
-    border: 2px dashed var(--comment-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-    overflow: hidden;
-    position: relative;
-    background-color: var(--background-color); /* Match body background */
-}
-
-.image-preview img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-.image-preview-placeholder {
-    color: var(--comment-color);
-    font-size: 1rem;
-}
-
-.file-upload-wrapper {
-    position: relative;
-    margin-bottom: 1rem;
-}
-
-.file-upload-input {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    height: 50px;
-    margin: 0;
-    opacity: 0;
-    cursor: pointer;
-}
-
-.file-upload-text {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 1;
-    height: 50px;
-    padding: 0.75rem 1rem;
-    overflow: hidden;
-    line-height: 1.5;
-    color: var(--foreground-color);
-    background-color: var(--background-color);
-    border: 1px solid var(--comment-color);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-}
-
-.category-icon {
-    margin-right: 8px;
-    color: var(--primary-color);
-}
-
-.breadcrumb {
-    background: transparent;
-    padding: 0;
-}
-
-.breadcrumb-item a {
-    color: var(--cyan-color); /* Cyan for links */
-    text-decoration: none;
-}
-
-.breadcrumb-item.active {
-    color: var(--comment-color);
-}
+/* public/css/create_menu_item.css */
 
 .form-section {
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--comment-color); /* Subtle border for sections */
-}
-
-.form-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+    margin-bottom: 2.5rem; /* Memberi jarak antar seksi */
 }
 
 .section-title {
-    font-size: 1.2rem;
+    color: #cdd3e3; /* Sesuaikan dengan warna teks tema Anda */
     font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: var(--dark-color);
+    margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
 }
 
 .section-title i {
-    margin-right: 10px;
-    color: var(--primary-color);
+    color: #bd93f9; /* Sesuaikan dengan warna aksen Anda */
 }
 
-.form-text {
-    color: var(--comment-color);
+hr {
+    margin-top: 0.5rem;
+    border-top: 1px solid #44475a; /* Garis pemisah antar seksi */
 }
 
-.btn-group {
-    margin-top: 2rem;
+/* Penataan untuk area preview gambar */
+.image-preview-container {
+    border: 2px dashed #44475a;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    background-color: #282a36; /* Warna latar belakang gelap */
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.image-preview-container .placeholder-icon {
+    font-size: 3rem;
+    color: #6272a4;
 }
 
-.card {
-    animation: fadeIn 0.5s ease-out;
+.image-preview-container .placeholder-text {
+    color: #6272a4;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+#imagePreview {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    display: none; /* Sembunyikan secara default */
+    border-radius: 5px;
+}
+
+/* Penataan untuk input group addon */
+.input-group-text {
+    background-color: #44475a;
+    border-color: #6272a4;
+    color: #f8f8f2;
+}
+
+.btn-primary {
+    background-color: #bd93f9; /* Warna ungu untuk tombol utama */
+    border-color: #bd93f9;
+}
+
+.btn-primary:hover {
+    background-color: #a47ed6;
+    border-color: #a47ed6;
 }
