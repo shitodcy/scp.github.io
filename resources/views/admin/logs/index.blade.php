@@ -25,7 +25,7 @@
             </form>
         </div>
     </div>
-    <div class="card-body p-0">
+    <div class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
         {{-- PERUBAHAN DI SINI: Menambahkan style untuk max-height dan overflow --}}
         <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
             <table class="table table-striped table-valign-middle">
