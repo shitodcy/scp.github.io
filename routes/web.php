@@ -38,7 +38,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Rute untuk CRUD (Create, Read, Update, Delete)
     // Route::resource akan otomatis membuat semua rute yang dibutuhkan
     Route::resource('users', UserController::class);
-    Route::resource('menu', MenuItemController::class);
+    Route::resource('menu', MenuItemController::class)->parameters([
+    'menu' => 'menuItem'
+]);
     Route::resource('teams', TeamController::class); // Rute tim Anda sudah benar di sini
 
     // Rute untuk Backup Data

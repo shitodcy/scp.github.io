@@ -50,11 +50,19 @@ class TeamController extends Controller
             $imagePathOrUrl = $request->file('image')->store('team_images', 'public');
         }
 
-        TeamMember::create([
+        // Simpan ke variabel agar bisa diambil namanya untuk log
+        $newTeamMember = TeamMember::create([
             'name' => $validatedData['name'],
             'student_id' => $validatedData['student_id'],
             'job_title' => $validatedData['job_title'],
             'image_url' => $imagePathOrUrl,
+        ]);
+
+        // Log aktivitas
+        Log::create([
+            'user_id'     => Auth::id(),
+            'action'      => 'TAMBAH_TIM',
+            'description' => 'Pengguna ' . Auth::user()->username . ' menambahkan anggota tim baru: ' . $newTeamMember->name
         ]);
 
         return redirect()->route('admin.teams.index')
@@ -63,12 +71,14 @@ class TeamController extends Controller
 
     /**
      * Menampilkan form untuk mengedit anggota.
-     * (INI METHOD YANG HILANG UNTUK TOMBOL EDIT)
+     * (INI METHOD YANG HILANG)
      */
     public function edit(TeamMember $team)
     {
+        // Method ini hanya bertugas mengirim data member yang akan diedit ke view
         return view('admin.teams.edit', compact('team'));
     }
+
 
     /**
      * Memperbarui data anggota di database.
@@ -83,6 +93,13 @@ class TeamController extends Controller
             'image_url' => 'nullable|url',
         ]);
 
+        // Perbaikan: Kita gunakan $updateData agar tidak error saat gambar tidak diupdate
+        $updateData = [
+            'name' => $validatedData['name'],
+            'student_id' => $validatedData['student_id'],
+            'job_title' => $validatedData['job_title'],
+        ];
+
         $oldImagePath = $team->image_url;
         $newImageSource = null;
 
@@ -93,19 +110,20 @@ class TeamController extends Controller
         }
 
         if ($newImageSource) {
-            $validatedData['image_url'] = $newImageSource;
+            $updateData['image_url'] = $newImageSource;
             if ($oldImagePath && !Str::startsWith($oldImagePath, 'http')) {
                 Storage::disk('public')->delete($oldImagePath);
             }
         }
         
-        $team->update($validatedData);
+        $team->update($updateData);
         
+        // Perbaikan: Aksi log diubah menjadi UPDATE_TIM
         Log::create([
-        'user_id'     => Auth::id(),
-        'action'      => 'TAMBAH_TIM',
-        'description' => 'Pengguna ' . Auth::user()->username . ' memperbarui anggota tim: ' . $team->name
-]);
+            'user_id'     => Auth::id(),
+            'action'      => 'UPDATE_TIM',
+            'description' => 'Pengguna ' . Auth::user()->username . ' memperbarui anggota tim: ' . $team->name
+        ]);
 
         return redirect()->route('admin.teams.index')
                          ->with('success', 'Data anggota tim berhasil diperbarui.');
@@ -113,25 +131,23 @@ class TeamController extends Controller
 
     /**
      * Menghapus anggota dari database.
-     * (INI METHOD YANG HILANG UNTUK TOMBOL HAPUS)
      */
     public function destroy(TeamMember $team)
     {
+        $teamName = $team->name;
+        $username = Auth::user()->username; // Gunakan username agar konsisten
+
         if ($team->image_url && !Str::startsWith($team->image_url, 'http')) {
             Storage::disk('public')->delete($team->image_url);
         }
 
-        $teamName = $team->name;
-        $username = Auth::user() ? Auth::user()->name : 'Unknown';
-
         $team->delete();
 
         Log::create([
-       'user_id'     => Auth::id(),
-       'action'      => 'HAPUS_TIM',
-       'description' => "Pengguna {$username} menghapus anggota tim: {$teamName}"
-]);
-
+           'user_id'     => Auth::id(),
+           'action'      => 'HAPUS_TIM',
+           'description' => "Pengguna {$username} menghapus anggota tim: {$teamName}"
+        ]);
     
         return redirect()->route('admin.teams.index')
                          ->with('success', 'Anggota tim berhasil dihapus.');

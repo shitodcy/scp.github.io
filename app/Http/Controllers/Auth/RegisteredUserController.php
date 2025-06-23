@@ -60,6 +60,6 @@ public function store(Request $request): RedirectResponse
 
     Auth::login($user);
 
-    return redirect()->route('dashboard');
+    return redirect()->route('admin.dashboard');
 }
 }
