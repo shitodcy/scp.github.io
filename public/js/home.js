@@ -1,7 +1,4 @@
-/**
- * Enhanced Responsive Image Handling for Home Carousel
- * This script automatically detects image dimensions and optimizes display
- */
+z
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize carousel with better mobile support
     const carousel = document.querySelector('#imageCarousel');

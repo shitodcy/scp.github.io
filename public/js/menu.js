@@ -22,35 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
       filterButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      const target = btn.dataset.target;
-
-      categorySections.forEach(section => {
-        const items = section.querySelectorAll(".menu-item");
-        let visible = false;
-
-        items.forEach((item, index) => {
-          const itemCategory = item.dataset.category;
-          if (target === "all" || itemCategory === target) {
-            item.style.display = "block";
-            item.style.setProperty("--item-index", index);
-            visible = true;
-          } else {
-            item.style.display = "none";
-          }
-        });
-
-        const content = section.querySelector(".category-content");
-        const title = section.querySelector(".category-title");
-
-        // Expand section kalau masih ada itemnya
-        if (visible) {
-          content.classList.add("active");
-          title.setAttribute("aria-expanded", true);
-        } else {
-          content.classList.remove("active");
-          title.setAttribute("aria-expanded", false);
-        }
-      });
+      // Example filter logic: show all sections (replace with your own logic)
+      showAllSections();
     });
   });
 
