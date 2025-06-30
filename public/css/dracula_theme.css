@@ -1,0 +1,312 @@
+/* General body styling for dark mode */
+body.dark-mode {
+    background-color: #282a36; /* Dracula background */
+    color: #f8f8f2; /* Dracula foreground text */
+}
+
+/* AdminLTE Specific Overrides for Dracula Theme */
+
+/* Navbar */
+.navbar-dark.navbar-gray-dark {
+    background-color: #282a36; /* Darker header */
+    border-bottom: 1px solid #44475a;
+}
+.navbar-dark.navbar-gray-dark .nav-link {
+    color: #f8f8f2;
+}
+.navbar-dark.navbar-gray-dark .nav-link:hover {
+    color: #ff79c6; /* Pink accent on hover */
+}
+.navbar-dark.navbar-gray-dark .navbar-nav > .nav-item > .nav-link.active,
+.navbar-dark.navbar-gray-dark .navbar-nav > .nav-item > .nav-link.active:focus,
+.navbar-dark.navbar-gray-dark .navbar-nav > .nav-item > .nav-link.active:hover {
+    background-color: transparent;
+    color: #bd93f9; /* Purple accent for active link */
+}
+
+/* Main Sidebar */
+.main-sidebar.sidebar-dark-purple {
+    background-color: #282a36; /* Same as body for seamless look */
+    border-right: 1px solid #44475a;
+}
+
+/* User panel in sidebar */
+.user-panel .image img {
+    border: 1px solid #6272a4; /* Comment color for border */
+}
+.user-panel .info a {
+    color: #f8f8f2;
+}
+.user-panel .info .fa-circle.text-success {
+    color: #50fa7b !important; /* Green for online status */
+}
+
+/* Nav links in sidebar */
+.nav-sidebar > .nav-item > .nav-link {
+    color: #f8f8f2;
+}
+.nav-sidebar > .nav-item > .nav-link.active {
+    background-color: #44475a; /* Current Line color for active item background */
+    color: #bd93f9; /* Purple accent for active text */
+}
+.nav-sidebar > .nav-item > .nav-link.active:hover {
+    background-color: #44475a; /* Keep same background on hover for active */
+    color: #ff79c6; /* Pink accent on hover for active text */
+}
+.nav-sidebar > .nav-item > .nav-link:hover {
+    background-color: #44475a; /* Current Line color on hover */
+    color: #ff79c6; /* Pink accent on hover */
+}
+
+/* Treeview menu */
+.nav-treeview .nav-item > .nav-link {
+    color: #f8f8f2; /* Foreground text for submenu items */
+}
+.nav-treeview .nav-item > .nav-link.active {
+    background-color: #44475a; /* Current Line color for active submenu */
+    color: #bd93f9; /* Purple accent for active submenu text */
+}
+.nav-treeview .nav-item > .nav-link:hover {
+    background-color: #44475a; /* Current Line color on hover for submenu */
+    color: #ff79c6; /* Pink accent on hover for submenu text */
+}
+
+/* Content Wrapper Background */
+.content-wrapper {
+    background-color: #282a36; /* Dracula background */
+}
+
+/* Card backgrounds and text */
+.card {
+    background-color: #2e303c; /* A slightly lighter dark for cards */
+    color: #f8f8f2;
+    border: 1px solid #44475a;
+}
+.card-header {
+    background-color: #44475a; /* Current Line color for card headers */
+    border-bottom: 1px solid #6272a4;
+    color: #f8f8f2;
+}
+.card-title {
+    color: #f8f8f2;
+}
+
+/* Table styling */
+.table {
+    color: #f8f8f2;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #282a36; /* Odd rows match body background */
+}
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #2e303c; /* Even rows match card background */
+}
+.table thead th {
+    border-bottom: 2px solid #6272a4; /* Comment color for table headers */
+    color: #f8f8f2;
+}
+.table td, .table th {
+    border-top: 1px solid #44475a; /* Current Line for table borders */
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #bd93f9; /* Purple */
+    border-color: #bd93f9;
+    color: #282a36; /* Dark text on button */
+}
+.btn-primary:hover {
+    background-color: #ff79c6; /* Pink */
+    border-color: #ff79c6;
+    color: #282a36;
+}
+.btn-info {
+    background-color: #8be9fd; /* Cyan */
+    border-color: #8be9fd;
+    color: #282a36;
+}
+.btn-info:hover {
+    background-color: #ff79c6; /* Pink */
+    border-color: #ff79c6;
+    color: #282a36;
+}
+.btn-danger {
+    background-color: #ff5555; /* Red */
+    border-color: #ff5555;
+    color: #f8f8f2;
+}
+.btn-danger:hover {
+    background-color: #bd93f9; /* Purple */
+    border-color: #bd93f9;
+    color: #f8f8f2;
+}
+.btn-success {
+    background-color: #50fa7b; /* Green */
+    border-color: #50fa7b;
+    color: #282a36;
+}
+.btn-success:hover {
+    background-color: #8be9fd; /* Cyan */
+    border-color: #8be9fd;
+    color: #282a36;
+}
+.btn-secondary {
+    background-color: #6272a4; /* Comment color */
+    border-color: #6272a4;
+    color: #f8f8f2;
+}
+.btn-secondary:hover {
+    background-color: #44475a;
+    border-color: #44475a;
+    color: #f8f8f2;
+}
+
+/* Alerts */
+.alert-success {
+    background-color: #50fa7b; /* Green */
+    color: #282a36;
+    border-color: #50fa7b;
+}
+.alert-info {
+    background-color: #8be9fd; /* Cyan */
+    color: #282a36;
+    border-color: #8be9fd;
+}
+.alert-warning {
+    background-color: #ffb86c; /* Orange */
+    color: #282a36;
+    border-color: #ffb86c;
+}
+.alert-danger {
+    background-color: #ff5555; /* Red */
+    color: #f8f8f2;
+    border-color: #ff5555;
+}
+.alert .close {
+    color: #f8f8f2 !important;
+}
+
+/* Info Boxes */
+.info-box {
+    background-color: #2e303c; /* Card background */
+    color: #f8f8f2;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.125), 0 1px 3px rgba(0, 0, 0, 0.2); /* Keep subtle shadow */
+}
+.info-box .info-box-icon {
+    background-color: #44475a; /* Current Line color */
+    color: #f8f8f2;
+}
+.info-box.bg-info { background-color: #8be9fd !important; color: #282a36 !important; } /* Cyan */
+.info-box.bg-info .info-box-icon { background-color: #6272a4 !important; color: #282a36 !important;}
+.info-box.bg-success { background-color: #50fa7b !important; color: #282a36 !important; } /* Green */
+.info-box.bg-success .info-box-icon { background-color: #6272a4 !important; color: #282a36 !important;}
+.info-box.bg-primary { background-color: #bd93f9 !important; color: #282a36 !important; } /* Purple */
+.info-box.bg-primary .info-box-icon { background-color: #6272a4 !important; color: #282a36 !important;}
+.info-box.bg-warning { background-color: #ffb86c !important; color: #282a36 !important; } /* Orange */
+.info-box.bg-warning .info-box-icon { background-color: #6272a4 !important; color: #282a36 !important;}
+.info-box.bg-danger { background-color: #ff5555 !important; color: #f8f8f2 !important; } /* Red */
+.info-box.bg-danger .info-box-icon { background-color: #44475a !important; color: #f8f8f2 !important;}
+
+
+/* Breadcrumbs */
+.breadcrumb-item {
+    color: #f8f8f2;
+}
+.breadcrumb-item a {
+    color: #bd93f9; /* Purple link color */
+}
+.breadcrumb-item a:hover {
+    color: #ff79c6; /* Pink hover */
+}
+.breadcrumb-item.active {
+    color: #6272a4; /* Comment color for active breadcrumb */
+}
+
+/* Footer */
+.main-footer {
+    background-color: #2e303c; /* Card background */
+    color: #f8f8f2;
+    border-top: 1px solid #44475a;
+}
+
+/* Scrollbar styles (optional, but good for dark themes) */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #44475a; /* Current Line color */
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background: #6272a4; /* Comment color */
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #bd93f9; /* Purple */
+}
+
+/* Specific adjustments for activity log table headers if needed */
+.table thead th {
+    background-color: #44475a; /* Match card header */
+}
+
+/* Adjust search input styling */
+.form-control {
+    background-color: #44475a; /* Current Line color */
+    color: #f8f8f2;
+    border: 1px solid #6272a4;
+}
+.form-control::placeholder {
+    color: #6272a4; /* Comment color */
+    opacity: 1; /* Firefox fix */
+}
+.form-control:focus {
+    background-color: #44475a;
+    color: #f8f8f2;
+    border-color: #bd93f9; /* Purple on focus */
+    box-shadow: 0 0 0 0.2rem rgba(189, 147, 249, 0.25); /* Purple shadow */
+}
+.input-group-text {
+    background-color: #6272a4; /* Comment color */
+    border: 1px solid #6272a4;
+    color: #f8f8f2;
+}
+
+/* Badge colors for activity logs */
+.badge.badge-info {
+    background-color: #8be9fd; /* Cyan */
+    color: #282a36;
+}
+.badge.badge-warning {
+    background-color: #ffb86c; /* Orange */
+    color: #282a36;
+}
+.badge.badge-danger {
+    background-color: #ff5555; /* Red */
+    color: #f8f8f2;
+}
+.badge.badge-secondary {
+    background-color: #6272a4; /* Comment color */
+    color: #f8f8f2;
+}
+
+.sidebar .user-panel .image img.img-circle {
+border-radius: 50%;
+width: 40px; 
+height: 40px;
+object-fit: cover; 
+}
+
+.profile-image-preview {
+    width: 150px;   /* Pastikan lebar fixed */
+    height: 150px;  /* Pastikan tinggi fixed, sama dengan lebar */
+    border-radius: 50% !important; /* Tambahkan !important untuk prioritas lebih tinggi */
+    object-fit: cover; /* Penting: Pastikan gambar menutupi area tanpa terdistorsi */
+    border: 1px solid #44475a; /* Border yang sesuai tema Dracula */
+    margin-bottom: 15px;
+    display: block; /* Pastikan ini adalah block element agar margin auto bekerja */
+    margin-left: auto; /* Memusatkan gambar */
+    margin-right: auto; /* Memusatkan gambar */
+}
+

@@ -1,0 +1,65 @@
+/* assets/css/edit_user_styles.css */
+.content-wrapper {
+    background-color: #fcf6f2; /* Warna latar belakang AdminLTE default */
+    padding: 20px;
+}
+.card-header {
+    background-color: #6f4e37; /* Warna header card */
+    color: #fcf6f2;
+}
+.profile-image-preview { /* This class is used for menu item image preview as well */
+    max-width: 150px; /* Keep this for user profiles */
+    height: 150px; /* Set height equal to width for a perfect circle */
+    border-radius: 50%; /* <<-- CHANGE THIS TO 50% FOR ROUND IMAGE -- */
+    border: 1px solid #44475a; /* Dark border */
+    margin-bottom: 15px;
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    /* If you want it centered: */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Styling untuk pesan sukses/error (AdminLTE alert) */
+.alert-dismissible .close {
+    position: absolute;
+    top: 50%;
+    right: 1.25rem;
+    transform: translateY(-50%);
+    padding: 0;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: inherit;
+    opacity: .5;
+}
+.alert-dismissible .close:hover {
+    opacity: .75;
+}
+.user-panel .image img {
+    width: 40px; /* Ukuran default gambar user di sidebar */
+    height: 40px;
+    object-fit: cover; /* Pastikan gambar tidak terdistorsi */
+}
+/* Tambahan jika ingin tombol close di sidebar saat dibuka (seperti di index.php) */
+.brand-link .pushmenu-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fcf6f2;
+    padding: 5px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: none; 
+}
+@media (max-width: 767.98px) {
+    .sidebar-open .brand-link .pushmenu-btn {
+        display: block;
+    }
+    .sidebar-mini.sidebar-collapse .brand-link .pushmenu-btn {
+        display: none;
+    }
+}

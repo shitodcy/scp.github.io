@@ -1,0 +1,73 @@
+/* public/css/create_menu_item.css */
+
+.form-section {
+    margin-bottom: 2.5rem; /* Memberi jarak antar seksi */
+}
+
+.section-title {
+    color: #cdd3e3; /* Sesuaikan dengan warna teks tema Anda */
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.section-title i {
+    color: #bd93f9; /* Sesuaikan dengan warna aksen Anda */
+}
+
+hr {
+    margin-top: 0.5rem;
+    border-top: 1px solid #44475a; /* Garis pemisah antar seksi */
+}
+
+/* Penataan untuk area preview gambar */
+.image-preview-container {
+    border: 2px dashed #44475a;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    background-color: #282a36; /* Warna latar belakang gelap */
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-preview-container .placeholder-icon {
+    font-size: 3rem;
+    color: #6272a4;
+}
+
+.image-preview-container .placeholder-text {
+    color: #6272a4;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+#imagePreview {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    display: none; /* Sembunyikan secara default */
+    border-radius: 5px;
+}
+
+/* Penataan untuk input group addon */
+.input-group-text {
+    background-color: #44475a;
+    border-color: #6272a4;
+    color: #f8f8f2;
+}
+
+.btn-primary {
+    background-color: #bd93f9; /* Warna ungu untuk tombol utama */
+    border-color: #bd93f9;
+}
+
+.btn-primary:hover {
+    background-color: #a47ed6;
+    border-color: #a47ed6;
+}

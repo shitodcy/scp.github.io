@@ -1,0 +1,260 @@
+/* public/css/register.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+    /* Updated Color Palette - Dark background for page, white for form card */
+    --dark-bg: #121212; /* A deeper black, closer to the login page overlay */
+    --dark-card-element: #f0f0f0; /* Very light grey for input fields on white card */
+    --white-card-bg: #FFFFFF; /* New: Pure white for the form container background */
+    --text-dark: #333333; /* New: Dark text for readability on white backgrounds */
+    --text-muted-dark: #666666; /* New: Muted text for descriptions on white backgrounds */
+    --accent-primary: #6f4e37; /* Directly from login.css's button/main background */
+    --accent-light: #8a674e; /* A lighter shade of the accent for hover effects */
+    --error-red: #D9534F; /* Retaining error red for consistency across alerts */
+    --error-bg-light: rgba(217, 83, 79, 0.1); /* Lighter error background on white */
+    --error-text-dark: #c90000; /* Darker red for error text on white background */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark); /* Default text color for body now dark, though container overrides this */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    box-sizing: border-box;
+    overflow-y: auto;
+    background-color: transparent;
+    position: relative;
+}
+
+.background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Keep this path dynamic based on your image location */
+    background-image: url('https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598324/foto_dapur_fvvsvn.webp'); /* **REMEMBER TO UPDATE THIS PATH** */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+.background-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Overlay on the background image */
+    z-index: 1;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 40px;
+    box-sizing: border-box;
+    background-color: var(--white-card-bg); /* Set container background to white */
+    border-radius: 15px;
+    z-index: 2;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    color: var(--text-dark); /* Set default text color inside container to dark */
+}
+
+/* The entire register-card will now be the main content area for this design */
+.register-card {
+    background-color: transparent;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
+    text-align: left;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+
+
+.logo-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark); /* Text color now dark */
+}
+
+.tagline {
+    font-size: 18px;
+    color: var(--text-muted-dark); /* Muted text color now dark */
+    margin-bottom: 10px;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.tagline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100px;
+    height: 2px;
+    background-color: var(--text-muted-dark); /* Muted text color for the line */
+}
+
+h1 {
+    font-size: 36px;
+    color: var(--text-dark); /* Heading text color now dark */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.login-prompt {
+    font-size: 16px;
+    color: var(--text-muted-dark); /* Muted text color now dark */
+    margin-bottom: 30px;
+}
+
+.login-prompt a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.login-prompt a:hover {
+    color: var(--accent-light);
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc; /* Lighter border for input on white background */
+    border-radius: 15px;
+    background-color: var(--dark-card-element); /* Light grey background for inputs */
+    color: var(--text-dark); /* Input text color now dark */
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.2s ease;
+}
+
+.form-group input::placeholder {
+    color: var(--text-muted-dark); /* Placeholder color now dark */
+}
+
+.form-group input:focus {
+    outline: none;
+    background-color: #ffffff; /* White on focus */
+    border-color: var(--accent-primary); /* Focus border using accent color */
+    box-shadow: 0 0 0 2px rgba(111, 78, 55, 0.3); /* Subtle accent shadow */
+}
+
+/* Special styles for "first_name" and "last_name" like appearance,
+    even if they are mapped to username and email in PHP */
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.input-hint {
+    font-size: 14px;
+    color: var(--text-muted-dark); /* Hint text color now dark */
+    margin-top: 5px;
+    display: block;
+}
+
+.terms-text {
+    font-size: 14px;
+    color: var(--text-muted-dark); /* Terms text color now dark */
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
+
+.terms-text a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.terms-text a:hover {
+    color: var(--accent-light);
+}
+
+.btn-signup {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--accent-primary);
+    color: var(--text-light); /* Button text color remains light (F8F8F8) */
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-signup:hover {
+    background-color: var(--accent-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.alert-error {
+    background-color: var(--error-bg-light); /* Lighter background for error on white */
+    border: 1px solid var(--error-red);
+    color: var(--error-text-dark); /* Darker text for error on white */
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.alert-error p {
+    margin: 5px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    .form-row .form-group {
+        margin-bottom: 20px;
+    }
+    .header h1 {
+        font-size: 30px;
+    }
+    .btn-signup {
+        font-size: 1rem;
+        padding: 10px 15px;
+    }
+}
