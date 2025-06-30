@@ -1,0 +1,22 @@
+.scroll-top {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 40px;
+    height: 40px;
+    background: #D49A6A; /* Warna biru Bootstrap */
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 24px;
+    display: none; /* Sembunyikan awalnya */
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.scroll-top:hover {
+    background: #6F4E37; /* Warna lebih gelap saat hover */
+}
+
+.scroll-top.show {
+    display: flex !important;
+}

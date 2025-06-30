@@ -1,0 +1,223 @@
+/* Navbar Styles - Versi yang lebih halus dan ringan */
+.navbar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  border-radius: 12px;
+  padding: 10px 20px;
+  z-index: 1000;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-out;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(8px);
+  background: rgba(44, 62, 80, 0.8);
+}
+
+/* Animasi melayang (floating) yang lebih halus */
+@keyframes float {
+  0% {
+    transform: translateX(-50%) translateY(0px);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0px);
+  }
+}
+
+/* Efek Navbar Saat di-scroll */
+.navbar.scrolled {
+  background: rgba(44, 62, 80, 0.92);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  top: 0;
+  width: 60%;
+  border-radius: 0 0 12px 12px;
+  animation: slideDown 0.4s ease-out forwards;
+  margin-top: 0;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%) translateX(-50%);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateY(0) translateX(-50%);
+    opacity: 1;
+  }
+}
+
+/* Link Navbar */
+.navbar a {
+  color: #F2E3C6 !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  transition: all 0.25s ease;
+  position: relative;
+  text-decoration: none;
+  font-size: clamp(0.85rem, 1vw + 0.3rem, 1rem); /* Responsive font size */
+  letter-spacing: 0.5px;
+}
+
+/* Efek Hover dengan Underline Animasi */
+.navbar a:hover {
+  color: #D17A22 !important;
+  transform: translateY(-1px);
+}
+
+.navbar a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #D17A22;
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  opacity: 0.8;
+}
+
+.navbar a:hover::after {
+  width: 70%;
+  left: 15%;
+}
+
+/* Efek Active Link */
+.navbar a.active {
+  color: #D17A22 !important;
+}
+
+.navbar a.active::after {
+  width: 70%;
+  left: 15%;
+  background-color: #D17A22;
+}
+
+/* Logo/Brand Styling */
+.navbar .navbar-brand {
+  font-size: clamp(1.1rem, 1.2vw + 0.5rem, 1.6rem); /* Responsive font size */
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  transition: color 0.25s ease;
+}
+
+.navbar .navbar-brand:hover {
+  color: #F2E3C6 !important;
+  text-shadow: 0 0 8px rgba(242, 227, 198, 0.3);
+}
+
+/* Tombol Hamburger untuk Mobile */
+.navbar .toggle-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #F2E3C6;
+  font-size: clamp(1.2rem, 2vw, 1.5rem); /* Responsive font size */
+  cursor: pointer;
+  transition: transform 0.25s ease, color 0.25s ease;
+  padding: 5px;
+}
+
+.navbar .toggle-btn:hover {
+  transform: scale(1.05);
+  color: #D17A22;
+}
+
+/* Animasi Toggle */
+.navbar .toggle-btn.active {
+  transform: rotate(90deg);
+  color: #D17A22;
+}
+
+/* Section Styling */
+.section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  background-size: cover;
+  background-position: center;
+  transition: background-position 0.8s ease-out;
+}
+
+/* Menu Items Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsif */
+@media screen and (max-width: 1024px) {
+  .navbar {
+    width: 90%;
+    padding: 10px 15px;
+    flex-direction: column;
+    animation: none;
+  }
+
+  .navbar.scrolled {
+    width: 100%;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .navbar .menu-items {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8px;
+    overflow: hidden;
+  }
+
+  .navbar .menu-items.active {
+    display: flex;
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .navbar .menu-items.closing {
+    display: flex;
+    animation: fadeOut 0.3s ease-out forwards;
+  }
+
+  .navbar .top-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navbar .toggle-btn {
+    display: block;
+  }
+
+  .navbar a {
+    margin: 6px 0;
+    animation: fadeIn 0.25s ease-out forwards;
+    animation-delay: calc(var(--item-index) * 0.08s);
+  }
+}
