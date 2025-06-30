@@ -4,12 +4,12 @@
 /* General Styling */
 body {
     font-family: 'Noto Serif JP', serif;
-    background-color: #6C4E31;
+    background-color: #6c4e32;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
     scroll-behavior: smooth;
-    color: #2C3E50;
+    color: #2d3f51;
 }
 
 /* Navbar Styling */
@@ -28,7 +28,7 @@ body {
   justify-content: space-between;
   align-items: center;
   backdrop-filter: blur(8px);
-  background: rgba(44, 62, 80, 0.8);
+  background: rgba(43, 61, 79, 0.8);
   /* --- TAMBAHKAN INI UNTUK ANIMASI MELAYANG SAAT TIDAK DI-SCROLL --- */
   animation: float 3s ease-in-out infinite; /* Sesuaikan durasi dan timing */
 }
@@ -72,7 +72,7 @@ body {
 
 /* Link Navbar */
 .navbar a {
-  color: #F2E3C6 !important;
+  color: #f2e3c7 !important;
   font-weight: 600;
   text-transform: uppercase;
   padding: 6px 12px;
