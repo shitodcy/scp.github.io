@@ -12,26 +12,20 @@ use Illuminate\Support\Facades\Auth;
 
 class TeamController extends Controller
 {
-    /**
-     * Menampilkan daftar semua anggota tim.
-     */
+
     public function index()
     {
         $teamMembers = TeamMember::orderBy('id')->get();
         return view('admin.teams.index', compact('teamMembers'));
     }
 
-    /**
-     * Menampilkan form untuk menambah anggota baru.
-     */
+
     public function create()
     {
         return view('admin.teams.create');
     }
 
-    /**
-     * Menyimpan anggota baru ke database.
-     */
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -50,7 +44,7 @@ class TeamController extends Controller
             $imagePathOrUrl = $request->file('image')->store('team_images', 'public');
         }
 
-        // Simpan ke variabel agar bisa diambil namanya untuk log
+
         $newTeamMember = TeamMember::create([
             'name' => $validatedData['name'],
             'student_id' => $validatedData['student_id'],
@@ -58,7 +52,7 @@ class TeamController extends Controller
             'image_url' => $imagePathOrUrl,
         ]);
 
-        // Log aktivitas
+
         Log::create([
             'user_id'     => Auth::id(),
             'action'      => 'TAMBAH_TIM',
@@ -69,20 +63,15 @@ class TeamController extends Controller
                          ->with('success', 'Anggota tim baru berhasil ditambahkan.');
     }
 
-    /**
-     * Menampilkan form untuk mengedit anggota.
-     * (INI METHOD YANG HILANG)
-     */
+
     public function edit(TeamMember $team)
     {
-        // Method ini hanya bertugas mengirim data member yang akan diedit ke view
+
         return view('admin.teams.edit', compact('team'));
     }
 
 
-    /**
-     * Memperbarui data anggota di database.
-     */
+
     public function update(Request $request, TeamMember $team)
     {
         $validatedData = $request->validate([
@@ -93,7 +82,7 @@ class TeamController extends Controller
             'image_url' => 'nullable|url',
         ]);
 
-        // Perbaikan: Kita gunakan $updateData agar tidak error saat gambar tidak diupdate
+
         $updateData = [
             'name' => $validatedData['name'],
             'student_id' => $validatedData['student_id'],
@@ -115,10 +104,10 @@ class TeamController extends Controller
                 Storage::disk('public')->delete($oldImagePath);
             }
         }
-        
+
         $team->update($updateData);
-        
-        // Perbaikan: Aksi log diubah menjadi UPDATE_TIM
+
+
         Log::create([
             'user_id'     => Auth::id(),
             'action'      => 'UPDATE_TIM',
@@ -129,9 +118,7 @@ class TeamController extends Controller
                          ->with('success', 'Data anggota tim berhasil diperbarui.');
     }
 
-    /**
-     * Menghapus anggota dari database.
-     */
+
     public function destroy(TeamMember $team)
     {
         $teamName = $team->name;
@@ -148,7 +135,7 @@ class TeamController extends Controller
            'action'      => 'HAPUS_TIM',
            'description' => "Pengguna {$username} menghapus anggota tim: {$teamName}"
         ]);
-    
+
         return redirect()->route('admin.teams.index')
                          ->with('success', 'Anggota tim berhasil dihapus.');
     }

@@ -16,13 +16,11 @@ class BackupController extends Controller
 
     public function __construct()
     {
-        // Tentukan path penyimpanan backup. Pastikan direktori ini ada dan bisa ditulis oleh server.
+
         $this->backupPath = storage_path('app/backups');
     }
 
-    /**
-     * Menampilkan halaman backup dan daftar file backup yang ada.
-     */
+
     public function index()
     {
         if (!File::exists($this->backupPath)) {
@@ -37,23 +35,21 @@ class BackupController extends Controller
         return view('admin.backups.index', compact('backupFiles'));
     }
 
-    /**
-     * Membuat file backup database baru.
-     */
+
     public function create()
     {
         try {
-            // Ambil konfigurasi database dari environment Laravel
+
             $dbName = config('database.connections.mysql.database');
             $dbUser = config('database.connections.mysql.username');
             $dbPass = config('database.connections.mysql.password');
             $dbHost = config('database.connections.mysql.host');
 
-            // Buat nama file dengan timestamp
+
             $fileName = 'backup-' . now()->format('Y-m-d_H-i-s') . '.sql';
             $filePath = $this->backupPath . '/' . $fileName;
 
-            // Buat perintah mysqldump
+
             $command = sprintf(
                 'mysqldump --user=%s --password=%s --host=%s %s > %s',
                 escapeshellarg($dbUser),
@@ -63,7 +59,7 @@ class BackupController extends Controller
                 escapeshellarg($filePath)
             );
 
-            // Jalankan perintah
+
             $process = Process::fromShellCommandline($command);
             $process->run();
 
@@ -74,7 +70,7 @@ class BackupController extends Controller
             return redirect()->route('admin.backups.index')->with('success', 'Backup database berhasil dibuat!');
 
         } catch (ProcessFailedException $exception) {
-            // Hapus file yang mungkin gagal dibuat
+
             if (File::exists($filePath)) {
                 File::delete($filePath);
             }
@@ -82,9 +78,7 @@ class BackupController extends Controller
         }
     }
 
-    /**
-     * Mengunduh file backup.
-     */
+
     public function download($filename)
     {
         $filePath = $this->backupPath . '/' . $filename;
@@ -96,9 +90,7 @@ class BackupController extends Controller
         return response()->download($filePath);
     }
 
-    /**
-     * Menghapus file backup.
-     */
+
     public function destroy($filename)
     {
         $filePath = $this->backupPath . '/' . $filename;

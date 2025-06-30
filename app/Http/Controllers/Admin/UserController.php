@@ -14,26 +14,20 @@ use Spatie\Activitylog\Facades\Activity;
 
 class UserController extends Controller
 {
-    /**
-     * Menampilkan halaman daftar semua user.
-     */
+
     public function index()
     {
         $users = User::latest()->paginate(10);
         return view('admin.users.index', compact('users'));
     }
 
-    /**
-     * Menampilkan form untuk membuat user baru.
-     */
+
     public function create()
     {
         return view('admin.users.create');
     }
 
-    /**
-     * Menyimpan user baru ke database.
-     */
+
     public function store(Request $request)
     {
         $request->validate([
@@ -50,24 +44,20 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // --- PERUBAHAN DI SINI ---
+
         activity()->useLog('info')->log('Created new user: ' . $user->username);
 
         return redirect()->route('admin.users.index')
                          ->with('success', 'User baru berhasil ditambahkan!');
     }
 
-    /**
-     * Menampilkan form untuk mengedit user.
-     */
+
     public function edit(User $user)
     {
         return view('admin.users.edit', compact('user'));
     }
 
-    /**
-     * Memperbarui data user di database.
-     */
+
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -92,17 +82,15 @@ class UserController extends Controller
         }
 
         $user->update($updateData);
-        
-        // --- PERUBAHAN DI SINI ---
+
+
         activity()->useLog('info')->log('Updated user: ' . $user->username);
 
         return redirect()->route('admin.users.index')
                          ->with('success', 'Data user berhasil diperbarui!');
     }
 
-    /**
-     * Menghapus user dari database.
-     */
+
     public function destroy(User $user)
     {
         if ($user->id === auth()->id()) {
@@ -112,11 +100,11 @@ class UserController extends Controller
         if ($user->profile_image) {
             Storage::disk('public')->delete($user->profile_image);
         }
-        
+
         $userName = $user->username;
         $user->delete();
 
-        // --- PERUBAHAN DI SINI ---
+
         activity()->useLog('delete')->log('Deleted user: ' . $userName);
 
         return redirect()->route('admin.users.index')
