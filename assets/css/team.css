@@ -12,7 +12,7 @@
     position: relative;
 }
 
-
+/* Styling untuk Member */
 .team-member {
     position: relative;
     text-align: center;
@@ -25,12 +25,12 @@
     height: 100%;
 }
 
-
+/* Hover Effect untuk Transparansi */
 .team-member:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 
-
+/* Styling untuk Gambar */
 .team-member img {
     width: 150px;
     height: 150px;
@@ -40,13 +40,13 @@
     transition: all 0.3s ease;
 }
 
-
+/* Hover Effect - Zoom & Glow */
 .team-member img:hover {
     box-shadow: 0px 0px 20px rgba(189, 147, 249, 0.9);
     transform: scale(1.05);
 }
 
-
+/* Job Info - Muncul Saat Hover */
 .team-member .job-info {
     position: relative;
     bottom: 10px;
@@ -61,12 +61,12 @@
     transition: opacity 0.3s ease-in-out;
 }
 
-
+/* Saat Hover, Tampilkan Job Info */
 .team-member:hover .job-info {
     opacity: 1;
 }
 
-
+/* Styling untuk Nama & ID */
 .team-member h4 {
     font-size: clamp(12.6px, 18px, 23.4px);
     font-weight: bold;
@@ -89,7 +89,7 @@
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-
+/* Title with a single animated underline */
 #team h2 {
     font-size: clamp(1.96rem, 2.8rem, 3.64rem);
     font-weight: 700;
@@ -122,7 +122,7 @@
     }
 }
 
-
+/* Mobile view - 3 in first row, 2 in second row */
 @media (max-width: 991.98px) {
     .col-md-4 {
         flex: 0 0 33.333%;
@@ -140,7 +140,7 @@
     }
 }
 
-
+/* Small mobile view */
 @media (max-width: 768px) {
     .col-sm-6 {
         flex: 0 0 50%;

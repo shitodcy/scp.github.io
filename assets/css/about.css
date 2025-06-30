@@ -8,7 +8,6 @@
     overflow: hidden;
 }
 
-
 @media (min-width: 992px) {
     #about {
         background-attachment: fixed;
@@ -88,7 +87,6 @@
 .panel-main:hover {
     transform: translateY(-3px);
 }
-
 
 .celebration-title {
     font-family: 'Roboto Slab', serif;
@@ -184,7 +182,6 @@
     font-size: clamp(1rem, 2.5vw, 1.1rem);
 }
 
-
 .fade-in {
     opacity: 0;
     transition: opacity 0.6s ease-out;
@@ -206,7 +203,6 @@
     transform: translateY(0);
 }
 
-
 @keyframes floating {
     0% { transform: translateY(0px); }
     50% { transform: translateY(-5px); }
@@ -216,7 +212,6 @@
 .float-animation {
     animation: floating 4s ease-in-out infinite;
 }
-
 
 .title-animation {
     animation: fadeSlideDown 0.6s ease-out forwards;
@@ -233,7 +228,6 @@
     }
 }
 
-
 .panel-animation {
     animation: fadeScale 0.5s ease-out forwards;
 }
@@ -249,7 +243,6 @@
     }
 }
 
-
 .image-animation {
     animation: fadeIn 0.6s ease-out forwards;
 }
@@ -262,7 +255,6 @@
         opacity: 1;
     }
 }
-
 
 .text-animation {
     animation: fadeSlideUp 0.5s ease-out forwards;
@@ -278,7 +270,6 @@
         transform: translateY(0);
     }
 }
-
 
 @media (max-width: 768px) {
     .panel-small, .panel-main {

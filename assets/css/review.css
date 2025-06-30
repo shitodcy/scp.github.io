@@ -1,17 +1,17 @@
+/* review.css */
 
-
-
+/* Styles for the review section */
 #review { 
     background: url('https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598321/lokasi_soeuze.webp') no-repeat center center/cover;
-    background-color: rgba(0, 0, 0, 0.4); 
-    background-blend-mode: multiply; 
+    background-color: rgba(0, 0, 0, 0.4); /* Black color with transparency */
+    background-blend-mode: multiply; /* Blend mode for background */
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    background-attachment: fixed; 
+    background-attachment: fixed; /* Parallax effect */
 }
 
-
+/* Title with a single animated underline */
 #review h1 {
     font-size: 2.8rem;
     font-weight: 700;
@@ -37,24 +37,24 @@
     width: 100px;
   }
 
-
+/* Style for Contact Section */
 .contact-section {
     text-align: center;
     padding: 20px;
     border-radius: 10px;
-    color: #F2E3C6; 
+    color: #F2E3C6; /* Light color for text */
 }
 
-
+/* Social Media Icons */
 .social-icons {
     display: flex;
     justify-content: center;
     gap: 15px;
     margin-top: 10px;
-    flex-wrap: wrap; 
+    flex-wrap: wrap; /* Prevents icons from being too close on small screens */
 }
 
-
+/* Style for Icon */
 .social-icons a {
     font-size: 24px;
     color: white;
@@ -62,9 +62,9 @@
 }
 
 .social-icons a:hover {
-    transform: scale(1.2); 
+    transform: scale(1.2); /* Scale effect on hover */
 }
 
-
+/* Hover effects for social media colors */
 .social-icons a[href*="instagram"]:hover { color: #C13584; } 
 .social-icons a[href*="whatsapp"]:hover { color: #25D366; } 

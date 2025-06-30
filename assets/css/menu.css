@@ -48,7 +48,7 @@
   padding: 15px;
 }
 
-
+/* Category title without underline */
 .category-title {
   position: relative;
   background-color: var(--primary-color);
@@ -77,7 +77,7 @@
   transform: rotate(180deg);
 }
 
-
+/* Filter controls */
 .menu-controls {
   background-color: rgba(111, 78, 55, 0.8);
   border-radius: 10px;
@@ -173,7 +173,7 @@
   }
 }
 
-
+/* Menu section styling */
 .category-section {
   margin-bottom: 25px;
   background-color: rgba(111, 78, 55, 0.8);
