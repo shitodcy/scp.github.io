@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const categoryTitles = document.querySelectorAll(".category-title");
   const categoryContents = document.querySelectorAll(".category-content");
 
-
+  // Fungsi untuk menampilkan semua section
   const showAllSections = () => {
     categoryContents.forEach(content => {
       content.classList.add("active");
@@ -12,13 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-
+  // Default: tampilkan semua saat halaman dimuat
   showAllSections();
 
-
+  // Filter tombol
   filterButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-
+      // Aktifkan tombol yang diklik
       filterButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const content = section.querySelector(".category-content");
         const title = section.querySelector(".category-title");
 
-
+        // Expand section kalau masih ada itemnya
         if (visible) {
           content.classList.add("active");
           title.setAttribute("aria-expanded", true);
@@ -54,14 +54,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-
+  // Toggle untuk expand/collapse tiap kategori
   categoryTitles.forEach(title => {
     title.addEventListener("click", () => {
       const targetId = title.dataset.target;
       const content = document.getElementById(targetId);
       const isActive = content.classList.contains("active");
 
-
+      // Toggle expand/collapse
       content.classList.toggle("active", !isActive);
       title.setAttribute("aria-expanded", !isActive);
     });
