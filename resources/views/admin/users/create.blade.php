@@ -12,7 +12,7 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Styling custom untuk input agar sesuai dengan tema Dracula di screenshot */
+
         .form-input {
             background-color: #44475a;
             border-color: #6272a4;
