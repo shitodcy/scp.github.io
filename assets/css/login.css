@@ -12,7 +12,7 @@ html, body {
   height: 100vh;
 }
 
-
+/* Left Panel - Image Background */
 .left-panel {
   flex: 1;
   background-image: url('https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598325/fotolokasi.depan_av71fx.webp');
@@ -50,7 +50,7 @@ html, body {
   max-width: 300px;
 }
 
-
+/* Right Panel - Form */
 .right-panel {
   flex: 1;
   display: flex;
@@ -114,7 +114,7 @@ button:hover {
   background-color: #8c5831;
 }
 
-
+/* 1. Hover Animasi pada .login-box (sedikit naik dan glow) */
 .login-box {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -124,13 +124,13 @@ button:hover {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
-
+/* 2. Hover Efek pada input */
 input:hover {
   background-color: #fffaf2;
   border-color: #b38a61;
 }
 
-
+/* 3. Transisi halus di semua input */
 input, button {
   transition: all 0.3s ease;
 }
