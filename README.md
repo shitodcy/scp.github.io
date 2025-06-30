@@ -19,11 +19,10 @@ Welcome to the official repository of our SCP Website Project, created as part o
 | Arya Putra Bahari  | 23.11.5494  |  team leader|
 | Jihan Humaira      | 23.11.5492  |  front-end  |
 | Khairul Fikri      | 23.11.5442  |  front-end  |
-| Alfan Sobron       | 23.11.5438  |   ui/ux     |
+| Alfan Shobron      | 23.11.5438  |   ui/ux     |
 | Zaky Riefani A     | 23.11.5446  |             |
 
 ## 🧑‍💻 Team Statistic
-
 
 [![scp GitHub stats](https://github-readme-stats.vercel.app/api?username=shitodcy&include_all_commits=true&theme=dracula)](https://github.com/shitodcy/scp)
 [![scp GitHub stats](https://github-readme-stats.vercel.app/api?username=JihanPaperwork&include_all_commits=true&theme=dracula)](https://github.com/shitodcy/scp)

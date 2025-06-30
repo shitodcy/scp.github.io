@@ -1,0 +1,136 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: 100%;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Left Panel - Image Background */
+.left-panel {
+  flex: 1;
+  background-image: url('https://res.cloudinary.com/dbdmqec1q/image/upload/v1748598325/fotolokasi.depan_av71fx.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  width: 50%;
+  height: 100%;
+}
+
+.left-panel .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 888px;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 30px;
+}
+
+.left-panel h1 {
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.left-panel p {
+  font-size: 18px;
+  max-width: 300px;
+}
+
+/* Right Panel - Form */
+.right-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fdf8f1;
+}
+
+.login-box {
+  background-color: #fff9e6;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  width: 320px;
+}
+
+.login-box h2 {
+  text-align: center;
+  color: #5c3b1e;
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  color: #6b4e2e;
+  font-weight: 500;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #d3c1a1;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #a3794f;
+  box-shadow: 0 0 4px #d2aa7b;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 25px;
+  background-color: #a76c3e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #8c5831;
+}
+
+/* 1. Hover Animasi pada .login-box (sedikit naik dan glow) */
+.login-box {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* 2. Hover Efek pada input */
+input:hover {
+  background-color: #fffaf2;
+  border-color: #b38a61;
+}
+
+/* 3. Transisi halus di semua input */
+input, button {
+  transition: all 0.3s ease;
+}
