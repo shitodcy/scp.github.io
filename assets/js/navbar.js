@@ -3,20 +3,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleBtn = document.querySelector('.toggle-btn');
     const menuItems = document.querySelector('.menu-items');
     const navLinks = document.querySelectorAll('.menu-items a');
-    
+
     // Throttle function untuk mengurangi frekuensi event scroll
     function throttle(func, delay) {
       let lastCall = 0;
       return function(...args) {
-        const now = new Date().getTime();
-        if (now - lastCall < delay) {
-          return;
+        const now = Date.now();
+        if (now - lastCall >= delay) {
+          lastCall = now;
+          func.apply(this, args);
         }
-        lastCall = now;
-        return func(...args);
       }
     }
-  
+
     // Handle scroll effect dengan throttle untuk performa lebih baik
     window.addEventListener('scroll', throttle(function() {
       // Tambahkan smooth transition dengan requestAnimationFrame
@@ -32,27 +31,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     }, 100)); // Throttle 100ms untuk pengalaman lebih halus
-    
+
     // Toggle menu pada mobile dengan efek lebih halus
     toggleBtn.addEventListener('click', function(e) {
       e.stopPropagation(); // Mencegah event bubbling
       toggleBtn.classList.toggle('active');
-      
+
       if (menuItems.classList.contains('closing')) {
         menuItems.classList.remove('closing');
       }
-      
+
       // Gunakan transisi yang lebih halus
       requestAnimationFrame(() => {
         menuItems.classList.toggle('active');
       });
     });
-    
+
     // Tambahkan animation delay ke setiap nav link
     navLinks.forEach((link, index) => {
       link.style.setProperty('--item-index', index);
     });
-    
+
     // Tutup menu saat link diklik dengan transisi yang lebih halus
     navLinks.forEach(link => {
       link.addEventListener('click', function(e) {
@@ -60,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (window.innerWidth <= 1024) {
           toggleBtn.classList.remove('active');
           menuItems.classList.add('closing');
-          
+
           // Gunakan transisi yang lebih pendek
           setTimeout(() => {
             menuItems.classList.remove('active');
@@ -69,15 +68,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     });
-    
+
     // Tutup menu saat mengklik di luar navbar dengan animasi lebih halus
     document.addEventListener('click', function(event) {
       const isClickInside = navbar.contains(event.target);
-      
+
       if (!isClickInside && menuItems.classList.contains('active') && window.innerWidth <= 1024) {
         toggleBtn.classList.remove('active');
         menuItems.classList.add('closing');
-        
+
         // Gunakan transisi yang lebih pendek
         setTimeout(() => {
           menuItems.classList.remove('active');
@@ -85,38 +84,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 250);
       }
     });
-    
+
     // Deteksi section aktif dengan performa lebih baik
     const sections = document.querySelectorAll("section");
-    
+
     // Observer untuk mendeteksi section yang visible
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const currentSection = entry.target.getAttribute("id");
-          highlightNavLink(currentSection);
-        }
-      });
-    }, {
-      threshold: 0.3, // Section harus terlihat minimal 30% untuk diaktifkan
-      rootMargin: "0px 0px" // Offset untuk trigger yang lebih akurat
-    });
-    
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      highlightNavLink(entry.target);
+    }
+  });
+}, 
+{
+  threshold: 0.3, // Section harus terlihat minimal 30% untuk diaktifkan
+  rootMargin: "0px 0px" // Offset untuk trigger yang lebih akurat
+});
+
     // Observe semua section
     sections.forEach(section => {
       observer.observe(section);
     });
-    
+
     // Fungsi untuk highlight link yang aktif
     function highlightNavLink(currentSection) {
-      navLinks.forEach(link => {
-        link.classList.remove("active");
-        if (link.getAttribute("href").includes(currentSection)) {
-          link.classList.add("active");
-        }
-      });
+navLinks.forEach(link => {
+  link.classList.remove("active");
+});
     }
-    
+
     // Tambahkan smooth scroll behavior
     navLinks.forEach(link => {
       link.addEventListener('click', (e) => {
@@ -126,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
           e.preventDefault();
           const targetId = href.substring(1);
           const targetElement = document.getElementById(targetId);
-          
+
           if (targetElement) {
             // Animasi scroll yang lebih halus
             window.scrollTo({

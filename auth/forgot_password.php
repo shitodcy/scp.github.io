@@ -133,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
 
         <p class="no-account-link">
-          Ingat password Anda? <a href="/auth/login.php">Login</a>
+          Ingat password Anda ? <a href="/auth/login.php">Login</a>
         </p>
       </div>
     </div>

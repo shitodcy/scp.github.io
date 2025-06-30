@@ -3,17 +3,17 @@ session_start();
 require_once '../config/database.php';
 
 $message = '';
-$message_type = ''; // 'success' or 'error'
+$message_type = ''; 
 $token = $_GET['token'] ?? '';
 $email = $_GET['email'] ?? '';
 
-// Check if token and email are provided in URL
+
 if (empty($token) || empty($email)) {
     $message = "Link reset password tidak valid atau sudah kedaluwarsa.";
     $message_type = 'error';
 } else {
     try {
-        // Find user by token and email, and check token expiry
+
         $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email AND reset_token = :token AND reset_token_expiry > NOW() LIMIT 1");
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':token', $token);
@@ -31,14 +31,14 @@ if (empty($token) || empty($email)) {
     }
 }
 
-// Handle password reset submission
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
-    $token = $_POST['token']; // Get token from hidden field
-    $email = $_POST['email']; // Get email from hidden field
+    $token = $_POST['token']; 
+    $email = $_POST['email']; 
 
-    // Re-validate token and email
+
     if (empty($token) || empty($email)) {
         $message = "Permintaan reset password tidak valid.";
         $message_type = 'error';
@@ -54,21 +54,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $message = "Link reset password tidak valid atau sudah kedaluwarsa.";
                 $message_type = 'error';
             } else {
-                // Validate new password
+
                 if (empty($new_password) || empty($confirm_password)) {
                     $message = "Password baru dan konfirmasi password wajib diisi.";
                     $message_type = 'error';
                 } elseif ($new_password !== $confirm_password) {
                     $message = "Konfirmasi password tidak cocok.";
                     $message_type = 'error';
-                } elseif (strlen($new_password) < 6) { // Example: minimum 6 characters
+                } elseif (strlen($new_password) < 6) { 
                     $message = "Password baru minimal 6 karakter.";
                     $message_type = 'error';
                 } else {
-                    // Hash the new password
+
                     $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
-                    // Update password and clear reset token
+
                     $stmt_update = $conn->prepare("UPDATE users SET password = :password, reset_token = NULL, reset_token_expiry = NULL WHERE id = :id");
                     $stmt_update->bindParam(':password', $hashed_password);
                     $stmt_update->bindParam(':id', $user['id']);
@@ -76,8 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     $message = "Password Anda berhasil direset! Silakan login dengan password baru Anda.";
                     $message_type = 'success';
-                    // Redirect to login page after successful reset
-                    header("Refresh: 3; url=/auth/login.php"); // Redirect after 3 seconds
+
+                    header("Refresh: 3; url=/auth/login.php"); 
                     exit();
                 }
             }

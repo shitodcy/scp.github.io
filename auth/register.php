@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once '../config/database.php'; // Connect to the database
+require_once '../config/database.php'; 
 
-// If already logged in, redirect to the dashboard
+
 if (isset($_SESSION['user_id'])) {
     header("Location: ../users/dashboard.php");
     exit();
@@ -16,14 +16,14 @@ $password = '';
 $confirm_password = '';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Sanitize and trim inputs
+
     $full_name = trim(filter_input(INPUT_POST, 'full_name', FILTER_SANITIZE_STRING));
     $username = trim(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
     $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-    $password = $_POST['password']; // Passwords are not sanitized; they're hashed
+    $password = $_POST['password']; 
     $confirm_password = $_POST['confirm_password'];
 
-    // Input Validation
+
     if (empty($full_name)) {
         $errors[] = "Nama lengkap wajib diisi.";
     } elseif (strlen($full_name) < 2) {
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $errors[] = "Password dan konfirmasi password tidak sama.";
     }
 
-    // Check if email is in the approved_emails list
+
     if (empty($errors)) {
         try {
             $stmt_approved = $conn->prepare("SELECT id FROM approved_emails WHERE email = :email LIMIT 1");
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // Check if username already exists in the users table
+
     if (empty($errors)) {
         try {
             $stmt = $conn->prepare("SELECT id FROM users WHERE username = :username LIMIT 1");
@@ -88,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // Check if email already exists in the users table
+
     if (empty($errors)) {
         try {
             $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email LIMIT 1");
@@ -103,12 +103,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // If no errors, save to the database
+
     if (empty($errors)) {
         try {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            // Insert into users table
+
             $stmt = $conn->prepare("INSERT INTO users (username, email, full_name, password, created_at) VALUES (:username, :email, :full_name, :password, NOW())");
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $email);
