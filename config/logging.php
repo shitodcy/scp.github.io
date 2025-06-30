@@ -7,16 +7,7 @@ use Monolog\Processor\PsrLogMessageProcessor;
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Default Log Channel
-    |--------------------------------------------------------------------------
-    |
-    | This option defines the default log channel that is utilized to write
-    | messages to your logs. The value provided here should match one of
-    | the channels present in the list of "channels" configured below.
-    |
-    */
+    
 
     'default' => env('LOG_CHANNEL', 'stack'),
 
