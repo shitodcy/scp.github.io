@@ -6,7 +6,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 $message = '';
-$message_type = '';
+$message_type = ''; // 'success' or 'error'
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
@@ -16,37 +16,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message_type = 'error';
     } else {
         try {
+            // Check if email exists
             $stmt = $conn->prepare("SELECT id, username, full_name, email FROM users WHERE email = :email LIMIT 1");
             $stmt->bindParam(':email', $email);
             $stmt->execute();
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user) {
+                // Generate a unique token
                 $token = bin2hex(random_bytes(32));
+                // Set expiry time (e.g., 1 hour from now)
                 $expiry_time = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
+                // Store token and expiry in database
                 $stmt_update = $conn->prepare("UPDATE users SET reset_token = :token, reset_token_expiry = :expiry WHERE id = :id");
                 $stmt_update->bindParam(':token', $token);
                 $stmt_update->bindParam(':expiry', $expiry_time);
                 $stmt_update->bindParam(':id', $user['id']);
                 $stmt_update->execute();
 
+                // Create reset link
                 $reset_link = "http://" . $_SERVER['HTTP_HOST'] . "/auth/reset_password.php?token=" . $token . "&email=" . urlencode($user['email']); // Gunakan alamat domain Anda
 
+                // Send email
                 $mail = new PHPMailer(true);
                 try {
-                    $mail->isSMTP();                                            
-                    $mail->Host       = 'smtp.gmail.com';                       
-                    $mail->SMTPAuth   = true;                                   
-                    $mail->Username   = 'your_email@example.com';               
-                    $mail->Password   = 'your_email_password';                  
-                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            
-                    $mail->Port       = 465;                                    
+                    //Server settings
+                    $mail->isSMTP();                                            // Send using SMTP
+                    $mail->Host       = 'smtp.gmail.com';                       // Set the SMTP server to send through
+                    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+                    $mail->Username   = 'your_email@example.com';               // SMTP username (e.g., your_gmail@gmail.com)
+                    $mail->Password   = 'your_email_password';                  // SMTP password (e.g., App password for Gmail)
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            // Enable implicit TLS encryption
+                    $mail->Port       = 465;                                    // TCP port to connect to; use 587 if you set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-                    $mail->setFrom('no-reply@yourdomain.com', 'Kedai Kopi Kayu'); 
-                    $mail->addAddress($user['email'], $user['full_name']);     
+                    //Recipients
+                    $mail->setFrom('no-reply@yourdomain.com', 'Kedai Kopi Kayu'); // Ganti dengan email pengirim Anda
+                    $mail->addAddress($user['email'], $user['full_name']);     // Add a recipient
 
-                    $mail->isHTML(true);                                        
+                    //Content
+                    $mail->isHTML(true);                                        // Set email format to HTML
                     $mail->Subject = 'Permintaan Reset Password Anda';
                     $mail->Body    = "Halo " . htmlspecialchars($user['full_name']) . ",<br><br>"
                                    . "Kami menerima permintaan reset password untuk akun Anda. Silakan klik link di bawah ini untuk mengatur ulang password Anda:<br>"
