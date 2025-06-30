@@ -9,7 +9,7 @@ class ApprovedEmail extends Model
 {
     use HasFactory;
 
-    protected $table = 'approved_emails'; // Nama tabel
-    protected $fillable = ['email']; // Kolom yang bisa diisi massal
+    protected $table = 'approved_emails';
+    protected $fillable = ['email'];
 }
 

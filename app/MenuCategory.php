@@ -1,8 +1,8 @@
 <?php
 
-namespace App\View; // <-- Must be correct
+namespace App\View; 
 
-enum MenuCategory: string // <-- The ": string" part is ESSENTIAL
+enum MenuCategory: string
 {
     case Coffee = 'coffee';
     case Tea = 'tea';
