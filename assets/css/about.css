@@ -8,7 +8,7 @@
     overflow: hidden;
 }
 
-/* Untuk perangkat non-mobile, aktifkan background-attachment: fixed */
+
 @media (min-width: 992px) {
     #about {
         background-attachment: fixed;
@@ -89,7 +89,7 @@
     transform: translateY(-3px);
 }
 
-/* Panel Content */
+
 .celebration-title {
     font-family: 'Roboto Slab', serif;
     font-size: clamp(1.5rem, 3.5vw, 2.2rem);
@@ -184,7 +184,7 @@
     font-size: clamp(1rem, 2.5vw, 1.1rem);
 }
 
-/* Animation classes */
+
 .fade-in {
     opacity: 0;
     transition: opacity 0.6s ease-out;
@@ -206,7 +206,7 @@
     transform: translateY(0);
 }
 
-/* Floating animation */
+
 @keyframes floating {
     0% { transform: translateY(0px); }
     50% { transform: translateY(-5px); }
@@ -217,7 +217,7 @@
     animation: floating 4s ease-in-out infinite;
 }
 
-/* Animasi untuk title */
+
 .title-animation {
     animation: fadeSlideDown 0.6s ease-out forwards;
 }
@@ -233,7 +233,7 @@
     }
 }
 
-/* Animasi untuk panel */
+
 .panel-animation {
     animation: fadeScale 0.5s ease-out forwards;
 }
@@ -249,7 +249,7 @@
     }
 }
 
-/* Animasi untuk image */
+
 .image-animation {
     animation: fadeIn 0.6s ease-out forwards;
 }
@@ -263,7 +263,7 @@
     }
 }
 
-/* Animasi untuk text */
+
 .text-animation {
     animation: fadeSlideUp 0.5s ease-out forwards;
 }
@@ -279,7 +279,7 @@
     }
 }
 
-/* Mobile adjustments */
+
 @media (max-width: 768px) {
     .panel-small, .panel-main {
         margin-bottom: 20px;
