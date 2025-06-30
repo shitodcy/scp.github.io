@@ -20,7 +20,7 @@ Welcome to the official repository of our SCP Website Project, created as part o
 | Jihan Humaira      | 23.11.5492  |  front-end  |
 | Khairul Fikri      | 23.11.5442  |  front-end  |
 | Alfan Sobron       | 23.11.5438  |   ui/ux     |
-| Zaky Riefani A     | 23.11.5446  |   ui/ux     |
+| Zaky Riefani A     | 23.11.5446  |             |
 
 ## 🧑‍💻 Team Statistic
 
