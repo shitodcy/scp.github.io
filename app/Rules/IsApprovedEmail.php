@@ -9,7 +9,7 @@ class IsApprovedEmail implements Rule
 {
     public function passes($attribute, $value)
     {
-        // Memeriksa apakah email ada di tabel approved_emails
+
         return ApprovedEmail::where('email', $value)->exists();
     }
 

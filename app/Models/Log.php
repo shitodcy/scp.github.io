@@ -15,7 +15,7 @@ class Log extends Model
         'description',
     ];
 
-    // Relasi ke model User (opsional tapi bagus)
+
     public function user()
     {
         return $this->belongsTo(User::class);
