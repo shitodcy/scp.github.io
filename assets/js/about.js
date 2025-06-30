@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Throttle function - membatasi frekuensi eksekusi fungsi
+  // Throttle function - membatasi frekuensi eksekusi fungs
   function throttle(func, delay) {
     let lastCall = 0;
     return function(...args) {
