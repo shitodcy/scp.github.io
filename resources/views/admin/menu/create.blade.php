@@ -139,18 +139,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Event listener untuk input URL
+    
     imageUrlInput.addEventListener('input', function () {
         updatePreview(this.value);
     });
 
-    // Event listener untuk input File
+
     imageInput.addEventListener('change', function () {
         const file = this.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                // Hapus isi input URL jika user memilih file, agar tidak konflik
+                
                 imageUrlInput.value = '';
                 updatePreview(e.target.result);
             };
